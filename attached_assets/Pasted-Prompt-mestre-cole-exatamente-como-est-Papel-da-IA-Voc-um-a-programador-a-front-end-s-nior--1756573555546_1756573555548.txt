@@ -1,0 +1,223 @@
+Prompt mestre (cole exatamente como está)
+
+Papel da IA
+Você é um(a) programador(a) front-end sênior (20+ anos), especialista em landing pages imersivas e diferenciadas, com forte domínio de design system, tipografia, motion design moderno e acessibilidade. Seu objetivo é criar uma landing page de vendas extremamente profissional e atual para um público jovem (18–35), para um produto Agente Financeiro no WhatsApp.
+
+Contexto do produto
+O usuário conversa com um número de WhatsApp para:
+
+Lançar gastos e receitas (ex.: salário CLT, bicos, Uber/iFood/freela; despesas como combustível, padaria, mercado).
+
+Enviar áudio, mensagem de texto ou foto/print de comprovantes (ex.: Apple Wallet, notificação Android); o agente lê e lança automaticamente.
+
+Ver dashboard mensal com categorias, recorrência de gastos por estabelecimento e visão clara de “quanto ganha x quanto gasta”.
+
+Produto leve, simples de usar e com linguagem visual moderna e comercial.
+
+Tom & estética desejados
+
+Jovem, confiante, direto, sem jargão chato.
+
+Visual “fintech 2025”: escuro elegante com acentos vibrantes OU claro minimalista com acentos neon — escolha 1 e justifique nos comentários do código.
+
+Imersivo / fora da curva: use glassmorphism sutil, gradientes suaves, blur, iluminação ou mesh gradients com parcimônia.
+
+Motion: microanimações suaves (hover, scroll-reveal, parallax leve) sem poluir.
+
+Mobile-first impecável (a página deve ficar incrível no smartphone).
+
+Público & cores comercializáveis
+
+Público: jovens profissionais e autônomos.
+
+Paletas sugeridas (escolha 1 e explique a escolha em comentário):
+
+Fundo escuro #0B0F14, primário verde-teal #20C997, secundário lilás #A78BFA, acento #22D3EE.
+
+Fundo claro #F7F7FB, primário azul #2563EB, secundário verde #10B981, acento magenta #EF5DA8.
+
+Stack & entrega (padronizar entre modelos para comparar)
+
+Opção padrão (preferida para comparação): HTML + Tailwind via CDN + Alpine.js via CDN (sem build, 1 arquivo index.html).
+
+Não use bibliotecas extras além de Tailwind/Alpine e ícones SVG inline.
+
+Inclua todo CSS via Tailwind CDN; JS mínimo com Alpine.
+
+Otimize para Lighthouse: boas práticas de performance, SEO básico e a11y (sem sacrificar o visual).
+
+Nada de dependências externas de imagens: usar SVG inline, placeholders locais (/assets/…) ou data URI.
+
+Comente o código destacando decisões de design.
+
+Arquitetura da página (seções obrigatórias)
+
+Header sticky com logotipo (placeholder “AssistenteFin”), navegação âncora (Como Funciona, Recursos, Para Quem, Preço, FAQ, Contato) e CTA “Começar no WhatsApp”.
+
+Hero imersivo:
+
+Headline forte: “Gestão financeira no WhatsApp — simples, inteligente, no seu ritmo”.
+
+Subheadline curta: “Lance por texto, áudio ou foto; nós lemos, categorizamos e mostramos tudo no seu painel.”
+
+CTAs: “Começar agora — R$ 9,99/mês” e “Falar com especialista”.
+
+Visual: mockup de chat flutuante mostrando mensagens fictícias (PT-BR) de lançamento de gastos/receitas + bolhas de “leitura de comprovante”.
+
+Micro-badges: “7 dias de garantia”, “Pagamento seguro”, “Dados protegidos”.
+
+Como funciona (4 passos) com ícones SVG:
+
+Envie seus comprovantes/áudios/textos
+
+A IA identifica valores e categorias
+
+Lançamentos automáticos e revisáveis
+
+Acompanhe tudo no dashboard
+
+Recursos principais (grid)
+
+Leitura de prints da Apple Wallet/Android
+
+OCR de notas e comprovantes
+
+Categorias automáticas + edição rápida
+
+Relatórios mensais e alertas de excesso
+
+Privacidade e segurança (explique brevemente)
+
+Sincronização leve (sem travar celular)
+
+Demonstração visual
+
+Um “card dashboard” com gráficos SVG simples (pizza/linha) + lista de top estabelecimentos.
+
+Não usar libs de chart — SVG puro estilizado com Tailwind.
+
+Para quem é (CLT, autônomos, entregadores, motoristas de app, freelancers).
+
+Social proof
+
+3 depoimentos breves (PT-BR, nomes fictícios), avaliação 5⭐ SVG.
+
+Preço
+
+Plano único: R$ 9,99/mês (grande, claro).
+
+Benefícios resumidos e CTA forte “Começar no WhatsApp”.
+
+FAQ (acordeão)
+
+“Preciso cadastrar cartão?”
+
+“Funciona só no WhatsApp?”
+
+“Como a leitura de prints funciona?”
+
+“Posso exportar meus dados?”
+
+CTA final em bloco imersivo (“Pronto para organizar suas finanças pelo WhatsApp?”).
+
+Footer com links âncora, email de suporte (placeholder), termos/privacidade.
+
+Microcopy em PT-BR (use/ajuste):
+
+CTA principal: “Começar agora — R$ 9,99/mês”
+
+Selo: “7 dias de garantia • Cancelamento fácil”
+
+Segurança: “Criptografia em trânsito, acesso restrito e controles de privacidade.”
+
+Benefício direto: “Veja para onde seu dinheiro vai — sem planilhas.”
+
+Acessibilidade & UX
+
+Contraste AA, aria-* nos componentes interativos, foco visível.
+
+Navegação por teclado e skip-to-content.
+
+Tocar/scroll fluido no mobile; alvos de toque 44px.
+
+Motion & detalhes
+
+Efeitos: hover suave em cards, parallax leve no hero, reveal ao rolar (Alpine + classes).
+
+Sem animações agressivas (evitar motion sickness).
+
+Sombra/blur para profundidade (glassmorphism moderado).
+
+SEO técnico
+
+<title> e <meta name="description"> convincentes.
+
+Heading structure H1–H2–H3 correta.
+
+Open Graph/Twitter tags.
+
+Imagens com alt.
+
+JSON-LD Organization simples (opcional).
+
+Ícones
+
+Use SVG inline inspirados em Heroicons/Phosphor (sem CDN).
+
+Entregáveis
+
+Um único arquivo index.html com Tailwind e Alpine via CDN.
+
+Código comentado (explicar escolhas de paleta, tipografia, motion e componentes).
+
+Sem erros no console.
+
+Sem imagens externas quebradas (use placeholders/SVG).
+
+Critérios de qualidade (o que você deve cumprir)
+
+Visual imersivo e fora da curva, porém limpo e comercial.
+
+Tipografia moderna (ex.: Inter, Outfit, Manrope via @import do Google Fonts).
+
+Paleta coerente com fintech jovem; acentos bem usados.
+
+Mobile-first excelente; desktop com respiros e grid bem definido.
+
+Acessibilidade (contraste, foco, labels).
+
+Performance (assets leves, SVGs).
+
+Microcopy convincente e natural em PT-BR.
+
+Componentes interativos estáveis (FAQ, navegação sticky, hover).
+
+Mockup de chat e mini-dashboard críveis (placeholders ok).
+
+Código limpo, sem libs desnecessárias.
+
+Saída esperada
+
+Forneça apenas o conteúdo do arquivo index.html completo, pronto para abrir no navegador.
+
+Rubrica rápida para você comparar as 3 saídas (1–5)
+
+Impacto visual e originalidade (fora da curva sem virar “carnaval”)
+
+Clareza da proposta no hero
+
+Qualidade dos microdetalhes (ícones, sombras, blur, vidro, gradientes)
+
+Tipografia e hierarquia de informação
+
+Mobile-first e responsividade
+
+Acessibilidade (contraste, foco, aria)
+
+Qualidade do mockup de chat e do mini-dashboard (legibilidade, realismo)
+
+Performance percebida (leveza, sem dependências inúteis)
+
+Copy em PT-BR (tom jovem, claro, comercial)
+
+Fidelidade aos requisitos (seções, CTAs, preço, FAQ, etc.)
