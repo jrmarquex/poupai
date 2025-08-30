@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssistenteFin - Gestão Financeira no WhatsApp | R$ 9,99/mês</title>
+    <title>AssistenteFin - Gestão Financeira no WhatsApp | R$ 17,90/mês</title>
     <meta name="description" content="Organize suas finanças pelo WhatsApp. Lance gastos por texto, áudio ou foto. Dashboard automático, categorização inteligente. 7 dias grátis!">
     
     <!-- Open Graph -->
@@ -207,7 +207,7 @@
                         <!-- CTAs -->
                         <div id="hero-cta" class="flex flex-col sm:flex-row gap-4 mb-8">
                             <a href="https://wa.me/5511999999999" class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus-ring">
-                                Começar agora — R$ 9,99/mês
+                                Começar agora — R$ 17,90/mês
                             </a>
                             <a href="#contato" class="glass text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:bg-opacity-10 transition-all duration-200 focus-ring">
                                 Falar com especialista
@@ -254,8 +254,8 @@
                             </div>
                             
                             <!-- Chat Messages -->
-                            <div class="space-y-3">
-                                <!-- User message -->
+                            <div class="space-y-3 max-h-96 overflow-y-auto">
+                                <!-- User message - Uber -->
                                 <div class="flex justify-end">
                                     <div class="bg-primary bg-opacity-20 backdrop-blur-sm rounded-2xl rounded-br-md px-4 py-2 max-w-xs">
                                         <p class="text-sm text-white">Gastei R$ 45 no Uber hoje</p>
@@ -272,7 +272,24 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Audio message indicator -->
+                                <!-- User message - Freelancer -->
+                                <div class="flex justify-end">
+                                    <div class="bg-primary bg-opacity-20 backdrop-blur-sm rounded-2xl rounded-br-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">Recebi R$ 850 do freela de design</p>
+                                        <div class="text-xs text-gray-400 mt-1">15:15</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Bot response -->
+                                <div class="flex justify-start">
+                                    <div class="glass rounded-2xl rounded-bl-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">💰 Receita lançada!</p>
+                                        <p class="text-xs text-gray-300 mt-1">Categoria: Trabalho Freelancer</p>
+                                        <div class="text-xs text-gray-400 mt-1">15:15</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Audio message indicator - iFood delivery -->
                                 <div class="flex justify-end">
                                     <div class="bg-primary bg-opacity-20 backdrop-blur-sm rounded-2xl rounded-br-md px-4 py-2 max-w-xs">
                                         <div class="flex items-center space-x-2">
@@ -284,20 +301,62 @@
                                                 <div class="w-1 h-1 bg-white rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
                                                 <div class="w-1 h-1 bg-white rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
                                             </div>
-                                            <span class="text-xs">0:03</span>
+                                            <span class="text-xs">0:05</span>
                                         </div>
-                                        <div class="text-xs text-gray-400 mt-1">14:32</div>
+                                        <div class="text-xs text-gray-400 mt-1">16:20</div>
                                     </div>
                                 </div>
                                 
-                                <!-- Photo processing -->
+                                <!-- Bot response to audio -->
+                                <div class="flex justify-start">
+                                    <div class="glass rounded-2xl rounded-bl-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">🎧 Ouvi: "Fiz 3 corridas no iFood, ganhei R$ 75"</p>
+                                        <p class="text-xs text-gray-300 mt-1">Categoria: Delivery</p>
+                                        <div class="text-xs text-gray-400 mt-1">16:20</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Photo processing - salary receipt -->
+                                <div class="flex justify-end">
+                                    <div class="bg-primary bg-opacity-20 backdrop-blur-sm rounded-2xl rounded-br-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">📸 [Comprovante PIX salário]</p>
+                                        <div class="text-xs text-gray-400 mt-1">09:45</div>
+                                    </div>
+                                </div>
+                                
                                 <div class="flex justify-start">
                                     <div class="glass rounded-2xl rounded-bl-md px-4 py-2 max-w-xs">
                                         <p class="text-sm text-white">📸 Analisando comprovante...</p>
                                         <div class="w-full bg-gray-700 rounded-full h-1 mt-2">
-                                            <div class="bg-primary h-1 rounded-full w-3/4"></div>
+                                            <div class="bg-primary h-1 rounded-full w-full"></div>
                                         </div>
-                                        <div class="text-xs text-gray-400 mt-1">14:32</div>
+                                        <div class="text-xs text-gray-400 mt-1">09:45</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Completed analysis -->
+                                <div class="flex justify-start">
+                                    <div class="glass rounded-2xl rounded-bl-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">💼 Salário R$ 2.800 lançado!</p>
+                                        <p class="text-xs text-gray-300 mt-1">Categoria: Salário CLT</p>
+                                        <div class="text-xs text-gray-400 mt-1">09:46</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- User message - market expense -->
+                                <div class="flex justify-end">
+                                    <div class="bg-primary bg-opacity-20 backdrop-blur-sm rounded-2xl rounded-br-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">Mercado R$ 127,50 Extra</p>
+                                        <div class="text-xs text-gray-400 mt-1">19:30</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Bot response -->
+                                <div class="flex justify-start">
+                                    <div class="glass rounded-2xl rounded-bl-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">🛒 Gasto registrado!</p>
+                                        <p class="text-xs text-gray-300 mt-1">Categoria: Alimentação</p>
+                                        <div class="text-xs text-gray-400 mt-1">19:30</div>
                                     </div>
                                 </div>
                             </div>
@@ -728,7 +787,7 @@
                     <div class="glass-strong rounded-3xl p-8 max-w-md mx-auto">
                         <div class="text-center">
                             <h3 class="text-2xl font-bold text-white mb-2">Plano Completo</h3>
-                            <div class="text-5xl font-bold text-primary mb-2">R$ 9,99</div>
+                            <div class="text-5xl font-bold text-primary mb-2">R$ 17,90</div>
                             <div class="text-gray-400 mb-6">/mês</div>
                             
                             <!-- Features List -->
@@ -807,7 +866,7 @@
                             </svg>
                         </button>
                         <div x-show="openFaq === 1" x-transition class="px-6 pb-4">
-                            <p class="text-gray-300">Não! Você pode começar imediatamente sem cadastrar cartão. O pagamento é feito apenas quando decidir assinar o plano de R$ 9,99/mês. Durante os 7 dias de teste, você usa todas as funcionalidades gratuitamente.</p>
+                            <p class="text-gray-300">Não! Você pode começar imediatamente sem cadastrar cartão. O pagamento é feito apenas quando decidir assinar o plano de R$ 17,90/mês. Durante os 7 dias de teste, você usa todas as funcionalidades gratuitamente.</p>
                         </div>
                     </div>
                     
@@ -881,7 +940,7 @@
                     
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
                         <a href="https://wa.me/5511999999999" class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus-ring">
-                            Começar agora — R$ 9,99/mês
+                            Começar agora — R$ 17,90/mês
                         </a>
                         <a href="#contato" class="glass text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:bg-opacity-10 transition-all duration-200 focus-ring">
                             Falar com nossa equipe
