@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AssistenteFin</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0B0F14',
+                        'primary': '#20C997',
+                        'secondary': '#A78BFA',
+                        'accent': '#22D3EE',
+                        'card-bg': 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)',
+                        'chart-transport': '#20C997',
+                        'chart-food': '#A78BFA',
+                        'chart-leisure': '#22D3EE',
+                        'chart-others': '#6B7280'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        /* Custom gradient backgrounds */
+        .gradient-bg {
+            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 100%);
+        }
+        
+        .gradient-mesh {
+            background: 
+                radial-gradient(at 40% 20%, rgba(32, 201, 151, 0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(167, 139, 250, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+        }
+        
+        /* Focus styles for accessibility */
+        .focus-ring:focus {
+            outline: 2px solid #20C997;
+            outline-offset: 2px;
+        }
+
+        /* Chart animations */
+        .chart-segment {
+            transition: all 0.3s ease;
+        }
+
+        .chart-segment:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="dashboardApp()">
+    <!-- Header -->
+    <header class="glass border-b border-glass-border">
+        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white">AssistenteFin</h1>
+                    <p class="text-xs text-gray-400">Dashboard Financeiro</p>
+                </div>
+            </div>
+
+            <!-- User menu -->
+            <div x-data="{ dropdownOpen: false }" class="relative">
+                <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all focus-ring">
+                    <div class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
+                        <span class="text-sm font-semibold text-white">A</span>
+                    </div>
+                    <span class="text-sm text-white">Admin</span>
+                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                </button>
+
+                <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition class="absolute right-0 mt-2 w-48 glass-strong rounded-lg shadow-lg py-2 z-50">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Perfil</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Configurações</a>
+                    <hr class="border-glass-border my-2">
+                    <a href="#" @click="logout" class="block px-4 py-2 text-sm text-red-400 hover:bg-white hover:bg-opacity-10 transition-colors">Sair</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Left Column - Gastos por Categoria -->
+            <div class="glass-strong rounded-2xl p-6">
+                <h2 class="text-xl font-semibold text-white mb-6">Gastos por Categoria - Novembro</h2>
+                
+                <!-- Chart Container -->
+                <div class="flex items-center justify-center mb-6">
+                    <div class="relative w-48 h-48">
+                        <!-- Donut Chart SVG -->
+                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                            <!-- Background circle -->
+                            <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
+                            
+                            <!-- Transport segment (35%) -->
+                            <circle 
+                                cx="50" 
+                                cy="50" 
+                                r="35" 
+                                fill="none" 
+                                stroke="#20C997" 
+                                stroke-width="8" 
+                                stroke-dasharray="77 143"
+                                stroke-dashoffset="0"
+                                class="chart-segment"
+                            />
+                            
+                            <!-- Food segment (25%) -->
+                            <circle 
+                                cx="50" 
+                                cy="50" 
+                                r="35" 
+                                fill="none" 
+                                stroke="#A78BFA" 
+                                stroke-width="8" 
+                                stroke-dasharray="55 165"
+                                stroke-dashoffset="-77"
+                                class="chart-segment"
+                            />
+                            
+                            <!-- Leisure segment (20%) -->
+                            <circle 
+                                cx="50" 
+                                cy="50" 
+                                r="35" 
+                                fill="none" 
+                                stroke="#22D3EE" 
+                                stroke-width="8" 
+                                stroke-dasharray="44 176"
+                                stroke-dashoffset="-132"
+                                class="chart-segment"
+                            />
+                            
+                            <!-- Others segment (20%) -->
+                            <circle 
+                                cx="50" 
+                                cy="50" 
+                                r="35" 
+                                fill="none" 
+                                stroke="#6B7280" 
+                                stroke-width="8" 
+                                stroke-dasharray="44 176"
+                                stroke-dashoffset="-176"
+                                class="chart-segment"
+                            />
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Chart Legend -->
+                <div class="space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-chart-transport rounded-full"></div>
+                            <span class="text-gray-300">Transporte</span>
+                        </div>
+                        <span class="text-white font-medium">R$ 450 (35%)</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-chart-food rounded-full"></div>
+                            <span class="text-gray-300">Alimentação</span>
+                        </div>
+                        <span class="text-white font-medium">R$ 320 (25%)</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-chart-leisure rounded-full"></div>
+                            <span class="text-gray-300">Lazer</span>
+                        </div>
+                        <span class="text-white font-medium">R$ 260 (20%)</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-3 h-3 bg-chart-others rounded-full"></div>
+                            <span class="text-gray-300">Outros</span>
+                        </div>
+                        <span class="text-white font-medium">R$ 260 (20%)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Resumo Financeiro -->
+            <div class="space-y-6">
+                <!-- Financial Summary -->
+                <div class="glass-strong rounded-2xl p-6">
+                    <h2 class="text-xl font-semibold text-white mb-6">Resumo Financeiro</h2>
+                    
+                    <div class="space-y-4">
+                        <!-- Receitas -->
+                        <div class="glass rounded-xl p-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">Receitas</span>
+                                <span class="text-2xl font-bold text-primary">R$ 3.500</span>
+                            </div>
+                        </div>
+
+                        <!-- Gastos -->
+                        <div class="glass rounded-xl p-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">Gastos</span>
+                                <span class="text-2xl font-bold text-red-400">R$ 1.290</span>
+                            </div>
+                        </div>
+
+                        <!-- Saldo -->
+                        <div class="glass rounded-xl p-4">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-400">Saldo</span>
+                                <span class="text-2xl font-bold text-white">R$ 2.210</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Estabelecimentos -->
+                <div class="glass-strong rounded-2xl p-6">
+                    <h2 class="text-xl font-semibold text-white mb-6">Top Estabelecimentos</h2>
+                    
+                    <div class="space-y-4">
+                        <!-- Uber -->
+                        <div class="flex items-center justify-between p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-chart-transport rounded-full flex items-center justify-center">
+                                    <span class="text-white font-semibold text-sm">U</span>
+                                </div>
+                                <span class="text-white font-medium">Uber</span>
+                            </div>
+                            <span class="text-chart-transport font-semibold">R$ 180</span>
+                        </div>
+
+                        <!-- iFood -->
+                        <div class="flex items-center justify-between p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-chart-food rounded-full flex items-center justify-center">
+                                    <span class="text-white font-semibold text-sm">iF</span>
+                                </div>
+                                <span class="text-white font-medium">iFood</span>
+                            </div>
+                            <span class="text-chart-food font-semibold">R$ 145</span>
+                        </div>
+
+                        <!-- Supermercado -->
+                        <div class="flex items-center justify-between p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 bg-chart-leisure rounded-full flex items-center justify-center">
+                                    <span class="text-white font-semibold text-sm">S</span>
+                                </div>
+                                <span class="text-white font-medium">Supermercado</span>
+                            </div>
+                            <span class="text-chart-leisure font-semibold">R$ 120</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="mt-8 glass-strong rounded-2xl p-6">
+            <h2 class="text-xl font-semibold text-white mb-6">Transações Recentes</h2>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-glass-border">
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Data</th>
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Descrição</th>
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Categoria</th>
+                            <th class="text-right py-3 px-4 text-gray-400 font-medium">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-glass-border">
+                        <tr class="hover:bg-white hover:bg-opacity-5 transition-colors">
+                            <td class="py-3 px-4 text-gray-300">30/11</td>
+                            <td class="py-3 px-4 text-white">Uber - Centro</td>
+                            <td class="py-3 px-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-chart-transport bg-opacity-20 text-chart-transport">
+                                    Transporte
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-right text-red-400 font-medium">-R$ 25,00</td>
+                        </tr>
+                        <tr class="hover:bg-white hover:bg-opacity-5 transition-colors">
+                            <td class="py-3 px-4 text-gray-300">29/11</td>
+                            <td class="py-3 px-4 text-white">Freelance Design</td>
+                            <td class="py-3 px-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary bg-opacity-20 text-primary">
+                                    Receita
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-right text-primary font-medium">+R$ 850,00</td>
+                        </tr>
+                        <tr class="hover:bg-white hover:bg-opacity-5 transition-colors">
+                            <td class="py-3 px-4 text-gray-300">28/11</td>
+                            <td class="py-3 px-4 text-white">iFood - Jantar</td>
+                            <td class="py-3 px-4">
+                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-chart-food bg-opacity-20 text-chart-food">
+                                    Alimentação
+                                </span>
+                            </td>
+                            <td class="py-3 px-4 text-right text-red-400 font-medium">-R$ 42,90</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function dashboardApp() {
+            return {
+                init() {
+                    // Check if user is logged in
+                    if (!localStorage.getItem('isLoggedIn')) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    // Load data from database in the future
+                    this.loadDashboardData();
+                },
+
+                loadDashboardData() {
+                    // This will be connected to Supabase database
+                    console.log('Loading dashboard data...');
+                    // TODO: Implement Supabase integration
+                },
+
+                logout() {
+                    localStorage.removeItem('isLoggedIn');
+                    localStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                }
+            }
+        }
+
+        // Auth check on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!localStorage.getItem('isLoggedIn')) {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
+</body>
+</html>
