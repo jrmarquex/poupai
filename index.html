@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AssistenteFin - Gestão Financeira no WhatsApp | R$ 9,99/mês</title>
+    <meta name="description" content="Organize suas finanças pelo WhatsApp. Lance gastos por texto, áudio ou foto. Dashboard automático, categorização inteligente. 7 dias grátis!">
+    
+    <!-- Open Graph -->
+    <meta property="og:title" content="AssistenteFin - Gestão Financeira no WhatsApp">
+    <meta property="og:description" content="Lance gastos por texto, áudio ou foto. A IA categoriza tudo automaticamente. Dashboard completo no seu celular.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://assistentefin.com">
+    
+    <!-- Twitter Cards -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="AssistenteFin - Gestão Financeira no WhatsApp">
+    <meta name="twitter:description" content="Lance gastos por texto, áudio ou foto. Dashboard automático no WhatsApp.">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0B0F14',
+                        'primary': '#20C997',
+                        'secondary': '#A78BFA',
+                        'accent': '#22D3EE',
+                        'card-bg': 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        /* Smooth animations */
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Custom gradient backgrounds */
+        .gradient-bg {
+            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 100%);
+        }
+        
+        .gradient-mesh {
+            background: 
+                radial-gradient(at 40% 20%, rgba(32, 201, 151, 0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(167, 139, 250, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+        }
+        
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Focus styles for accessibility */
+        .focus-ring:focus {
+            outline: 2px solid #20C997;
+            outline-offset: 2px;
+        }
+        
+        /* Skip to content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 6px;
+            background: #20C997;
+            color: #0B0F14;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+        
+        .skip-link:focus {
+            top: 6px;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen">
+    <!-- Skip to content link for accessibility -->
+    <a href="#main-content" class="skip-link focus-ring">Pular para o conteúdo principal</a>
+    
+    <!-- Header -->
+    <header x-data="{ mobileMenuOpen: false }" class="fixed top-0 w-full z-50 glass transition-all duration-300">
+        <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <span class="text-xl font-bold text-white">AssistenteFin</span>
+            </div>
+            
+            <!-- Desktop Navigation -->
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#como-funciona" class="text-gray-300 hover:text-primary transition-colors focus-ring">Como Funciona</a>
+                <a href="#recursos" class="text-gray-300 hover:text-primary transition-colors focus-ring">Recursos</a>
+                <a href="#para-quem" class="text-gray-300 hover:text-primary transition-colors focus-ring">Para Quem</a>
+                <a href="#preco" class="text-gray-300 hover:text-primary transition-colors focus-ring">Preço</a>
+                <a href="#faq" class="text-gray-300 hover:text-primary transition-colors focus-ring">FAQ</a>
+                <a href="#contato" class="text-gray-300 hover:text-primary transition-colors focus-ring">Contato</a>
+            </div>
+            
+            <!-- CTA Button -->
+            <div class="hidden md:block">
+                <a href="#hero-cta" class="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 focus-ring">
+                    Começar no WhatsApp
+                </a>
+            </div>
+            
+            <!-- Mobile menu button -->
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-white focus-ring" aria-label="Menu mobile">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="!mobileMenuOpen" d="M4 6h16M4 12h16M4 18h16"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="mobileMenuOpen" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </nav>
+        
+        <!-- Mobile Menu -->
+        <div x-show="mobileMenuOpen" x-transition class="md:hidden glass-strong border-t border-glass-border">
+            <div class="container mx-auto px-4 py-4 space-y-4">
+                <a href="#como-funciona" class="block text-gray-300 hover:text-primary transition-colors focus-ring">Como Funciona</a>
+                <a href="#recursos" class="block text-gray-300 hover:text-primary transition-colors focus-ring">Recursos</a>
+                <a href="#para-quem" class="block text-gray-300 hover:text-primary transition-colors focus-ring">Para Quem</a>
+                <a href="#preco" class="block text-gray-300 hover:text-primary transition-colors focus-ring">Preço</a>
+                <a href="#faq" class="block text-gray-300 hover:text-primary transition-colors focus-ring">FAQ</a>
+                <a href="#contato" class="block text-gray-300 hover:text-primary transition-colors focus-ring">Contato</a>
+                <a href="#hero-cta" class="block bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-lg font-semibold text-center focus-ring">
+                    Começar no WhatsApp
+                </a>
+            </div>
+        </div>
+    </header>
+    
+    <main id="main-content">
+        <!-- Hero Section -->
+        <section class="relative pt-24 pb-16 overflow-hidden">
+            <div class="container mx-auto px-4">
+                <div class="flex flex-col lg:flex-row items-center gap-12">
+                    <!-- Hero Content -->
+                    <div class="flex-1 text-center lg:text-left animate-fade-in">
+                        <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+                            Gestão financeira no 
+                            <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">WhatsApp</span>
+                            <br>
+                            <span class="text-2xl md:text-4xl font-normal text-gray-300">simples, inteligente, no seu ritmo</span>
+                        </h1>
+                        
+                        <p class="text-xl text-gray-300 mb-8 max-w-2xl">
+                            Lance por texto, áudio ou foto; nós lemos, categorizamos e mostramos tudo no seu painel.
+                        </p>
+                        
+                        <!-- CTAs -->
+                        <div id="hero-cta" class="flex flex-col sm:flex-row gap-4 mb-8">
+                            <a href="https://wa.me/5511999999999" class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus-ring">
+                                Começar agora — R$ 9,99/mês
+                            </a>
+                            <a href="#contato" class="glass text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:bg-opacity-10 transition-all duration-200 focus-ring">
+                                Falar com especialista
+                            </a>
+                        </div>
+                        
+                        <!-- Micro-badges -->
+                        <div class="flex flex-wrap justify-center lg:justify-start gap-4 text-sm text-gray-400">
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                                <span>7 dias de garantia</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M18,8A6,6 0 0,0 12,2A6,6 0 0,0 6,8H4A2,2 0 0,0 2,10V20A2,2 0 0,0 4,22H20A2,2 0 0,0 22,20V10A2,2 0 0,0 20,8H18M12,4A4,4 0 0,1 16,8H8A4,4 0 0,1 12,4Z"/>
+                                </svg>
+                                <span>Pagamento seguro</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11.5C14.8,12.4 14.4,13.2 13.7,13.7V16.5C13.7,17.3 13.1,18 12.3,18H11.7C10.9,18 10.3,17.3 10.3,16.5V13.7C9.6,13.2 9.2,12.4 9.2,11.5V10C9.2,8.6 10.6,7 12,7Z"/>
+                                </svg>
+                                <span>Dados protegidos</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Hero Visual - WhatsApp Chat Mockup -->
+                    <div class="flex-1 relative animate-float">
+                        <div class="glass-strong rounded-3xl p-6 max-w-sm mx-auto">
+                            <!-- Phone Header -->
+                            <div class="flex items-center space-x-3 mb-4 pb-4 border-b border-glass-border">
+                                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
+                                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.889 3.486"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-semibold text-white">AssistenteFin</div>
+                                    <div class="text-xs text-gray-400">online</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Chat Messages -->
+                            <div class="space-y-3">
+                                <!-- User message -->
+                                <div class="flex justify-end">
+                                    <div class="bg-primary bg-opacity-20 backdrop-blur-sm rounded-2xl rounded-br-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">Gastei R$ 45 no Uber hoje</p>
+                                        <div class="text-xs text-gray-400 mt-1">14:30</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Bot response -->
+                                <div class="flex justify-start">
+                                    <div class="glass rounded-2xl rounded-bl-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">✅ Lançamento criado!</p>
+                                        <p class="text-xs text-gray-300 mt-1">Categoria: Transporte</p>
+                                        <div class="text-xs text-gray-400 mt-1">14:30</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Audio message indicator -->
+                                <div class="flex justify-end">
+                                    <div class="bg-primary bg-opacity-20 backdrop-blur-sm rounded-2xl rounded-br-md px-4 py-2 max-w-xs">
+                                        <div class="flex items-center space-x-2">
+                                            <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 15c1.66 0 2.99-1.34 2.99-3L15 6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 15 6.7 12H5c0 3.41 2.72 6.23 6 6.72V22h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                                            </svg>
+                                            <div class="flex space-x-1">
+                                                <div class="w-1 h-1 bg-white rounded-full animate-pulse"></div>
+                                                <div class="w-1 h-1 bg-white rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+                                                <div class="w-1 h-1 bg-white rounded-full animate-pulse" style="animation-delay: 0.4s"></div>
+                                            </div>
+                                            <span class="text-xs">0:03</span>
+                                        </div>
+                                        <div class="text-xs text-gray-400 mt-1">14:32</div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Photo processing -->
+                                <div class="flex justify-start">
+                                    <div class="glass rounded-2xl rounded-bl-md px-4 py-2 max-w-xs">
+                                        <p class="text-sm text-white">📸 Analisando comprovante...</p>
+                                        <div class="w-full bg-gray-700 rounded-full h-1 mt-2">
+                                            <div class="bg-primary h-1 rounded-full w-3/4"></div>
+                                        </div>
+                                        <div class="text-xs text-gray-400 mt-1">14:32</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Como Funciona Section -->
+        <section id="como-funciona" class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Como Funciona</h2>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">4 passos simples para organizar suas finanças sem complicação</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <!-- Step 1 -->
+                    <div class="text-center glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">1. Envie</h3>
+                        <p class="text-gray-300">Mande seus comprovantes, áudios ou textos pelo WhatsApp</p>
+                    </div>
+                    
+                    <!-- Step 2 -->
+                    <div class="text-center glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">2. IA Identifica</h3>
+                        <p class="text-gray-300">Nossa IA lê e identifica valores e categorias automaticamente</p>
+                    </div>
+                    
+                    <!-- Step 3 -->
+                    <div class="text-center glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">3. Revise</h3>
+                        <p class="text-gray-300">Lançamentos automáticos que você pode revisar e editar</p>
+                    </div>
+                    
+                    <!-- Step 4 -->
+                    <div class="text-center glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">4. Acompanhe</h3>
+                        <p class="text-gray-300">Veja tudo organizado no seu dashboard personalizado</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Recursos Section -->
+        <section id="recursos" class="py-16 bg-black bg-opacity-20">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Recursos Principais</h2>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">Tecnologia avançada para simplificar sua vida financeira</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Leitura de Prints</h3>
+                        <p class="text-gray-300">Apple Wallet, notificações Android, screenshots de bancos - lemos tudo automaticamente</p>
+                    </div>
+                    
+                    <!-- Feature 2 -->
+                    <div class="glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">OCR Inteligente</h3>
+                        <p class="text-gray-300">Reconhecimento óptico de notas fiscais e comprovantes com alta precisão</p>
+                    </div>
+                    
+                    <!-- Feature 3 -->
+                    <div class="glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-12 h-12 bg-gradient-to-br from-accent to-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Categorias Automáticas</h3>
+                        <p class="text-gray-300">Categorização inteligente com possibilidade de edição rápida e personalização</p>
+                    </div>
+                    
+                    <!-- Feature 4 -->
+                    <div class="glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Relatórios Mensais</h3>
+                        <p class="text-gray-300">Dashboard completo com alertas de excesso e análise de padrões de gastos</p>
+                    </div>
+                    
+                    <!-- Feature 5 -->
+                    <div class="glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-12 h-12 bg-gradient-to-br from-secondary to-primary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Privacidade Total</h3>
+                        <p class="text-gray-300">Criptografia em trânsito, acesso restrito e controles de privacidade rigorosos</p>
+                    </div>
+                    
+                    <!-- Feature 6 -->
+                    <div class="glass rounded-2xl p-6 hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                        <div class="w-12 h-12 bg-gradient-to-br from-accent to-secondary rounded-lg flex items-center justify-center mb-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Sincronização Leve</h3>
+                        <p class="text-gray-300">Processamento eficiente que não trava seu celular nem consome bateria</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Dashboard Demo Section -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Veja para onde seu dinheiro vai</h2>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">Dashboard claro e intuitivo — sem planilhas complicadas</p>
+                </div>
+                
+                <div class="max-w-4xl mx-auto glass-strong rounded-3xl p-8">
+                    <div class="grid lg:grid-cols-2 gap-8">
+                        <!-- Chart Section -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-6 text-white">Gastos por Categoria - Novembro</h3>
+                            
+                            <!-- Simple SVG Pie Chart -->
+                            <div class="relative">
+                                <svg viewBox="0 0 200 200" class="w-64 h-64 mx-auto">
+                                    <!-- Transporte (35%) -->
+                                    <circle cx="100" cy="100" r="80" fill="none" stroke="#20C997" stroke-width="20" 
+                                            stroke-dasharray="175.93 351.86" stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
+                                    
+                                    <!-- Alimentação (25%) -->
+                                    <circle cx="100" cy="100" r="80" fill="none" stroke="#A78BFA" stroke-width="20" 
+                                            stroke-dasharray="125.66 351.86" stroke-dashoffset="-175.93" transform="rotate(-90 100 100)"/>
+                                    
+                                    <!-- Lazer (20%) -->
+                                    <circle cx="100" cy="100" r="80" fill="none" stroke="#22D3EE" stroke-width="20" 
+                                            stroke-dasharray="100.53 351.86" stroke-dashoffset="-301.59" transform="rotate(-90 100 100)"/>
+                                    
+                                    <!-- Outros (20%) -->
+                                    <circle cx="100" cy="100" r="80" fill="none" stroke="#6B7280" stroke-width="20" 
+                                            stroke-dasharray="100.53 351.86" stroke-dashoffset="-402.12" transform="rotate(-90 100 100)"/>
+                                </svg>
+                                
+                                <!-- Legend -->
+                                <div class="mt-6 space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-3 h-3 bg-primary rounded-full"></div>
+                                            <span class="text-sm text-gray-300">Transporte</span>
+                                        </div>
+                                        <span class="text-sm font-semibold text-white">R$ 450 (35%)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-3 h-3 bg-secondary rounded-full"></div>
+                                            <span class="text-sm text-gray-300">Alimentação</span>
+                                        </div>
+                                        <span class="text-sm font-semibold text-white">R$ 320 (25%)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-3 h-3 bg-accent rounded-full"></div>
+                                            <span class="text-sm text-gray-300">Lazer</span>
+                                        </div>
+                                        <span class="text-sm font-semibold text-white">R$ 260 (20%)</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-2">
+                                            <div class="w-3 h-3 bg-gray-500 rounded-full"></div>
+                                            <span class="text-sm text-gray-300">Outros</span>
+                                        </div>
+                                        <span class="text-sm font-semibold text-white">R$ 260 (20%)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Section -->
+                        <div>
+                            <h3 class="text-xl font-semibold mb-6 text-white">Resumo Financeiro</h3>
+                            
+                            <!-- Balance Cards -->
+                            <div class="space-y-4 mb-6">
+                                <div class="glass rounded-xl p-4">
+                                    <div class="text-sm text-gray-400">Receitas</div>
+                                    <div class="text-2xl font-bold text-primary">R$ 3.500</div>
+                                </div>
+                                <div class="glass rounded-xl p-4">
+                                    <div class="text-sm text-gray-400">Gastos</div>
+                                    <div class="text-2xl font-bold text-red-400">R$ 1.290</div>
+                                </div>
+                                <div class="glass rounded-xl p-4">
+                                    <div class="text-sm text-gray-400">Saldo</div>
+                                    <div class="text-2xl font-bold text-white">R$ 2.210</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Top Establishments -->
+                            <h4 class="text-lg font-semibold mb-4 text-white">Top Estabelecimentos</h4>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between glass rounded-lg p-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                                            <span class="text-xs font-bold text-white">U</span>
+                                        </div>
+                                        <span class="text-sm text-white">Uber</span>
+                                    </div>
+                                    <span class="text-sm font-semibold text-red-400">R$ 180</span>
+                                </div>
+                                <div class="flex items-center justify-between glass rounded-lg p-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center">
+                                            <span class="text-xs font-bold text-white">iF</span>
+                                        </div>
+                                        <span class="text-sm text-white">iFood</span>
+                                    </div>
+                                    <span class="text-sm font-semibold text-red-400">R$ 145</span>
+                                </div>
+                                <div class="flex items-center justify-between glass rounded-lg p-3">
+                                    <div class="flex items-center space-x-3">
+                                        <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                                            <span class="text-xs font-bold text-white">S</span>
+                                        </div>
+                                        <span class="text-sm text-white">Supermercado</span>
+                                    </div>
+                                    <span class="text-sm font-semibold text-red-400">R$ 120</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Para Quem Section -->
+        <section id="para-quem" class="py-16 bg-black bg-opacity-20">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Para Quem é o AssistenteFin</h2>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">Ideal para quem tem vida financeira ativa e quer simplicidade</p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Target 1 -->
+                    <div class="text-center glass rounded-2xl p-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v6m-8-6v6"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Trabalhador CLT</h3>
+                        <p class="text-gray-300">Salário fixo + gastos extras que precisa controlar para não estourar o orçamento</p>
+                    </div>
+                    
+                    <!-- Target 2 -->
+                    <div class="text-center glass rounded-2xl p-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Freelancer</h3>
+                        <p class="text-gray-300">Renda variável que exige controle rigoroso entre projetos e despesas</p>
+                    </div>
+                    
+                    <!-- Target 3 -->
+                    <div class="text-center glass rounded-2xl p-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 9a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Entregador</h3>
+                        <p class="text-gray-300">Uber, iFood, Rappi - precisa controlar combustível vs. ganhos do dia</p>
+                    </div>
+                    
+                    <!-- Target 4 -->
+                    <div class="text-center glass rounded-2xl p-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Motorista de App</h3>
+                        <p class="text-gray-300">99, Uber - monitorar ganhos por hora, combustível e manutenção</p>
+                    </div>
+                    
+                    <!-- Target 5 -->
+                    <div class="text-center glass rounded-2xl p-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-secondary to-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Autônomo</h3>
+                        <p class="text-gray-300">Consultores, prestadores de serviço com múltiplas fontes de renda</p>
+                    </div>
+                    
+                    <!-- Target 6 -->
+                    <div class="text-center glass rounded-2xl p-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-secondary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2 text-white">Estudante</h3>
+                        <p class="text-gray-300">Mesada, estágio, trabalho meio período - controle total dos gastos</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Social Proof Section -->
+        <section class="py-16">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">O que nossos usuários dizem</h2>
+                    <div class="flex justify-center items-center space-x-1 mb-4">
+                        <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <svg class="w-6 h-6 text-yellow-400" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <span class="ml-2 text-white font-semibold">5.0 de 5</span>
+                    </div>
+                    <p class="text-gray-300">Mais de 1.000 usuários organizando suas finanças</p>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Testimonial 1 -->
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
+                                <span class="text-white font-semibold">MC</span>
+                            </div>
+                            <div class="ml-3">
+                                <div class="font-semibold text-white">Marina Costa</div>
+                                <div class="text-sm text-gray-400">Freelancer, São Paulo</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 italic">"Finalmente consigo ver onde meu dinheiro vai! Só mando as fotos dos comprovantes e pronto. Não preciso mais ficar anotando tudo."</p>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-secondary to-accent rounded-full flex items-center justify-center">
+                                <span class="text-white font-semibold">RS</span>
+                            </div>
+                            <div class="ml-3">
+                                <div class="font-semibold text-white">Rafael Santos</div>
+                                <div class="text-sm text-gray-400">Motorista Uber, Rio de Janeiro</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 italic">"Mudou minha vida! Agora sei exatamente quanto gasto de combustível por dia e se estou tendo lucro real. Recomendo demais!"</p>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="glass rounded-2xl p-6">
+                        <div class="flex items-center mb-4">
+                            <div class="w-12 h-12 bg-gradient-to-br from-accent to-primary rounded-full flex items-center justify-center">
+                                <span class="text-white font-semibold">TA</span>
+                            </div>
+                            <div class="ml-3">
+                                <div class="font-semibold text-white">Thais Almeida</div>
+                                <div class="text-sm text-gray-400">Estudante, Belo Horizonte</div>
+                            </div>
+                        </div>
+                        <p class="text-gray-300 italic">"Super fácil de usar! Só gravo um áudio falando o que gastei e o app organiza tudo. Perfeito para quem não tem tempo de ficar fazendo planilha."</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Pricing Section -->
+        <section id="preco" class="py-16 bg-black bg-opacity-20">
+            <div class="container mx-auto px-4 text-center">
+                <div class="max-w-2xl mx-auto">
+                    <h2 class="text-4xl font-bold mb-4">Plano Simples, Preço Justo</h2>
+                    <p class="text-xl text-gray-300 mb-12">Sem pegadinhas, sem planos confusos. Um preço, todos os recursos.</p>
+                    
+                    <!-- Pricing Card -->
+                    <div class="glass-strong rounded-3xl p-8 max-w-md mx-auto">
+                        <div class="text-center">
+                            <h3 class="text-2xl font-bold text-white mb-2">Plano Completo</h3>
+                            <div class="text-5xl font-bold text-primary mb-2">R$ 9,99</div>
+                            <div class="text-gray-400 mb-6">/mês</div>
+                            
+                            <!-- Features List -->
+                            <ul class="space-y-3 mb-8 text-left">
+                                <li class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-white">Lançamentos ilimitados</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-white">IA para leitura de comprovantes</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-white">Dashboard completo</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-white">Categorização automática</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-white">Relatórios mensais</span>
+                                </li>
+                                <li class="flex items-center space-x-3">
+                                    <svg class="w-5 h-5 text-primary flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                    </svg>
+                                    <span class="text-white">Suporte por WhatsApp</span>
+                                </li>
+                            </ul>
+                            
+                            <a href="https://wa.me/5511999999999" class="block bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus-ring mb-4">
+                                Começar no WhatsApp
+                            </a>
+                            
+                            <p class="text-sm text-gray-400">
+                                <span class="text-primary">✓</span> 7 dias de garantia • 
+                                <span class="text-primary">✓</span> Cancelamento fácil
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- FAQ Section -->
+        <section id="faq" class="py-16" x-data="{ openFaq: 0 }">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Perguntas Frequentes</h2>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">Tire suas dúvidas sobre o AssistenteFin</p>
+                </div>
+                
+                <div class="max-w-3xl mx-auto space-y-4">
+                    <!-- FAQ 1 -->
+                    <div class="glass rounded-2xl overflow-hidden">
+                        <button @click="openFaq = openFaq === 1 ? 0 : 1" 
+                                class="w-full px-6 py-4 text-left flex items-center justify-between focus-ring"
+                                :aria-expanded="openFaq === 1">
+                            <span class="text-lg font-semibold text-white">Preciso cadastrar cartão de crédito?</span>
+                            <svg class="w-5 h-5 text-gray-400 transform transition-transform" 
+                                 :class="{ 'rotate-180': openFaq === 1 }" 
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div x-show="openFaq === 1" x-transition class="px-6 pb-4">
+                            <p class="text-gray-300">Não! Você pode começar imediatamente sem cadastrar cartão. O pagamento é feito apenas quando decidir assinar o plano de R$ 9,99/mês. Durante os 7 dias de teste, você usa todas as funcionalidades gratuitamente.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 2 -->
+                    <div class="glass rounded-2xl overflow-hidden">
+                        <button @click="openFaq = openFaq === 2 ? 0 : 2" 
+                                class="w-full px-6 py-4 text-left flex items-center justify-between focus-ring"
+                                :aria-expanded="openFaq === 2">
+                            <span class="text-lg font-semibold text-white">Funciona só no WhatsApp?</span>
+                            <svg class="w-5 h-5 text-gray-400 transform transition-transform" 
+                                 :class="{ 'rotate-180': openFaq === 2 }" 
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div x-show="openFaq === 2" x-transition class="px-6 pb-4">
+                            <p class="text-gray-300">Sim, toda interação é pelo WhatsApp - é mais prático e você já usa no dia a dia! Seu dashboard fica disponível via web também, mas para lançar gastos e receitas, é tudo pelo WhatsApp mesmo.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 3 -->
+                    <div class="glass rounded-2xl overflow-hidden">
+                        <button @click="openFaq = openFaq === 3 ? 0 : 3" 
+                                class="w-full px-6 py-4 text-left flex items-center justify-between focus-ring"
+                                :aria-expanded="openFaq === 3">
+                            <span class="text-lg font-semibold text-white">Como a leitura de prints funciona?</span>
+                            <svg class="w-5 h-5 text-gray-400 transform transition-transform" 
+                                 :class="{ 'rotate-180': openFaq === 3 }" 
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div x-show="openFaq === 3" x-transition class="px-6 pb-4">
+                            <p class="text-gray-300">Nossa IA reconhece textos em screenshots do Apple Wallet, notificações de bancos, notas fiscais e comprovantes. Você só manda a foto e pronto - identificamos o valor, estabelecimento e sugerimos a categoria automaticamente.</p>
+                        </div>
+                    </div>
+                    
+                    <!-- FAQ 4 -->
+                    <div class="glass rounded-2xl overflow-hidden">
+                        <button @click="openFaq = openFaq === 4 ? 0 : 4" 
+                                class="w-full px-6 py-4 text-left flex items-center justify-between focus-ring"
+                                :aria-expanded="openFaq === 4">
+                            <span class="text-lg font-semibold text-white">Posso exportar meus dados?</span>
+                            <svg class="w-5 h-5 text-gray-400 transform transition-transform" 
+                                 :class="{ 'rotate-180': openFaq === 4 }" 
+                                 fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+                        <div x-show="openFaq === 4" x-transition class="px-6 pb-4">
+                            <p class="text-gray-300">Claro! Seus dados são seus. Você pode exportar tudo em Excel ou PDF a qualquer momento. E se quiser cancelar, todos os seus dados ficam disponíveis para download por 30 dias.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Final CTA Section -->
+        <section class="py-16 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20"></div>
+            <div class="container mx-auto px-4 relative z-10">
+                <div class="text-center max-w-3xl mx-auto">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6">
+                        Pronto para organizar suas finanças 
+                        <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">pelo WhatsApp?</span>
+                    </h2>
+                    <p class="text-xl text-gray-300 mb-8">
+                        Comece hoje mesmo e veja como é fácil ter controle total do seu dinheiro. 
+                        Primeiro mês com 7 dias de garantia total.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="https://wa.me/5511999999999" class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus-ring">
+                            Começar agora — R$ 9,99/mês
+                        </a>
+                        <a href="#contato" class="glass text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:bg-opacity-10 transition-all duration-200 focus-ring">
+                            Falar com nossa equipe
+                        </a>
+                    </div>
+                    
+                    <p class="text-sm text-gray-400 mt-6">
+                        <span class="text-primary">✓</span> Sem compromisso • 
+                        <span class="text-primary">✓</span> Cancele quando quiser • 
+                        <span class="text-primary">✓</span> Suporte especializado
+                    </p>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Footer -->
+    <footer id="contato" class="bg-black bg-opacity-40 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-4 gap-8">
+                <!-- Logo & Description -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <span class="text-xl font-bold text-white">AssistenteFin</span>
+                    </div>
+                    <p class="text-gray-300 mb-4 max-w-md">
+                        A forma mais simples de organizar suas finanças pelo WhatsApp. 
+                        Tecnologia brasileira, suporte em português.
+                    </p>
+                    <div class="flex items-center space-x-2 text-gray-300">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        <span>suporte@assistentefin.com.br</span>
+                    </div>
+                </div>
+                
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Links Rápidos</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#como-funciona" class="text-gray-300 hover:text-primary transition-colors focus-ring">Como Funciona</a></li>
+                        <li><a href="#recursos" class="text-gray-300 hover:text-primary transition-colors focus-ring">Recursos</a></li>
+                        <li><a href="#preco" class="text-gray-300 hover:text-primary transition-colors focus-ring">Preço</a></li>
+                        <li><a href="#faq" class="text-gray-300 hover:text-primary transition-colors focus-ring">FAQ</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Legal -->
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="/termos" class="text-gray-300 hover:text-primary transition-colors focus-ring">Termos de Uso</a></li>
+                        <li><a href="/privacidade" class="text-gray-300 hover:text-primary transition-colors focus-ring">Privacidade</a></li>
+                        <li><a href="/cancelamento" class="text-gray-300 hover:text-primary transition-colors focus-ring">Cancelamento</a></li>
+                        <li><a href="https://wa.me/5511999999999" class="text-primary hover:text-accent transition-colors focus-ring">Suporte WhatsApp</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center">
+                <p class="text-gray-400 text-sm">
+                    © 2024 AssistenteFin. Todos os direitos reservados. 
+                    <span class="text-primary">Feito com ❤️ no Brasil</span>
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JSON-LD for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "AssistenteFin",
+        "description": "Gestão financeira pelo WhatsApp com IA",
+        "url": "https://assistentefin.com",
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+55-11-99999-9999",
+            "contactType": "customer service",
+            "availableLanguage": "Portuguese"
+        }
+    }
+    </script>
+</body>
+</html>
