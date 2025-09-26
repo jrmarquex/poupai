@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AssistenteFin - Gestão Financeira no WhatsApp | R$ 17,90/mês</title>
+    <title>Poupa.AI - Gestão Financeira no WhatsApp | R$ 17,90/mês</title>
     <meta name="description" content="Organize suas finanças pelo WhatsApp. Lance gastos por texto, áudio ou foto. Dashboard automático, categorização inteligente. 7 dias grátis!">
     
     <!-- Open Graph -->
-    <meta property="og:title" content="AssistenteFin - Gestão Financeira no WhatsApp">
+    <meta property="og:title" content="Poupa.AI - Gestão Financeira no WhatsApp">
     <meta property="og:description" content="Lance gastos por texto, áudio ou foto. A IA categoriza tudo automaticamente. Dashboard completo no seu celular.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://assistentefin.com">
     
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="AssistenteFin - Gestão Financeira no WhatsApp">
+    <meta name="twitter:title" content="Poupa.AI - Gestão Financeira no WhatsApp">
     <meta name="twitter:description" content="Lance gastos por texto, áudio ou foto. Dashboard automático no WhatsApp.">
     
     <!-- Tailwind CSS -->
@@ -25,9 +25,11 @@
                 extend: {
                     colors: {
                         'dark-bg': '#0B0F14',
-                        'primary': '#20C997',
-                        'secondary': '#A78BFA',
-                        'accent': '#22D3EE',
+                        'primary': '#10B981', // Verde mais vibrante
+                        'secondary': '#F59E0B', // Laranja para urgência
+                        'accent': '#3B82F6', // Azul mais convidativo
+                        'success': '#059669', // Verde de sucesso
+                        'warning': '#F59E0B', // Laranja de destaque
                         'card-bg': 'rgba(255, 255, 255, 0.05)',
                         'glass-border': 'rgba(255, 255, 255, 0.1)'
                     },
@@ -49,6 +51,44 @@
     
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Efeito de Digitação -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const texts = ['Poupa.AI', 'PoupaAI', 'Poupaí'];
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            const typingElement = document.getElementById('typing-text');
+            
+            function typeText() {
+                const currentText = texts[textIndex];
+                
+                if (isDeleting) {
+                    typingElement.textContent = currentText.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    typingElement.textContent = currentText.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+                
+                let typeSpeed = isDeleting ? 100 : 150;
+                
+                if (!isDeleting && charIndex === currentText.length) {
+                    typeSpeed = 2000; // Pausa no final
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % texts.length;
+                    typeSpeed = 500; // Pausa antes de começar novo texto
+                }
+                
+                setTimeout(typeText, typeSpeed);
+            }
+            
+            typeText();
+        });
+    </script>
     
     <style>
         * {
@@ -85,6 +125,42 @@
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Animações de scroll horizontal contínuo */
+        .animate-scroll-right {
+            animation: scrollRight 40s linear infinite;
+        }
+        
+        .animate-scroll-left {
+            animation: scrollLeft 40s linear infinite;
+        }
+        
+        @keyframes scrollRight {
+            0% { transform: translateX(0%); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        @keyframes scrollLeft {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
+        }
+        
+        /* Pausar animação no hover */
+        .animate-scroll-right:hover,
+        .animate-scroll-left:hover {
+            animation-play-state: paused;
+        }
+        
+        /* Efeito de digitação */
+        .typing-animation {
+            border-right: 3px solid #20C997;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50% { border-color: #20C997; }
+            51%, 100% { border-color: transparent; }
         }
         
         /* Custom gradient backgrounds */
@@ -141,7 +217,7 @@
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                 </div>
-                <span class="text-xl font-bold text-white">AssistenteFin</span>
+                <span class="text-xl font-bold text-white">Poupa.AI</span>
             </div>
             
             <!-- Desktop Navigation -->
@@ -202,17 +278,34 @@
                             <span class="text-2xl md:text-4xl font-normal text-gray-300">simples, inteligente, no seu ritmo</span>
                         </h1>
                         
+                        <!-- Efeito de digitação -->
+                        <div class="text-3xl md:text-5xl font-bold mb-6">
+                            <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent typing-animation" id="typing-text">Poupa.AI</span>
+                        </div>
+                        
                         <p class="text-xl text-gray-300 mb-8 max-w-2xl">
                             Lance por texto, áudio ou foto; nós lemos, categorizamos e mostramos tudo no seu painel.
                         </p>
                         
+                        <!-- Urgência e Escassez -->
+                        <div class="bg-gradient-to-r from-warning/20 to-secondary/20 border border-warning/30 rounded-lg p-4 mb-6">
+                            <div class="flex items-center justify-center space-x-2 text-warning">
+                                <svg class="w-5 h-5 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                                </svg>
+                                <span class="font-bold">🔥 OFERTA LIMITADA:</span>
+                                <span class="text-white">Apenas 50 vagas por R$ 17,90/mês</span>
+                            </div>
+                        </div>
+                        
                         <!-- CTAs -->
                         <div id="hero-cta" class="flex flex-col sm:flex-row gap-4 mb-8">
-                            <a href="https://wa.me/5511999999999" class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus-ring">
-                                Começar agora — R$ 17,90/mês
+                            <a href="https://wa.me/5511999999999" class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-bold text-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-200 focus-ring relative overflow-hidden group">
+                                <span class="relative z-10">🚀 GARANTIR MINHA VAGA AGORA</span>
+                                <div class="absolute inset-0 bg-gradient-to-r from-success to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                             </a>
                             <a href="#contato" class="glass text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:bg-opacity-10 transition-all duration-200 focus-ring">
-                                Falar com especialista
+                                💬 Falar com especialista
                             </a>
                         </div>
                         
@@ -250,7 +343,7 @@
                                     </svg>
                                 </div>
                                 <div>
-                                    <div class="font-semibold text-white">AssistenteFin</div>
+                                    <div class="font-semibold text-white">Poupa.AI</div>
                                     <div class="text-xs text-gray-400">online</div>
                                 </div>
                             </div>
@@ -368,6 +461,62 @@
             </div>
         </section>
         
+        <!-- Chamada Principal - Solução do Problema -->
+        <section class="py-20 bg-gradient-to-br from-dark-bg to-gray-900 relative overflow-hidden">
+            <div class="container mx-auto px-4">
+                <div class="text-center max-w-4xl mx-auto">
+                    <!-- Pergunta do problema -->
+                    <p class="text-2xl md:text-3xl font-semibold text-primary mb-8">
+                        Cansado de esquecer gastos ou não ter controle total do seu dinheiro?
+                    </p>
+                    
+                    <!-- Solução principal -->
+                    <h2 class="text-4xl md:text-6xl font-bold text-white mb-12 leading-tight">
+                        Tenha um assistente financeiro<br>
+                        <span class="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">disponível 24/7</span><br>
+                        para você
+                    </h2>
+                    
+                    <!-- Cards de benefícios -->
+                    <div class="grid md:grid-cols-3 gap-8 mt-16">
+                        <!-- Card 1 - Segurança -->
+                        <div class="glass rounded-2xl p-8 text-center hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                            <div class="text-6xl mb-4">🔒</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Proteção Total<br>dos Dados</h3>
+                            <p class="text-gray-300">Criptografia avançada</p>
+                        </div>
+                        
+                        <!-- Card 2 - Precisão -->
+                        <div class="glass rounded-2xl p-8 text-center hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                            <div class="text-6xl mb-4">🧠</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Inteligência Artificial<br>Precisa</h3>
+                            <p class="text-gray-300">Reconhece português perfeitamente</p>
+                        </div>
+                        
+                        <!-- Card 3 - Facilidade -->
+                        <div class="glass rounded-2xl p-8 text-center hover:bg-white hover:bg-opacity-10 transition-all duration-300">
+                            <div class="text-6xl mb-4">💬</div>
+                            <h3 class="text-xl font-bold text-white mb-2">Gestão Completa<br>de Finanças</h3>
+                            <p class="text-gray-300">Tudo pelo WhatsApp</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Call to Action -->
+                    <div class="mt-12">
+                        <a href="https://wa.me/5511999999999" class="inline-block bg-gradient-to-r from-primary to-accent text-white px-10 py-5 rounded-full text-xl font-bold hover:shadow-2xl transform hover:scale-110 transition-all duration-300 relative overflow-hidden group">
+                            <span class="relative z-10 flex items-center space-x-2">
+                                <span>💰 QUERO CONTROLAR MEU DINHEIRO</span>
+                                <svg class="w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                                </svg>
+                            </span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-success to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
         <!-- Como Funciona Section -->
         <section id="como-funciona" class="py-16">
             <div class="container mx-auto px-4">
@@ -428,6 +577,12 @@
         <section id="recursos" class="py-16 bg-black bg-opacity-20">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
+                    <div class="inline-flex items-center bg-gradient-to-r from-success/20 to-primary/20 border border-success/30 rounded-full px-6 py-2 mb-6">
+                        <svg class="w-5 h-5 text-success mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <span class="text-success font-bold">+2.500 usuários já economizam com o Poupa.AI</span>
+                    </div>
                     <h2 class="text-4xl font-bold mb-4">Recursos Principais</h2>
                     <p class="text-xl text-gray-300 max-w-2xl mx-auto">Tecnologia avançada para simplificar sua vida financeira</p>
                 </div>
@@ -499,6 +654,259 @@
                         <h3 class="text-xl font-semibold mb-2 text-white">Sincronização Leve</h3>
                         <p class="text-gray-300">Processamento eficiente que não trava seu celular nem consome bateria</p>
                     </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Novos Recursos em Desenvolvimento -->
+        <section class="py-16 bg-gradient-to-r from-primary/10 to-accent/10">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <div class="inline-flex items-center bg-gradient-to-r from-primary to-accent text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        EM DESENVOLVIMENTO
+                    </div>
+                    <h2 class="text-4xl font-bold mb-4">Novos Recursos Inclusos</h2>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">Estamos desenvolvendo recursos incríveis que serão incluídos no valor promocional de <span class="text-primary font-bold">R$ 17,90</span></p>
+                </div>
+                
+                <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Lembretes Diários -->
+                    <div class="glass-strong rounded-2xl p-8 border-2 border-primary/30 relative overflow-hidden">
+                        <!-- Badge de novo recurso -->
+                        <div class="absolute top-4 right-4 bg-gradient-to-r from-primary to-accent text-white px-3 py-1 rounded-full text-xs font-bold">
+                            NOVO
+                        </div>
+                        
+                        <div class="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-4 text-white">Lembretes Diários</h3>
+                        <p class="text-gray-300 mb-6">O seu assessor irá lhe enviar no WhatsApp todo dia pela manhã um resumo dos seus compromissos/afazeres, contas a pagar e a receber no dia. Além disso, 30 minutos antes de cada compromisso ele irá lhe enviar uma mensagem de lembrete.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-primary mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                <span>Lembretes ilimitados</span>
+                            </div>
+                            <div class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-primary mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                <span>Lembretes de compromissos e afazeres</span>
+                            </div>
+                            <div class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-primary mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                <span>Lembretes de contas a pagar e a receber</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Integração Google Agenda -->
+                    <div class="glass-strong rounded-2xl p-8 border-2 border-accent/30 relative overflow-hidden">
+                        <!-- Badge de novo recurso -->
+                        <div class="absolute top-4 right-4 bg-gradient-to-r from-accent to-primary text-white px-3 py-1 rounded-full text-xs font-bold">
+                            NOVO
+                        </div>
+                        
+                        <div class="w-16 h-16 bg-gradient-to-br from-accent to-primary rounded-2xl flex items-center justify-center mb-6">
+                            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        
+                        <h3 class="text-2xl font-bold mb-4 text-white">Integração com Google Agenda</h3>
+                        <p class="text-gray-300 mb-6">Agora você pode integrar seus compromissos automaticamente com o Google Agenda. O Meu Assessor será sincronizado em tempo real com sua agenda pessoal ou profissional.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-accent mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                <span>Sincronização automática dos compromissos</span>
+                            </div>
+                            <div class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-accent mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                <span>Receba lembretes automáticos no WhatsApp</span>
+                            </div>
+                            <div class="flex items-center text-gray-300">
+                                <svg class="w-5 h-5 text-accent mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                <span>Mais organização e produtividade no seu dia a dia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Call to Action para os novos recursos -->
+                <div class="text-center mt-12">
+                    <div class="bg-gradient-to-r from-primary/20 to-accent/20 rounded-2xl p-8 max-w-2xl mx-auto">
+                        <h4 class="text-2xl font-bold text-white mb-4">Garanta já o valor promocional!</h4>
+                        <p class="text-gray-300 mb-6">Estes novos recursos serão incluídos automaticamente no seu plano atual de <span class="text-primary font-bold text-xl">R$ 17,90/mês</span> assim que estiverem prontos.</p>
+                        <button class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-primary hover:to-primary hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                            Quero garantir meu desconto →
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Interação com Assistente Section -->
+        <section class="py-16 bg-black bg-opacity-30">
+            <div class="container mx-auto px-4">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-bold mb-4">Interaja com o Meu Assessor 24h por dia</h2>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">Pergunte o que quiser e como quiser sobre as suas finanças. Veja alguns exemplos abaixo.</p>
+                </div>
+                
+                <!-- Frases em movimento horizontal -->
+                <div class="relative overflow-hidden">
+                    <!-- Linha 1 - Direita para esquerda -->
+                    <div class="flex animate-scroll-right mb-6">
+                        <div class="flex space-x-4 whitespace-nowrap">
+                            <!-- Sequência 1 -->
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 30 reais de gasolina</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 150 de um freelance</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei boleto de 50 reais</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 25 no supermercado</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 2000 de salário</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 80 de energia</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 15 no delivery</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 300 de venda</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 45 de farmácia</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 800 de bônus</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 120 no posto</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 200 de aluguel</span>
+                            <!-- Sequência 2 (duplicada para loop contínuo) -->
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 30 reais de gasolina</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 150 de um freelance</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei boleto de 50 reais</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 25 no supermercado</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 2000 de salário</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 80 de energia</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 15 no delivery</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 300 de venda</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 45 de farmácia</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 800 de bônus</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 120 no posto</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 200 de aluguel</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Linha 2 - Esquerda para direita -->
+                    <div class="flex animate-scroll-left mb-6">
+                        <div class="flex space-x-4 whitespace-nowrap">
+                            <!-- Sequência 1 -->
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quanto gastei hoje?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Saldo do mês?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Transações da semana</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quanto tenho pra pagar?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Resumo financeiro</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos com alimentação</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Receitas do mês</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Tenho saldo positivo?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quais gastos fixos?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Como está meu saldo?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei boletos hoje?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi quanto esse mês?</span>
+                            <!-- Sequência 2 (duplicada para loop contínuo) -->
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quanto gastei hoje?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Saldo do mês?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Transações da semana</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quanto tenho pra pagar?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Resumo financeiro</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos com alimentação</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Receitas do mês</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Tenho saldo positivo?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quais gastos fixos?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Como está meu saldo?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei boletos hoje?</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi quanto esse mês?</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Linha 3 - Direita para esquerda -->
+                    <div class="flex animate-scroll-right mb-6">
+                        <div class="flex space-x-4 whitespace-nowrap">
+                            <!-- Sequência 1 -->
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 120 de aluguel</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 500 de bônus</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 40 no posto</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 60 de internet</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 100 de cashback</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 35 no farmácia</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 90 de cartão</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 150 de investimento</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 75 no shopping</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 250 de venda</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 55 de água</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 400 de freelance</span>
+                            <!-- Sequência 2 (duplicada para loop contínuo) -->
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 120 de aluguel</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 500 de bônus</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 40 no posto</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 60 de internet</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 100 de cashback</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 35 no farmácia</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 90 de cartão</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 150 de investimento</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastei 75 no shopping</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 250 de venda</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 55 de água</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi 400 de freelance</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Linha 4 - Esquerda para direita -->
+                    <div class="flex animate-scroll-left mb-6">
+                        <div class="flex space-x-4 whitespace-nowrap">
+                            <!-- Sequência 1 -->
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos com transporte</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Resumo do dia</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Categorias de gastos</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Relatório mensal</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Extrato da semana</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos por categoria</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Análise de padrões</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Metas financeiras</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Orçamento do mês</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Previsão de gastos</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Relatório anual</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Comparativo mensal</span>
+                            <!-- Sequência 2 (duplicada para loop contínuo) -->
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos com transporte</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Resumo do dia</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Categorias de gastos</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Relatório mensal</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Extrato da semana</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos por categoria</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Análise de padrões</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Metas financeiras</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Orçamento do mês</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Previsão de gastos</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Relatório anual</span>
+                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Comparativo mensal</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Botão CTA -->
+                <div class="text-center mt-12">
+                    <button class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-full text-lg font-semibold hover:from-primary hover:to-primary hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+                        Quero utilizar →
+                    </button>
                 </div>
             </div>
         </section>
@@ -632,7 +1040,7 @@
         <section id="para-quem" class="py-16 bg-black bg-opacity-20">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-4">Para Quem é o AssistenteFin</h2>
+                    <h2 class="text-4xl font-bold mb-4">Para Quem é o Poupa.AI</h2>
                     <p class="text-xl text-gray-300 max-w-2xl mx-auto">Ideal para quem tem vida financeira ativa e quer simplicidade</p>
                 </div>
                 
@@ -782,6 +1190,12 @@
         <section id="preco" class="py-16 bg-black bg-opacity-20">
             <div class="container mx-auto px-4 text-center">
                 <div class="max-w-2xl mx-auto">
+                    <div class="inline-flex items-center bg-gradient-to-r from-warning/20 to-secondary/20 border border-warning/30 rounded-full px-6 py-2 mb-6">
+                        <svg class="w-5 h-5 text-warning mr-2 animate-pulse" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        <span class="text-warning font-bold">⚡ ÚLTIMAS VAGAS DISPONÍVEIS</span>
+                    </div>
                     <h2 class="text-4xl font-bold mb-4">Plano Simples, Preço Justo</h2>
                     <p class="text-xl text-gray-300 mb-12">Sem pegadinhas, sem planos confusos. Um preço, todos os recursos.</p>
                     
@@ -851,7 +1265,7 @@
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
                     <h2 class="text-4xl font-bold mb-4">Perguntas Frequentes</h2>
-                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">Tire suas dúvidas sobre o AssistenteFin</p>
+                    <p class="text-xl text-gray-300 max-w-2xl mx-auto">Tire suas dúvidas sobre o Poupa.AI</p>
                 </div>
                 
                 <div class="max-w-3xl mx-auto space-y-4">
@@ -941,11 +1355,15 @@
                     </p>
                     
                     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                        <a href="https://wa.me/5511999999999" class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-semibold text-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 focus-ring">
-                            Começar agora — R$ 17,90/mês
+                        <a href="https://wa.me/5511999999999" class="bg-gradient-to-r from-primary to-accent text-white px-10 py-5 rounded-lg font-bold text-xl hover:shadow-2xl transform hover:scale-110 transition-all duration-300 focus-ring relative overflow-hidden group">
+                            <span class="relative z-10 flex items-center justify-center space-x-2">
+                                <span>🚀 GARANTIR VAGA AGORA</span>
+                                <span class="text-sm opacity-90">— R$ 17,90/mês</span>
+                            </span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-success to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                         </a>
                         <a href="#contato" class="glass text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-white hover:bg-opacity-10 transition-all duration-200 focus-ring">
-                            Falar com nossa equipe
+                            💬 Falar com nossa equipe
                         </a>
                     </div>
                     
@@ -971,7 +1389,7 @@
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
                         </div>
-                        <span class="text-xl font-bold text-white">AssistenteFin</span>
+                        <span class="text-xl font-bold text-white">Poupa.AI</span>
                     </div>
                     <p class="text-gray-300 mb-4 max-w-md">
                         A forma mais simples de organizar suas finanças pelo WhatsApp. 
@@ -1010,8 +1428,8 @@
             
             <div class="border-t border-gray-700 mt-8 pt-8 text-center">
                 <p class="text-gray-400 text-sm">
-                    © 2024 AssistenteFin. Todos os direitos reservados. 
-                    <span class="text-primary">Feito com ❤️ no Brasil</span>
+                    © 2024 Poupa.AI. Todos os direitos reservados. 
+                    <span class="text-primary">Feito por Junior Marques</span>
                 </p>
             </div>
         </div>
@@ -1022,7 +1440,7 @@
     {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "AssistenteFin",
+        "name": "Poupa.AI",
         "description": "Gestão financeira pelo WhatsApp com IA",
         "url": "https://assistentefin.com",
         "contactPoint": {

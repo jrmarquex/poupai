@@ -1,7 +1,20 @@
-// Database Schema for AssistenteFin using Drizzle ORM
-import { pgTable, serial, varchar, decimal, timestamp, text, integer } from 'drizzle-orm/pg-core';
+// Database Schema for Blog Literário using Drizzle ORM
+import { pgTable, serial, varchar, decimal, timestamp, text, integer, boolean } from 'drizzle-orm/pg-core';
 
-// Users table
+// Clientes table (main users table)
+export const clientes = pgTable('clientes', {
+  id: serial('id').primaryKey(),
+  username: varchar('username', { length: 50 }).notNull().unique(),
+  password: varchar('password', { length: 255 }).notNull(),
+  name: varchar('name', { length: 100 }),
+  email: varchar('email', { length: 100 }).unique(),
+  whatsapp: varchar('whatsapp', { length: 20 }),
+  isActive: boolean('is_active').default(true),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow()
+});
+
+// Users table (keeping for compatibility)
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
   username: varchar('username', { length: 50 }).notNull().unique(),
@@ -25,7 +38,8 @@ export const categories = pgTable('categories', {
 // Transactions table
 export const transactions = pgTable('transactions', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id),
+  clienteId: integer('cliente_id').references(() => clientes.id),
+  userId: integer('user_id').references(() => users.id), // keeping for compatibility
   categoryId: integer('category_id').references(() => categories.id),
   amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
   description: text('description').notNull(),
@@ -41,7 +55,8 @@ export const transactions = pgTable('transactions', {
 // Monthly summaries table
 export const monthlySummaries = pgTable('monthly_summaries', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id),
+  clienteId: integer('cliente_id').references(() => clientes.id),
+  userId: integer('user_id').references(() => users.id), // keeping for compatibility
   month: integer('month').notNull(),
   year: integer('year').notNull(),
   totalIncome: decimal('total_income', { precision: 10, scale: 2 }).default('0'),
@@ -56,7 +71,8 @@ export const monthlySummaries = pgTable('monthly_summaries', {
 // WhatsApp sessions table  
 export const whatsappSessions = pgTable('whatsapp_sessions', {
   id: serial('id').primaryKey(),
-  userId: integer('user_id').references(() => users.id),
+  clienteId: integer('cliente_id').references(() => clientes.id),
+  userId: integer('user_id').references(() => users.id), // keeping for compatibility
   whatsappId: varchar('whatsapp_id', { length: 100 }).notNull(),
   sessionToken: varchar('session_token', { length: 255 }),
   isActive: integer('is_active').default(1), // 1 for active, 0 for inactive

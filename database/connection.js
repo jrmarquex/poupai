@@ -1,14 +1,25 @@
 // Database connection setup for Supabase with Drizzle ORM
 import { drizzle } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config({ path: './config.env' });
 
 // Database connection configuration
 const getDatabaseUrl = () => {
-  // In production, this will use the DATABASE_URL environment variable
-  const dbUrl = process.env.DATABASE_URL;
+  // Try to get DATABASE_URL from environment variables
+  let dbUrl = process.env.DATABASE_URL;
+  
+  // If not found, try to construct it from Supabase URL
+  if (!dbUrl && process.env.NEXT_PUBLIC_SUPABASE_URL) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    const host = supabaseUrl.replace('https://', '').replace('.supabase.co', '');
+    dbUrl = `postgresql://postgres:[YOUR_PASSWORD]@db.${host}.supabase.co:5432/postgres?sslmode=require`;
+  }
   
   if (!dbUrl) {
-    throw new Error('DATABASE_URL environment variable is not set');
+    throw new Error('DATABASE_URL environment variable is not set. Please check your config.env file.');
   }
   
   return dbUrl;
