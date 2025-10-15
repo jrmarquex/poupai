@@ -52,75 +52,68 @@
         
         .glass-strong {
             background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(16px);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
-        .sidebar-glass {
-            background: rgba(15, 23, 42, 0.8);
-            backdrop-filter: blur(20px);
-            border-right: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
         .gradient-bg {
-            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 100%);
+            background: linear-gradient(135deg, #0B0F14 0%, #1A1F2E 100%);
         }
         
         .gradient-mesh {
-            background: 
-                radial-gradient(at 40% 20%, rgba(32, 201, 151, 0.1) 0px, transparent 50%),
-                radial-gradient(at 80% 0%, rgba(167, 139, 250, 0.1) 0px, transparent 50%),
-                radial-gradient(at 0% 50%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(32, 201, 151, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(167, 139, 250, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(34, 211, 238, 0.1) 0%, transparent 50%);
         }
         
-        .focus-ring:focus {
-            outline: 2px solid #20C997;
-            outline-offset: 2px;
-        }
-        
-        .transaction-item {
-            transition: all 0.3s ease;
+        .profile-photo {
+            object-fit: cover;
         }
         
         .transaction-item:hover {
-            transform: translateX(4px);
-            background: rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .focus-ring:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(32, 201, 151, 0.3);
         }
     </style>
 </head>
+
 <body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="transacoesApp()">
     <!-- Sidebar -->
-    <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-40">
-        <div class="p-6">
+    <div class="fixed inset-y-0 left-0 w-64 glass-strong z-50">
+        <div class="flex flex-col h-full">
             <!-- Logo -->
-            <div class="flex items-center space-x-3 mb-8">
-                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+            <div class="flex items-center space-x-3 px-6 py-6">
+                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
                     <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-white">Poupa.Ai</h1>
-                    <p class="text-xs text-gray-400">Dashboard Financeiro</p>
+                    <p class="text-sm text-gray-400">Dashboard Financeiro</p>
                 </div>
             </div>
             
             <!-- User Profile -->
-            <div class="flex items-center space-x-3 mb-8">
-                <div class="relative">
+            <div class="px-6 py-4 border-t border-glass-border">
+                <div class="flex items-center space-x-3">
                     <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
-                         alt="Avatar" 
-                         class="w-12 h-12 rounded-full border-2 border-primary">
-                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-dark-bg"></div>
-                </div>
-                <div>
-                    <h3 class="text-white font-semibold" x-text="userProfile.name"></h3>
-                    <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
+                         alt="Profile" 
+                         class="w-10 h-10 rounded-full border-2 border-primary profile-photo">
+                    <div>
+                        <p class="text-white font-medium" x-text="userProfile.name"></p>
+                        <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
+                    </div>
                 </div>
             </div>
             
-            <!-- Navigation Menu -->
-            <nav class="space-y-2">
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-6 space-y-2">
                 <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
@@ -128,14 +121,14 @@
                     <span>Dashboard</span>
                 </a>
                 
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                     <span>Minha Carteira</span>
                 </a>
                 
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white">
+                <a href="transacoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
@@ -158,7 +151,7 @@
                 
                 <a href="tutorial.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,16.5L18,9.5L16.5,8L11,13.5L7.5,10L6,11.5L11,16.5Z"/>
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                     <span>Guia Prático</span>
                 </a>
@@ -167,55 +160,56 @@
     </div>
     
     <!-- Main Content -->
-    <div class="ml-64 p-6">
-        <!-- Top Bar -->
-        <div class="flex items-center justify-between mb-8">
-            <div class="flex items-center space-x-4">
-                <h2 class="text-3xl font-bold text-white">Transações</h2>
-                <div class="flex items-center space-x-2">
-                    <span class="text-sm text-gray-400">Total:</span>
-                    <span class="text-lg font-semibold text-white" x-text="filteredTransactions.length"></span>
-                    <span class="text-sm text-gray-400">transações</span>
-                </div>
-            </div>
-            
-            <div class="flex items-center space-x-4">
-                <!-- Export Buttons -->
-                <div class="flex items-center space-x-2">
-                    <button @click="exportData('pdf')" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                        </svg>
-                        PDF
-                    </button>
-                    
-                    <button @click="exportData('excel')" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                        </svg>
-                        Excel
-                    </button>
-                    
-                    <button @click="exportData('xml')" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
-                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-                        </svg>
-                        XML
-                    </button>
+    <div class="ml-64 min-h-screen">
+        <!-- Header -->
+        <div class="glass-strong border-b border-glass-border px-8 py-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-3xl font-bold text-white">Transações</h1>
+                    <div class="flex items-center space-x-2">
+                        <span class="text-lg font-semibold text-white" x-text="filteredTransactions.length"></span>
+                        <span class="text-sm text-gray-400">transações</span>
+                    </div>
                 </div>
                 
-                <!-- Filter Button -->
-                <button @click="showFilters = !showFilters" class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
-                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                    </svg>
-                    <span>Filtros</span>
-                </button>
+                <div class="flex items-center space-x-4">
+                    <!-- Export Buttons -->
+                    <div class="flex items-center space-x-2">
+                        <button @click="exportData('pdf')" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                            PDF
+                        </button>
+                        
+                        <button @click="exportData('excel')" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                            Excel
+                        </button>
+                        
+                        <button @click="exportData('xml')" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                            <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                            </svg>
+                            XML
+                        </button>
+                    </div>
+                    
+                    <!-- Filter Button -->
+                    <button @click="showFilters = !showFilters" class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                        </svg>
+                        <span>Filtros</span>
+                    </button>
+                </div>
             </div>
         </div>
         
         <!-- Filters Panel -->
-        <div x-show="showFilters" x-transition class="glass-strong rounded-2xl p-6 mb-6">
+        <div x-show="showFilters" x-transition class="glass-strong rounded-2xl p-6 mb-6 mx-8 mt-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <!-- Date Range -->
                 <div>
@@ -276,152 +270,79 @@
         </div>
         
         <!-- Transactions List -->
-        <div class="glass-strong rounded-2xl p-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-semibold text-white">Lista de Transações</h3>
-                <div class="flex items-center space-x-4">
-                    <span class="text-sm text-gray-400" x-text="'Mostrando ' + filteredTransactions.length + ' de ' + transactions.length + ' transações'"></span>
-                    <select x-model="sortBy" class="px-3 py-1 glass rounded-lg text-sm">
-                        <option value="date-desc">Data (mais recente)</option>
-                        <option value="date-asc">Data (mais antiga)</option>
-                        <option value="amount-desc">Valor (maior)</option>
-                        <option value="amount-asc">Valor (menor)</option>
+        <div class="p-8">
+            <div class="glass-strong rounded-2xl overflow-hidden">
+                <div class="px-6 py-4 border-b border-glass-border flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-white">Lista de Transações</h3>
+                    <select x-model="sortBy" class="px-3 py-2 glass rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-primary bg-dark-bg border border-glass-border">
+                        <option value="date-desc" class="bg-dark-bg text-white">Data (mais recente)</option>
+                        <option value="date-asc" class="bg-dark-bg text-white">Data (mais antiga)</option>
+                        <option value="amount-desc" class="bg-dark-bg text-white">Valor (maior)</option>
+                        <option value="amount-asc" class="bg-dark-bg text-white">Valor (menor)</option>
                     </select>
                 </div>
-            </div>
-            
-            <!-- Transactions Table -->
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead>
-                        <tr class="border-b border-glass-border">
-                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Data</th>
-                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Descrição</th>
-                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Categoria</th>
-                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Tipo</th>
-                            <th class="text-right py-3 px-4 text-gray-400 font-medium">Valor</th>
-                            <th class="text-center py-3 px-4 text-gray-400 font-medium">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-glass-border">
-                        <template x-for="transaction in filteredTransactions" :key="transaction.id">
-                            <tr class="transaction-item hover:bg-white hover:bg-opacity-5">
-                                <td class="py-4 px-4 text-gray-300" x-text="formatDate(transaction.date)"></td>
-                                <td class="py-4 px-4 text-white font-medium" x-text="transaction.description"></td>
-                                <td class="py-4 px-4">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-                                          :class="getCategoryColor(transaction.category)"
-                                          x-text="transaction.category"></span>
-                                </td>
-                                <td class="py-4 px-4">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-                                          :class="transaction.type === 'Receita' ? 'bg-emerald-500 bg-opacity-20 text-emerald-400' : 'bg-orange-500 bg-opacity-20 text-orange-400'"
-                                          x-text="transaction.type"></span>
-                                </td>
-                                <td class="py-4 px-4 text-right">
-                                    <span class="font-semibold text-lg"
-                                          :class="transaction.type === 'Receita' ? 'text-emerald-400' : 'text-orange-400'"
-                                          x-text="(transaction.type === 'Receita' ? '+' : '-') + 'R$ ' + transaction.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></span>
-                                </td>
-                                <td class="py-4 px-4 text-center">
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <button @click="editTransaction(transaction)" class="text-primary hover:text-accent transition-colors">
-                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-                                            </svg>
-                                        </button>
-                                        <button @click="deleteTransaction(transaction.id)" class="text-danger hover:text-red-300 transition-colors">
-                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </td>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-glass-border">
+                            <tr>
+                                <th class="text-left py-3 px-4 text-gray-400 font-medium">Data</th>
+                                <th class="text-left py-3 px-4 text-gray-400 font-medium">Descrição</th>
+                                <th class="text-left py-3 px-4 text-gray-400 font-medium">Categoria</th>
+                                <th class="text-left py-3 px-4 text-gray-400 font-medium">Tipo</th>
+                                <th class="text-right py-3 px-4 text-gray-400 font-medium">Valor</th>
+                                <th class="text-center py-3 px-4 text-gray-400 font-medium">Ações</th>
                             </tr>
-                        </template>
-                    </tbody>
-                </table>
-                
-                <!-- Empty State -->
-                <div x-show="filteredTransactions.length === 0" class="text-center py-12">
-                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    <h3 class="text-lg font-semibold text-gray-400 mb-2">Nenhuma transação encontrada</h3>
-                    <p class="text-gray-500">Tente ajustar os filtros ou adicione uma nova transação</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Add Transaction Modal -->
-    <div x-show="showAddModal" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div class="glass-strong rounded-2xl p-6 w-full max-w-md mx-4">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-semibold text-white">Nova Transação</h3>
-                <button @click="showAddModal = false" class="text-gray-400 hover:text-white">
-                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                    </svg>
-                </button>
-            </div>
-            
-            <form @submit.prevent="addTransaction" class="space-y-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Descrição</label>
-                    <input x-model="newTransaction.description" type="text" required
-                           class="w-full px-3 py-2 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                           placeholder="Ex: Uber, iFood, Salário...">
-                </div>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Valor</label>
-                        <input x-model="newTransaction.amount" type="number" step="0.01" required
-                               class="w-full px-3 py-2 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
-                               placeholder="0.00">
-                    </div>
+                        </thead>
+                        <tbody class="divide-y divide-glass-border">
+                            <template x-for="transaction in filteredTransactions" :key="transaction.id">
+                                <tr class="transaction-item hover:bg-white hover:bg-opacity-5">
+                                    <td class="py-4 px-4 text-gray-300" x-text="formatDate(transaction.date)"></td>
+                                    <td class="py-4 px-4 text-white font-medium" x-text="transaction.description"></td>
+                                    <td class="py-4 px-4">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                                              :class="getCategoryColor(transaction.category)"
+                                              x-text="transaction.category"></span>
+                                    </td>
+                                    <td class="py-4 px-4">
+                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                                              :class="transaction.type === 'Receita' ? 'bg-emerald-500 bg-opacity-20 text-emerald-400' : 'bg-orange-500 bg-opacity-20 text-orange-400'"
+                                              x-text="transaction.type"></span>
+                                    </td>
+                                    <td class="py-4 px-4 text-right">
+                                        <span class="font-semibold text-lg"
+                                              :class="transaction.type === 'Receita' ? 'text-emerald-400' : 'text-orange-400'"
+                                              x-text="(transaction.type === 'Receita' ? '+' : '-') + 'R$ ' + transaction.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></span>
+                                    </td>
+                                    <td class="py-4 px-4 text-center">
+                                        <div class="flex items-center justify-center space-x-2">
+                                            <button @click="editTransaction(transaction)" class="text-primary hover:text-accent transition-colors">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                                </svg>
+                                            </button>
+                                            <button @click="deleteTransaction(transaction.id)" class="text-danger hover:text-red-300 transition-colors">
+                                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
                     
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Tipo</label>
-                        <select x-model="newTransaction.type" required
-                                class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                            <option value="">Selecione</option>
-                            <option value="Receita">Receita</option>
-                            <option value="Despesa">Despesa</option>
-                        </select>
+                    <!-- Empty State -->
+                    <div x-show="filteredTransactions.length === 0" class="text-center py-12">
+                        <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        <h3 class="text-lg font-medium text-white mb-2">Nenhuma transação encontrada</h3>
+                        <p class="text-gray-400">Tente ajustar os filtros ou adicione uma nova transação.</p>
                     </div>
                 </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Categoria</label>
-                    <select x-model="newTransaction.category" required
-                            class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                        <option value="">Selecione</option>
-                        <option value="alimentação">Alimentação</option>
-                        <option value="transporte">Transporte</option>
-                        <option value="lazer">Lazer</option>
-                        <option value="outros">Outros</option>
-                    </select>
-                </div>
-                
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Data</label>
-                    <input x-model="newTransaction.date" type="date" required
-                           class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                </div>
-                
-                <div class="flex justify-end space-x-4 pt-4">
-                    <button type="button" @click="showAddModal = false" 
-                            class="px-4 py-2 text-gray-400 hover:text-white transition-colors">
-                        Cancelar
-                    </button>
-                    <button type="submit" 
-                            class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-80 transition-colors">
-                        Adicionar
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
@@ -434,7 +355,6 @@
                     avatar: null
                 },
                 
-                showAddModal: false,
                 showFilters: false,
                 sortBy: 'date-desc',
                 
@@ -445,14 +365,6 @@
                     amountRange: 'all'
                 },
                 
-                newTransaction: {
-                    description: '',
-                    amount: '',
-                    type: '',
-                    category: '',
-                    date: new Date().toISOString().split('T')[0]
-                },
-                
                 transactions: [
                     {
                         id: 1,
@@ -460,8 +372,8 @@
                         amount: 850.00,
                         type: 'Receita',
                         category: 'outros',
-                        date: '2024-11-30',
-                        time: '10:42:23'
+                        date: '2024-11-29',
+                        time: '14:30:00'
                     },
                     {
                         id: 2,
@@ -469,8 +381,8 @@
                         amount: 25.00,
                         type: 'Despesa',
                         category: 'transporte',
-                        date: '2024-11-30',
-                        time: '12:50:40'
+                        date: '2024-11-29',
+                        time: '10:15:00'
                     },
                     {
                         id: 3,
@@ -478,17 +390,17 @@
                         amount: 42.90,
                         type: 'Despesa',
                         category: 'alimentação',
-                        date: '2024-11-29',
-                        time: '19:30:00'
+                        date: '2024-11-28',
+                        time: '19:45:00'
                     },
                     {
                         id: 4,
-                        description: 'Salário CLT',
+                        description: 'Salário',
                         amount: 2800.00,
                         type: 'Receita',
                         category: 'outros',
                         date: '2024-11-28',
-                        time: '09:00:00'
+                        time: '08:00:00'
                     },
                     {
                         id: 5,
@@ -562,28 +474,6 @@
                         'outros': 'bg-gray-500 bg-opacity-20 text-gray-400'
                     };
                     return colors[category] || 'bg-gray-500 bg-opacity-20 text-gray-400';
-                },
-                
-                addTransaction() {
-                    const transaction = {
-                        id: Date.now(),
-                        ...this.newTransaction,
-                        amount: parseFloat(this.newTransaction.amount),
-                        time: new Date().toLocaleTimeString('pt-BR')
-                    };
-                    
-                    this.transactions.unshift(transaction);
-                    
-                    // Reset form
-                    this.newTransaction = {
-                        description: '',
-                        amount: '',
-                        type: '',
-                        category: '',
-                        date: new Date().toISOString().split('T')[0]
-                    };
-                    
-                    this.showAddModal = false;
                 },
                 
                 editTransaction(transaction) {
