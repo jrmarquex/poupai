@@ -1,81 +1,143 @@
-// Database Schema for Blog Literário using Drizzle ORM
-import { pgTable, serial, varchar, decimal, timestamp, text, integer, boolean } from 'drizzle-orm/pg-core';
+// Database Schema for Poupa.AI using Drizzle ORM
+// This schema matches your existing Supabase tables: clientes and movimentacoes
+import { pgTable, uuid, text, boolean, timestamp, numeric, date } from 'drizzle-orm/pg-core';
 
-// Clientes table (main users table)
+// Clientes table (matches your existing structure)
 export const clientes = pgTable('clientes', {
-  id: serial('id').primaryKey(),
-  username: varchar('username', { length: 50 }).notNull().unique(),
-  password: varchar('password', { length: 255 }).notNull(),
-  name: varchar('name', { length: 100 }),
-  email: varchar('email', { length: 100 }).unique(),
-  whatsapp: varchar('whatsapp', { length: 20 }),
-  isActive: boolean('is_active').default(true),
+  clientid: uuid('clientid').primaryKey().defaultRandom(),
+  whatsapp: text('whatsapp'),
+  status: boolean('status').default(true),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow()
 });
 
-// Users table (keeping for compatibility)
-export const users = pgTable('users', {
-  id: serial('id').primaryKey(),
-  username: varchar('username', { length: 50 }).notNull().unique(),
-  password: varchar('password', { length: 255 }).notNull(),
-  name: varchar('name', { length: 100 }),
-  whatsapp: varchar('whatsapp', { length: 20 }),
+// Movimentacoes table (matches your existing structure)
+export const movimentacoes = pgTable('movimentacoes', {
+  id: text('id').primaryKey(),
+  dataMovimentacao: date('data_movimentacao'),
+  valorMovimentacao: numeric('valor_movimentacao', { precision: 10, scale: 2 }),
+  clientid: uuid('clientid').references(() => clientes.clientid),
+  type: text('type'), // 'Despesa' or 'Receita'
+  category: text('category'),
+  observation: text('observation'),
   createdAt: timestamp('created_at').defaultNow(),
   updatedAt: timestamp('updated_at').defaultNow()
 });
 
-// Categories table
-export const categories = pgTable('categories', {
-  id: serial('id').primaryKey(),
-  name: varchar('name', { length: 50 }).notNull(),
-  color: varchar('color', { length: 7 }), // hex color
-  icon: varchar('icon', { length: 50 }),
-  type: varchar('type', { length: 20 }).notNull(), // 'income' or 'expense'
-  createdAt: timestamp('created_at').defaultNow()
-});
+// Helper functions for common queries
+export const schemaHelpers = {
+  // Get all clientes
+  async getAllClientes(db) {
+    return await db.select().from(clientes);
+  },
 
-// Transactions table
-export const transactions = pgTable('transactions', {
-  id: serial('id').primaryKey(),
-  clienteId: integer('cliente_id').references(() => clientes.id),
-  userId: integer('user_id').references(() => users.id), // keeping for compatibility
-  categoryId: integer('category_id').references(() => categories.id),
-  amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
-  description: text('description').notNull(),
-  establishment: varchar('establishment', { length: 100 }),
-  type: varchar('type', { length: 20 }).notNull(), // 'income' or 'expense'
-  source: varchar('source', { length: 20 }), // 'text', 'audio', 'photo'
-  originalMessage: text('original_message'), // original WhatsApp message
-  processedAt: timestamp('processed_at'),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow()
-});
+  // Get cliente by clientid
+  async getClienteById(db, clientid) {
+    const result = await db.select().from(clientes).where(eq(clientes.clientid, clientid));
+    return result[0] || null;
+  },
 
-// Monthly summaries table
-export const monthlySummaries = pgTable('monthly_summaries', {
-  id: serial('id').primaryKey(),
-  clienteId: integer('cliente_id').references(() => clientes.id),
-  userId: integer('user_id').references(() => users.id), // keeping for compatibility
-  month: integer('month').notNull(),
-  year: integer('year').notNull(),
-  totalIncome: decimal('total_income', { precision: 10, scale: 2 }).default('0'),
-  totalExpenses: decimal('total_expenses', { precision: 10, scale: 2 }).default('0'),
-  balance: decimal('balance', { precision: 10, scale: 2 }).default('0'),
-  topCategory: varchar('top_category', { length: 50 }),
-  topEstablishment: varchar('top_establishment', { length: 100 }),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').defaultNow()
-});
+  // Get cliente by whatsapp
+  async getClienteByWhatsapp(db, whatsapp) {
+    const result = await db.select().from(clientes).where(eq(clientes.whatsapp, whatsapp));
+    return result[0] || null;
+  },
 
-// WhatsApp sessions table  
-export const whatsappSessions = pgTable('whatsapp_sessions', {
-  id: serial('id').primaryKey(),
-  clienteId: integer('cliente_id').references(() => clientes.id),
-  userId: integer('user_id').references(() => users.id), // keeping for compatibility
-  whatsappId: varchar('whatsapp_id', { length: 100 }).notNull(),
-  sessionToken: varchar('session_token', { length: 255 }),
-  isActive: integer('is_active').default(1), // 1 for active, 0 for inactive
-  lastActivity: timestamp('last_activity').defaultNow(),
-  createdAt: timestamp('created_at').defaultNow()
-});
+  // Get movimentacoes by clientid
+  async getMovimentacoesByCliente(db, clientid) {
+    return await db
+      .select()
+      .from(movimentacoes)
+      .where(eq(movimentacoes.clientid, clientid))
+      .orderBy(desc(movimentacoes.dataMovimentacao));
+  },
+
+  // Get movimentacoes by date range
+  async getMovimentacoesByDateRange(db, clientid, startDate, endDate) {
+    return await db
+      .select()
+      .from(movimentacoes)
+      .where(
+        and(
+          eq(movimentacoes.clientid, clientid),
+          gte(movimentacoes.dataMovimentacao, startDate),
+          lte(movimentacoes.dataMovimentacao, endDate)
+        )
+      )
+      .orderBy(desc(movimentacoes.dataMovimentacao));
+  },
+
+  // Get summary by type (Despesa/Receita)
+  async getSummaryByType(db, clientid, type) {
+    const result = await db
+      .select({
+        total: sum(movimentacoes.valorMovimentacao),
+        count: count(movimentacoes.id)
+      })
+      .from(movimentacoes)
+      .where(
+        and(
+          eq(movimentacoes.clientid, clientid),
+          eq(movimentacoes.type, type)
+        )
+      );
+    
+    return result[0] || { total: 0, count: 0 };
+  },
+
+  // Get top categories
+  async getTopCategories(db, clientid, type = null) {
+    let whereCondition = eq(movimentacoes.clientid, clientid);
+    
+    if (type) {
+      whereCondition = and(whereCondition, eq(movimentacoes.type, type));
+    }
+
+    return await db
+      .select({
+        category: movimentacoes.category,
+        total: sum(movimentacoes.valorMovimentacao),
+        count: count(movimentacoes.id)
+      })
+      .from(movimentacoes)
+      .where(whereCondition)
+      .groupBy(movimentacoes.category)
+      .orderBy(desc(sum(movimentacoes.valorMovimentacao)))
+      .limit(10);
+  },
+
+  // Create new movimentacao
+  async createMovimentacao(db, movimentacaoData) {
+    const result = await db
+      .insert(movimentacoes)
+      .values(movimentacaoData)
+      .returning();
+    
+    return result[0];
+  },
+
+  // Update movimentacao
+  async updateMovimentacao(db, id, updates) {
+    const result = await db
+      .update(movimentacoes)
+      .set(updates)
+      .where(eq(movimentacoes.id, id))
+      .returning();
+    
+    return result[0];
+  },
+
+  // Delete movimentacao
+  async deleteMovimentacao(db, id) {
+    await db
+      .delete(movimentacoes)
+      .where(eq(movimentacoes.id, id));
+    
+    return true;
+  }
+};
+
+// Import Drizzle operators
+import { eq, and, gte, lte, desc, sum, count } from 'drizzle-orm';
+
+export default { clientes, movimentacoes, schemaHelpers };

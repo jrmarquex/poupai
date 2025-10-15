@@ -1,129 +1,68 @@
--- Blog Literário Database Schema for Supabase
+-- Poupa.AI Database Schema for Supabase
 -- Execute these queries in your Supabase SQL editor
+-- This schema matches your existing tables: clientes and movimentacoes
 
--- Create clientes table (main users table)
+-- Create clientes table (matches your existing structure)
 CREATE TABLE IF NOT EXISTS clientes (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    name VARCHAR(100),
-    email VARCHAR(100) UNIQUE,
-    whatsapp VARCHAR(20),
-    is_active BOOLEAN DEFAULT TRUE,
+    clientid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    whatsapp TEXT,
+    status BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Create users table (keeping for compatibility)
-CREATE TABLE IF NOT EXISTS users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    name VARCHAR(100),
-    whatsapp VARCHAR(20),
+-- Create movimentacoes table (matches your existing structure)
+CREATE TABLE IF NOT EXISTS movimentacoes (
+    id TEXT PRIMARY KEY,
+    data_movimentacao DATE,
+    valor_movimentacao NUMERIC(10,2),
+    clientid UUID REFERENCES clientes(clientid),
+    type TEXT,
+    category TEXT,
+    observation TEXT,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Create categories table
-CREATE TABLE IF NOT EXISTS categories (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    color VARCHAR(7), -- hex color
-    icon VARCHAR(50),
-    type VARCHAR(20) NOT NULL CHECK (type IN ('income', 'expense')),
-    created_at TIMESTAMP DEFAULT NOW()
-);
+-- Insert sample clientes data (matching your existing data structure)
+INSERT INTO clientes (clientid, whatsapp, status) VALUES
+('660a9484-dc41-4aa3-a01d-aec3d477fdfe', '5511997245501', TRUE),
+('800fcbf0-95d5-4c1b-b79d-fdc3755cc5d', '5511913142143', TRUE),
+('89864049-7d89-4f6e-a15b-3a38b810dd5', '555199528953', TRUE),
+('a0b9ae28-2806-4e44-aec2-9f735c5b76c', '5521998934748', TRUE)
+ON CONFLICT (clientid) DO NOTHING;
 
--- Create transactions table
-CREATE TABLE IF NOT EXISTS transactions (
-    id SERIAL PRIMARY KEY,
-    cliente_id INTEGER REFERENCES clientes(id),
-    user_id INTEGER REFERENCES users(id), -- keeping for compatibility
-    category_id INTEGER REFERENCES categories(id),
-    amount DECIMAL(10,2) NOT NULL,
-    description TEXT NOT NULL,
-    establishment VARCHAR(100),
-    type VARCHAR(20) NOT NULL CHECK (type IN ('income', 'expense')),
-    source VARCHAR(20) CHECK (source IN ('text', 'audio', 'photo')),
-    original_message TEXT,
-    processed_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Create monthly_summaries table
-CREATE TABLE IF NOT EXISTS monthly_summaries (
-    id SERIAL PRIMARY KEY,
-    cliente_id INTEGER REFERENCES clientes(id),
-    user_id INTEGER REFERENCES users(id), -- keeping for compatibility
-    month INTEGER NOT NULL,
-    year INTEGER NOT NULL,
-    total_income DECIMAL(10,2) DEFAULT 0,
-    total_expenses DECIMAL(10,2) DEFAULT 0,
-    balance DECIMAL(10,2) DEFAULT 0,
-    top_category VARCHAR(50),
-    top_establishment VARCHAR(100),
-    created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW()
-);
-
--- Create whatsapp_sessions table
-CREATE TABLE IF NOT EXISTS whatsapp_sessions (
-    id SERIAL PRIMARY KEY,
-    cliente_id INTEGER REFERENCES clientes(id),
-    user_id INTEGER REFERENCES users(id), -- keeping for compatibility
-    whatsapp_id VARCHAR(100) NOT NULL,
-    session_token VARCHAR(255),
-    is_active INTEGER DEFAULT 1,
-    last_activity TIMESTAMP DEFAULT NOW(),
-    created_at TIMESTAMP DEFAULT NOW()
-);
-
--- Insert default admin user (password is '1234' - you should hash this in production)
-INSERT INTO users (username, password, name) 
-VALUES ('admin', '1234', 'Administrador')
-ON CONFLICT (username) DO NOTHING;
-
--- Insert default admin cliente
-INSERT INTO clientes (username, password, name, email) 
-VALUES ('admin', '1234', 'Administrador', 'admin@blogliterario.com')
-ON CONFLICT (username) DO NOTHING;
-
--- Insert default categories
-INSERT INTO categories (name, color, icon, type) VALUES
-('Transporte', '#20C997', 'car', 'expense'),
-('Alimentação', '#A78BFA', 'utensils', 'expense'),
-('Lazer', '#22D3EE', 'gamepad', 'expense'),
-('Outros', '#6B7280', 'more', 'expense'),
-('Salário CLT', '#10B981', 'briefcase', 'income'),
-('Trabalho Freelancer', '#F59E0B', 'laptop', 'income'),
-('Delivery', '#EF4444', 'truck', 'income')
-ON CONFLICT DO NOTHING;
-
--- Insert sample transactions for demo
-INSERT INTO transactions (cliente_id, user_id, category_id, amount, description, establishment, type, created_at) VALUES
-(1, 1, 1, 25.00, 'Uber - Centro', 'Uber', 'expense', '2024-11-30 14:30:00'),
-(1, 1, 6, 850.00, 'Freelance Design', 'Cliente XYZ', 'income', '2024-11-29 10:00:00'),
-(1, 1, 2, 42.90, 'iFood - Jantar', 'iFood', 'expense', '2024-11-28 19:30:00'),
-(1, 1, 1, 180.00, 'Corridas Uber - Novembro', 'Uber', 'expense', '2024-11-25 18:00:00'),
-(1, 1, 2, 145.00, 'Pedidos iFood - Novembro', 'iFood', 'expense', '2024-11-24 20:15:00'),
-(1, 1, 2, 120.00, 'Compras do mês', 'Supermercado', 'expense', '2024-11-23 16:00:00'),
-(1, 1, 5, 2800.00, 'Salário CLT', 'Empresa ABC', 'income', '2024-11-01 09:00:00'),
-(1, 1, 7, 75.00, 'Corridas iFood', 'iFood', 'income', '2024-11-20 21:30:00')
-ON CONFLICT DO NOTHING;
+-- Insert sample movimentacoes data (matching your existing data structure)
+INSERT INTO movimentacoes (id, data_movimentacao, valor_movimentacao, clientid, type, category, observation) VALUES
+('011a0', '2025-08-03', 70.00, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'alimentação', 'pizza'),
+('06ba0', '2025-07-13', 89.18, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'alimentação', 'Ifood'),
+('086e0', '2023-10-01', 37.99, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'Produtos', 'Transferência de M'),
+('09a09', '2025-07-01', 100.00, '89864049-7d89-4f6e-a15b-3a38b810dd5', 'Despesa', 'alimentação', 'barzinho'),
+('0d72d', '2022-11-07', 85.00, '89864049-7d89-4f6e-a15b-3a38b810dd5', 'Despesa', 'Outros', 'Transferência de Jc'),
+('0f48a', '2025-07-21', 130.00, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'Outros', 'valor corrigido'),
+('1a25a', '2025-07-14', 16.00, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'alimentação', 'Almoço'),
+('1bfdd', '2025-07-23', 25.99, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'alimentação', 'almoço'),
+('1c1bd', '2025-07-21', 13.68, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'alimentação', 'mercadinho'),
+('1e48b', '2025-07-18', 15.78, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'Outros', 'mercado'),
+('1eb51', '2025-07-14', 26.00, '800fcbf0-95d5-4c1b-b79d-fdc3755cc5d', 'Despesa', 'alimentação', 'mercado'),
+('20c46', '2025-09-03', 26.48, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'alimentação', 'almoço'),
+('212b1', '2025-07-17', 10.00, 'a0b9ae28-2806-4e44-aec2-9f735c5b76c', 'Despesa', 'Outros', 'noite'),
+('216b0', '2025-07-13', 2.05, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Receita', 'Outros', 'venda'),
+('227b7', '2025-09-01', 10.00, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'Outros', 'rifa'),
+('2415c', '2025-07-30', 9.99, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'Outros', 'compra'),
+('258b6', '2025-07-31', 19.48, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'Outros', 'mercadinho'),
+('28488', '2025-09-08', 22.98, '660a9484-dc41-4aa3-a01d-aec3d477fdfe', 'Despesa', 'alimentação', 'Almoço')
+ON CONFLICT (id) DO NOTHING;
 
 -- Create indexes for better performance
-CREATE INDEX IF NOT EXISTS idx_transactions_cliente_id ON transactions(cliente_id);
-CREATE INDEX IF NOT EXISTS idx_transactions_user_id ON transactions(user_id);
-CREATE INDEX IF NOT EXISTS idx_transactions_category_id ON transactions(category_id);
-CREATE INDEX IF NOT EXISTS idx_transactions_created_at ON transactions(created_at);
-CREATE INDEX IF NOT EXISTS idx_transactions_type ON transactions(type);
-CREATE INDEX IF NOT EXISTS idx_clientes_username ON clientes(username);
-CREATE INDEX IF NOT EXISTS idx_clientes_email ON clientes(email);
-CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_movimentacoes_clientid ON movimentacoes(clientid);
+CREATE INDEX IF NOT EXISTS idx_movimentacoes_data ON movimentacoes(data_movimentacao);
+CREATE INDEX IF NOT EXISTS idx_movimentacoes_type ON movimentacoes(type);
+CREATE INDEX IF NOT EXISTS idx_movimentacoes_category ON movimentacoes(category);
+CREATE INDEX IF NOT EXISTS idx_clientes_whatsapp ON clientes(whatsapp);
+CREATE INDEX IF NOT EXISTS idx_clientes_status ON clientes(status);
 
--- Create updated_at trigger for users table
+-- Create updated_at trigger function
 CREATE OR REPLACE FUNCTION update_updated_at_column()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -132,14 +71,38 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
+-- Create triggers for updated_at
 CREATE TRIGGER update_clientes_updated_at BEFORE UPDATE ON clientes 
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users 
+CREATE TRIGGER update_movimentacoes_updated_at BEFORE UPDATE ON movimentacoes 
 FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
-CREATE TRIGGER update_transactions_updated_at BEFORE UPDATE ON transactions 
-FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+-- Enable Row Level Security (RLS) for better security
+ALTER TABLE clientes ENABLE ROW LEVEL SECURITY;
+ALTER TABLE movimentacoes ENABLE ROW LEVEL SECURITY;
 
-CREATE TRIGGER update_monthly_summaries_updated_at BEFORE UPDATE ON monthly_summaries 
-FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+-- Create policies for clientes table
+CREATE POLICY "Users can view their own data" ON clientes
+    FOR SELECT USING (auth.uid()::text = clientid::text);
+
+CREATE POLICY "Users can insert their own data" ON clientes
+    FOR INSERT WITH CHECK (auth.uid()::text = clientid::text);
+
+CREATE POLICY "Users can update their own data" ON clientes
+    FOR UPDATE USING (auth.uid()::text = clientid::text);
+
+-- Create policies for movimentacoes table
+CREATE POLICY "Users can view their own movimentacoes" ON movimentacoes
+    FOR SELECT USING (auth.uid()::text = clientid::text);
+
+CREATE POLICY "Users can insert their own movimentacoes" ON movimentacoes
+    FOR INSERT WITH CHECK (auth.uid()::text = clientid::text);
+
+CREATE POLICY "Users can update their own movimentacoes" ON movimentacoes
+    FOR UPDATE USING (auth.uid()::text = clientid::text);
+
+-- Grant necessary permissions
+GRANT USAGE ON SCHEMA public TO anon, authenticated;
+GRANT ALL ON ALL TABLES IN SCHEMA public TO anon, authenticated;
+GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO anon, authenticated;
