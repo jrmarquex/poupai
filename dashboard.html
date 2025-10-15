@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - AssistenteFin</title>
+    <title>Dashboard - Poupa.Ai</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -16,15 +16,22 @@
                         'primary': '#20C997',
                         'secondary': '#A78BFA',
                         'accent': '#22D3EE',
+                        'success': '#10B981',
+                        'warning': '#F59E0B',
+                        'danger': '#EF4444',
                         'card-bg': 'rgba(255, 255, 255, 0.05)',
                         'glass-border': 'rgba(255, 255, 255, 0.1)',
-                        'chart-transport': '#20C997',
-                        'chart-food': '#A78BFA',
-                        'chart-leisure': '#22D3EE',
-                        'chart-others': '#6B7280'
+                        'sidebar-bg': 'rgba(15, 23, 42, 0.8)',
+                        'chart-green': '#10B981',
+                        'chart-blue': '#3B82F6',
+                        'chart-purple': '#A78BFA',
+                        'chart-orange': '#F59E0B'
                     },
                     fontFamily: {
                         'inter': ['Inter', 'sans-serif'],
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
                     }
                 }
             }
@@ -38,6 +45,9 @@
     
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
         * {
@@ -57,6 +67,12 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
+        .sidebar-glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
         /* Custom gradient backgrounds */
         .gradient-bg {
             background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 100%);
@@ -74,288 +90,453 @@
             outline: 2px solid #20C997;
             outline-offset: 2px;
         }
-
+        
         /* Chart animations */
         .chart-segment {
             transition: all 0.3s ease;
         }
-
+        
         .chart-segment:hover {
             transform: scale(1.05);
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.5);
+        }
+        
+        /* Floating elements */
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Card hover effects */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
     </style>
 </head>
 <body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="dashboardApp()">
-    <!-- Header -->
-    <header class="glass border-b border-glass-border">
-        <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-40" x-data="{ sidebarOpen: true }">
+        <div class="p-6">
             <!-- Logo -->
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-lg flex items-center justify-center">
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
                     <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-white">AssistenteFin</h1>
+                    <h1 class="text-xl font-bold text-white">Poupa.Ai</h1>
                     <p class="text-xs text-gray-400">Dashboard Financeiro</p>
                 </div>
             </div>
-
-            <!-- User menu -->
-            <div x-data="{ dropdownOpen: false }" class="relative">
-                <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-all focus-ring">
-                    <div class="w-8 h-8 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
-                        <span class="text-sm font-semibold text-white">A</span>
-                    </div>
-                    <span class="text-sm text-white">Admin</span>
-                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            
+            <!-- User Profile -->
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="relative">
+                    <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
+                         alt="Avatar" 
+                         class="w-12 h-12 rounded-full border-2 border-primary">
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-dark-bg"></div>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold" x-text="userProfile.name"></h3>
+                    <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
+                </div>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="space-y-2">
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
                     </svg>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Minha Carteira</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Transações</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Relatórios</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+            
+            <!-- History Card -->
+            <div class="mt-8 glass rounded-xl p-4">
+                <div class="flex items-center space-x-3 mb-2">
+                    <svg class="w-5 h-5 text-warning" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span class="text-sm font-semibold text-white">Histórico Disponível</span>
+                </div>
+                <p class="text-xs text-gray-400">Verifique seus relatórios semanais de transações</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="ml-64 p-6">
+        <!-- Top Bar -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <h2 class="text-3xl font-bold text-white">Dashboard</h2>
+                <button class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span>Filtros</span>
                 </button>
-
-                <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition class="absolute right-0 mt-2 w-48 glass-strong rounded-lg shadow-lg py-2 z-50">
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Perfil</a>
-                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Configurações</a>
-                    <hr class="border-glass-border my-2">
-                    <a href="#" @click="logout" class="block px-4 py-2 text-sm text-red-400 hover:bg-white hover:bg-opacity-10 transition-colors">Sair</a>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Search -->
+                <div class="relative">
+                    <input type="text" placeholder="Buscar..." 
+                           class="w-64 px-4 py-2 pl-10 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <svg class="w-4 h-4 absolute left-3 top-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                    </svg>
+                </div>
+                
+                <!-- Notifications -->
+                <button class="relative p-2 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+                    </svg>
+                    <span class="absolute -top-1 -right-1 w-3 h-3 bg-danger rounded-full"></span>
+                </button>
+                
+                <!-- User Menu -->
+                <div x-data="{ dropdownOpen: false }" class="relative">
+                    <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                        <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/32x32/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
+                             alt="Avatar" class="w-8 h-8 rounded-full">
+                        <span x-text="userProfile.name"></span>
+                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M7 10l5 5 5-5z"/>
+                        </svg>
+                    </button>
+                    
+                    <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition class="absolute right-0 mt-2 w-48 glass-strong rounded-lg shadow-lg py-2 z-50">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Perfil</a>
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Configurações</a>
+                        <hr class="border-glass-border my-2">
+                        <a href="#" @click="logout" class="block px-4 py-2 text-sm text-red-400 hover:bg-white hover:bg-opacity-10 transition-colors">Sair</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="container mx-auto px-4 py-8">
-        <div class="grid lg:grid-cols-2 gap-8">
-            <!-- Left Column - Gastos por Categoria -->
-            <div class="glass-strong rounded-2xl p-6">
-                <h2 class="text-xl font-semibold text-white mb-6">Gastos por Categoria - Novembro</h2>
-                
-                <!-- Chart Container -->
-                <div class="flex items-center justify-center mb-6">
-                    <div class="relative w-48 h-48">
-                        <!-- Donut Chart SVG -->
-                        <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                            <!-- Background circle -->
-                            <circle cx="50" cy="50" r="35" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="8"/>
-                            
-                            <!-- Transport segment (35%) -->
-                            <circle 
-                                cx="50" 
-                                cy="50" 
-                                r="35" 
-                                fill="none" 
-                                stroke="#20C997" 
-                                stroke-width="8" 
-                                stroke-dasharray="77 143"
-                                stroke-dashoffset="0"
-                                class="chart-segment"
-                            />
-                            
-                            <!-- Food segment (25%) -->
-                            <circle 
-                                cx="50" 
-                                cy="50" 
-                                r="35" 
-                                fill="none" 
-                                stroke="#A78BFA" 
-                                stroke-width="8" 
-                                stroke-dasharray="55 165"
-                                stroke-dashoffset="-77"
-                                class="chart-segment"
-                            />
-                            
-                            <!-- Leisure segment (20%) -->
-                            <circle 
-                                cx="50" 
-                                cy="50" 
-                                r="35" 
-                                fill="none" 
-                                stroke="#22D3EE" 
-                                stroke-width="8" 
-                                stroke-dasharray="44 176"
-                                stroke-dashoffset="-132"
-                                class="chart-segment"
-                            />
-                            
-                            <!-- Others segment (20%) -->
-                            <circle 
-                                cx="50" 
-                                cy="50" 
-                                r="35" 
-                                fill="none" 
-                                stroke="#6B7280" 
-                                stroke-width="8" 
-                                stroke-dasharray="44 176"
-                                stroke-dashoffset="-176"
-                                class="chart-segment"
-                            />
+        
+        <!-- Financial Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Receitas Card -->
+            <div class="glass-strong rounded-2xl p-6 card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-success to-chart-green rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
                     </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-400">Lançamentos</p>
+                        <p class="text-2xl font-bold text-success" x-text="'R$ ' + financialSummary.receitas.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
+                        <p class="text-xs text-success">+12% este mês</p>
+                    </div>
                 </div>
-
-                <!-- Chart Legend -->
-                <div class="space-y-3">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 bg-chart-transport rounded-full"></div>
-                            <span class="text-gray-300">Transporte</span>
-                        </div>
-                        <span class="text-white font-medium">R$ 450 (35%)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 bg-chart-food rounded-full"></div>
-                            <span class="text-gray-300">Alimentação</span>
-                        </div>
-                        <span class="text-white font-medium">R$ 320 (25%)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 bg-chart-leisure rounded-full"></div>
-                            <span class="text-gray-300">Lazer</span>
-                        </div>
-                        <span class="text-white font-medium">R$ 260 (20%)</span>
-                    </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center space-x-3">
-                            <div class="w-3 h-3 bg-chart-others rounded-full"></div>
-                            <span class="text-gray-300">Outros</span>
-                        </div>
-                        <span class="text-white font-medium">R$ 260 (20%)</span>
-                    </div>
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div class="bg-success h-2 rounded-full" style="width: 75%"></div>
                 </div>
             </div>
-
-            <!-- Right Column - Resumo Financeiro -->
-            <div class="space-y-6">
-                <!-- Financial Summary -->
-                <div class="glass-strong rounded-2xl p-6">
-                    <h2 class="text-xl font-semibold text-white mb-6">Resumo Financeiro</h2>
-                    
-                    <div class="space-y-4">
-                        <!-- Receitas -->
-                        <div class="glass rounded-xl p-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-400">Receitas</span>
-                                <span class="text-2xl font-bold text-primary">R$ 3.500</span>
-                            </div>
-                        </div>
-
-                        <!-- Gastos -->
-                        <div class="glass rounded-xl p-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-400">Gastos</span>
-                                <span class="text-2xl font-bold text-red-400">R$ 1.290</span>
-                            </div>
-                        </div>
-
-                        <!-- Saldo -->
-                        <div class="glass rounded-xl p-4">
-                            <div class="flex items-center justify-between">
-                                <span class="text-gray-400">Saldo</span>
-                                <span class="text-2xl font-bold text-white">R$ 2.210</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Top Estabelecimentos -->
-                <div class="glass-strong rounded-2xl p-6">
-                    <h2 class="text-xl font-semibold text-white mb-6">Top Estabelecimentos</h2>
-                    
-                    <div class="space-y-4">
-                        <!-- Uber -->
-                        <div class="flex items-center justify-between p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-chart-transport rounded-full flex items-center justify-center">
-                                    <span class="text-white font-semibold text-sm">U</span>
-                                </div>
-                                <span class="text-white font-medium">Uber</span>
-                            </div>
-                            <span class="text-chart-transport font-semibold">R$ 180</span>
-                        </div>
-
-                        <!-- iFood -->
-                        <div class="flex items-center justify-between p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-chart-food rounded-full flex items-center justify-center">
-                                    <span class="text-white font-semibold text-sm">iF</span>
-                                </div>
-                                <span class="text-white font-medium">iFood</span>
-                            </div>
-                            <span class="text-chart-food font-semibold">R$ 145</span>
-                        </div>
-
-                        <!-- Supermercado -->
-                        <div class="flex items-center justify-between p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-all">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-10 h-10 bg-chart-leisure rounded-full flex items-center justify-center">
-                                    <span class="text-white font-semibold text-sm">S</span>
-                                </div>
-                                <span class="text-white font-medium">Supermercado</span>
-                            </div>
-                            <span class="text-chart-leisure font-semibold">R$ 120</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Recent Transactions -->
-        <div class="mt-8 glass-strong rounded-2xl p-6">
-            <h2 class="text-xl font-semibold text-white mb-6">Transações Recentes</h2>
             
-            <div class="overflow-x-auto">
-                <table class="w-full">
-                    <thead>
-                        <tr class="border-b border-glass-border">
-                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Data</th>
-                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Descrição</th>
-                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Categoria</th>
-                            <th class="text-right py-3 px-4 text-gray-400 font-medium">Valor</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-glass-border">
-                        <tr class="hover:bg-white hover:bg-opacity-5 transition-colors">
-                            <td class="py-3 px-4 text-gray-300">30/11</td>
-                            <td class="py-3 px-4 text-white">Uber - Centro</td>
-                            <td class="py-3 px-4">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-chart-transport bg-opacity-20 text-chart-transport">
-                                    Transporte
-                                </span>
-                            </td>
-                            <td class="py-3 px-4 text-right text-red-400 font-medium">-R$ 25,00</td>
-                        </tr>
-                        <tr class="hover:bg-white hover:bg-opacity-5 transition-colors">
-                            <td class="py-3 px-4 text-gray-300">29/11</td>
-                            <td class="py-3 px-4 text-white">Freelance Design</td>
-                            <td class="py-3 px-4">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-primary bg-opacity-20 text-primary">
-                                    Receita
-                                </span>
-                            </td>
-                            <td class="py-3 px-4 text-right text-primary font-medium">+R$ 850,00</td>
-                        </tr>
-                        <tr class="hover:bg-white hover:bg-opacity-5 transition-colors">
-                            <td class="py-3 px-4 text-gray-300">28/11</td>
-                            <td class="py-3 px-4 text-white">iFood - Jantar</td>
-                            <td class="py-3 px-4">
-                                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs bg-chart-food bg-opacity-20 text-chart-food">
-                                    Alimentação
-                                </span>
-                            </td>
-                            <td class="py-3 px-4 text-right text-red-400 font-medium">-R$ 42,90</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!-- Despesas Card -->
+            <div class="glass-strong rounded-2xl p-6 card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-danger to-chart-orange rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-400">Gastos</p>
+                        <p class="text-2xl font-bold text-danger" x-text="'R$ ' + financialSummary.despesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
+                        <p class="text-xs text-danger">+8% este mês</p>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div class="bg-danger h-2 rounded-full" style="width: 60%"></div>
+                </div>
+            </div>
+            
+            <!-- Saldo Líquido Card -->
+            <div class="glass-strong rounded-2xl p-6 card-hover">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-400">Saldo Líquido</p>
+                        <p class="text-2xl font-bold" 
+                           :class="financialSummary.saldo >= 0 ? 'text-success' : 'text-danger'"
+                           x-text="'R$ ' + financialSummary.saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
+                        <p class="text-xs" :class="financialSummary.saldo >= 0 ? 'text-success' : 'text-danger'">
+                            <span x-text="financialSummary.saldo >= 0 ? '+5% este mês' : '-3% este mês'"></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-2">
+                    <div class="h-2 rounded-full" 
+                         :class="financialSummary.saldo >= 0 ? 'bg-success' : 'bg-danger'"
+                         :style="'width: ' + Math.min(Math.abs(financialSummary.saldo) / 1000 * 10, 100) + '%'"></div>
+                </div>
             </div>
         </div>
-    </main>
+        
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Pie Chart - Gastos por Categoria -->
+            <div class="glass-strong rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-white">Gastos por Categoria</h3>
+                    <select class="glass px-3 py-1 rounded-lg text-sm">
+                        <option>Este Mês</option>
+                        <option>Últimos 3 Meses</option>
+                        <option>Este Ano</option>
+                    </select>
+                </div>
+                <div class="relative h-64">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Line Chart - Evolução Financeira -->
+            <div class="glass-strong rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-white">Evolução Financeira</h3>
+                    <select class="glass px-3 py-1 rounded-lg text-sm">
+                        <option>Últimos 7 dias</option>
+                        <option>Últimos 30 dias</option>
+                        <option>Últimos 90 dias</option>
+                    </select>
+                </div>
+                <div class="relative h-64">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Activities and Export Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Recent Activities -->
+            <div class="lg:col-span-2 glass-strong rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-white">Atividades Recentes</h3>
+                    <a href="#" class="text-primary hover:underline text-sm">Ver todas</a>
+                </div>
+                
+                <div class="space-y-4">
+                    <template x-for="activity in recentActivities" :key="activity.id">
+                        <div class="flex items-center space-x-4 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-5 transition-colors">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center"
+                                 :class="activity.type === 'Receita' ? 'bg-success bg-opacity-20' : 'bg-danger bg-opacity-20'">
+                                <svg class="w-5 h-5" :class="activity.type === 'Receita' ? 'text-success' : 'text-danger'" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                                </svg>
+                            </div>
+                            <div class="flex-1">
+                                <p class="text-white font-medium" x-text="activity.description"></p>
+                                <p class="text-sm text-gray-400" x-text="activity.time"></p>
+                            </div>
+                            <div class="text-right">
+                                <p class="font-semibold" :class="activity.type === 'Receita' ? 'text-success' : 'text-danger'"
+                                   x-text="(activity.type === 'Receita' ? '+' : '-') + 'R$ ' + activity.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
+                                <p class="text-xs text-gray-400" x-text="activity.status"></p>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+            
+            <!-- Export Options -->
+            <div class="glass-strong rounded-2xl p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-semibold text-white">Exportar Dados</h3>
+                    <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                
+                <div class="space-y-4">
+                    <button @click="exportData('pdf')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                        <svg class="w-5 h-5 text-danger" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        <div class="text-left">
+                            <p class="text-white font-medium">Exportar PDF</p>
+                            <p class="text-xs text-gray-400">Relatório completo</p>
+                        </div>
+                    </button>
+                    
+                    <button @click="exportData('excel')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                        <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        <div class="text-left">
+                            <p class="text-white font-medium">Exportar Excel</p>
+                            <p class="text-xs text-gray-400">Planilha de dados</p>
+                        </div>
+                    </button>
+                    
+                    <button @click="exportData('xml')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                        <svg class="w-5 h-5 text-warning" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        <div class="text-left">
+                            <p class="text-white font-medium">Exportar XML</p>
+                            <p class="text-xs text-gray-400">Dados estruturados</p>
+                        </div>
+                    </button>
+                    
+                    <button @click="exportData('csv')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                        <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        <div class="text-left">
+                            <p class="text-white font-medium">Exportar CSV</p>
+                            <p class="text-xs text-gray-400">Dados separados por vírgula</p>
+                        </div>
+                    </button>
+                </div>
+                
+                <!-- Quick Stats -->
+                <div class="mt-6 pt-6 border-t border-glass-border">
+                    <h4 class="text-sm font-semibold text-gray-400 mb-3">Resumo Rápido</h4>
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Total de Transações:</span>
+                            <span class="text-white" x-text="recentActivities.length"></span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-gray-400">Última Atualização:</span>
+                            <span class="text-white" x-text="new Date().toLocaleString('pt-BR')"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Elements -->
+    <div class="fixed top-4 left-4 w-8 h-8 bg-warning rounded-full flex items-center justify-center floating z-30">
+        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+    </div>
+    
+    <div class="fixed bottom-4 right-4 w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center floating z-30">
+        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+        </svg>
+    </div>
 
     <script>
         function dashboardApp() {
             return {
+                userProfile: {
+                    name: 'Usuário',
+                    role: 'Usuário Poupa.Ai',
+                    avatar: null
+                },
+                
+                financialSummary: {
+                    receitas: 3500.00,
+                    despesas: 1290.00,
+                    saldo: 2210.00
+                },
+                
+                recentActivities: [
+                    {
+                        id: 1,
+                        description: 'Freelance Design',
+                        amount: 850.00,
+                        type: 'Receita',
+                        time: '10:42:23 AM',
+                        status: 'Concluído'
+                    },
+                    {
+                        id: 2,
+                        description: 'Uber - Centro',
+                        amount: 25.00,
+                        type: 'Despesa',
+                        time: '12:50:40 AM',
+                        status: 'Pendente'
+                    },
+                    {
+                        id: 3,
+                        description: 'iFood - Jantar',
+                        amount: 42.90,
+                        type: 'Despesa',
+                        time: 'Ontem 19:30',
+                        status: 'Concluído'
+                    },
+                    {
+                        id: 4,
+                        description: 'Salário CLT',
+                        amount: 2800.00,
+                        type: 'Receita',
+                        time: 'Ontem 09:00',
+                        status: 'Concluído'
+                    }
+                ],
+                
                 init() {
                     // Check if user is logged in
                     if (!localStorage.getItem('isLoggedIn')) {
@@ -363,16 +544,115 @@
                         return;
                     }
                     
-                    // Load data from database in the future
-                    this.loadDashboardData();
+                    // Load user data
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    this.userProfile.name = user.name || 'Usuário';
+                    this.userProfile.role = user.role || 'Usuário Poupa.Ai';
+                    
+                    // Initialize charts
+                    this.$nextTick(() => {
+                        this.initCharts();
+                    });
                 },
-
-                loadDashboardData() {
-                    // This will be connected to Supabase database
-                    console.log('Loading dashboard data...');
-                    // TODO: Implement Supabase integration
+                
+                initCharts() {
+                    // Pie Chart
+                    const pieCtx = document.getElementById('pieChart');
+                    if (pieCtx) {
+                        new Chart(pieCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Transporte', 'Alimentação', 'Lazer', 'Outros'],
+                                datasets: [{
+                                    data: [35, 25, 20, 20],
+                                    backgroundColor: [
+                                        '#20C997',
+                                        '#A78BFA',
+                                        '#22D3EE',
+                                        '#6B7280'
+                                    ],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom',
+                                        labels: {
+                                            color: '#9CA3AF',
+                                            padding: 20
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    
+                    // Line Chart
+                    const lineCtx = document.getElementById('lineChart');
+                    if (lineCtx) {
+                        new Chart(lineCtx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                                datasets: [{
+                                    label: 'Receitas',
+                                    data: [1200, 1900, 3000, 5000, 2000, 3000, 3500],
+                                    borderColor: '#10B981',
+                                    backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                    tension: 0.4
+                                }, {
+                                    label: 'Despesas',
+                                    data: [800, 1200, 1500, 2000, 1800, 2200, 1290],
+                                    borderColor: '#EF4444',
+                                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                    tension: 0.4
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                plugins: {
+                                    legend: {
+                                        labels: {
+                                            color: '#9CA3AF'
+                                        }
+                                    }
+                                },
+                                scales: {
+                                    x: {
+                                        ticks: {
+                                            color: '#9CA3AF'
+                                        },
+                                        grid: {
+                                            color: 'rgba(255, 255, 255, 0.1)'
+                                        }
+                                    },
+                                    y: {
+                                        ticks: {
+                                            color: '#9CA3AF'
+                                        },
+                                        grid: {
+                                            color: 'rgba(255, 255, 255, 0.1)'
+                                        }
+                                    }
+                                }
+                            }
+                        });
+                    }
                 },
-
+                
+                exportData(format) {
+                    // Simulate export functionality
+                    const message = `Exportando dados em formato ${format.toUpperCase()}...`;
+                    alert(message);
+                    
+                    // In a real application, this would trigger the actual export
+                    console.log(`Exporting data as ${format}`);
+                },
+                
                 logout() {
                     localStorage.removeItem('isLoggedIn');
                     localStorage.removeItem('user');
@@ -380,13 +660,6 @@
                 }
             }
         }
-
-        // Auth check on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!localStorage.getItem('isLoggedIn')) {
-                window.location.href = 'login.html';
-            }
-        });
     </script>
 </body>
 </html>
