@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tutorial - Poupa.Ai</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0B0F14',
+                        'primary': '#20C997',
+                        'secondary': '#A78BFA',
+                        'accent': '#22D3EE',
+                        'success': '#10B981',
+                        'warning': '#F59E0B',
+                        'danger': '#EF4444',
+                        'card-bg': 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)',
+                        'sidebar-bg': 'rgba(15, 23, 42, 0.8)',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .sidebar-glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 100%);
+        }
+        
+        .gradient-mesh {
+            background: 
+                radial-gradient(at 40% 20%, rgba(32, 201, 151, 0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(167, 139, 250, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+        }
+        
+        .focus-ring:focus {
+            outline: 2px solid #20C997;
+            outline-offset: 2px;
+        }
+        
+        .tutorial-step {
+            transition: all 0.3s ease;
+        }
+        
+        .tutorial-step:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .example-card {
+            transition: all 0.3s ease;
+        }
+        
+        .example-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(32, 201, 151, 0.2);
+        }
+        
+        .whatsapp-link {
+            transition: all 0.3s ease;
+        }
+        
+        .whatsapp-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="tutorialApp()">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-40">
+        <div class="p-6">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white">Poupa.Ai</h1>
+                    <p class="text-xs text-gray-400">Dashboard Financeiro</p>
+                </div>
+            </div>
+            
+            <!-- User Profile -->
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="relative">
+                    <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
+                         alt="Avatar" 
+                         class="w-12 h-12 rounded-full border-2 border-primary">
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-dark-bg"></div>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold" x-text="userProfile.name"></h3>
+                    <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
+                </div>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Minha Carteira</span>
+                </a>
+                
+                <a href="transacoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Transações</span>
+                </a>
+                
+                <a href="relatorios.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Relatórios</span>
+                </a>
+                
+                <a href="configuracoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Configurações</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,16.5L18,9.5L16.5,8L11,13.5L7.5,10L6,11.5L11,16.5Z"/>
+                    </svg>
+                    <span>Guia Prático</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="ml-64 p-6">
+        <!-- Top Bar -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <h2 class="text-3xl font-bold text-white">Guia Prático</h2>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-400">Como usar o Poupa.Ai</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Support Button -->
+                <a href="https://wa.me/5511999999999?text=Olá! Preciso de ajuda com o Poupa.Ai" 
+                   target="_blank" 
+                   class="whatsapp-link bg-success text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-80 transition-all duration-200 flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M17.472,14.382c-0.297-0.149-1.758-0.867-2.03-0.967c-0.273-0.099-0.471-0.148-0.67,0.15c-0.197,0.297-0.767,0.967-0.94,1.164c-0.173,0.199-0.347,0.223-0.644,0.074c-0.297-0.149-1.255-0.462-2.39-1.475c-0.883-0.788-1.48-1.761-1.653-2.059c-0.173-0.297-0.018-0.458,0.13-0.606c0.134-0.133,0.298-0.347,0.446-0.52c0.149-0.174,0.198-0.298,0.298-0.497c0.099-0.198,0.05-0.372-0.025-0.52c-0.074-0.149-0.669-1.612-0.916-2.207c-0.24-0.579-0.487-0.5-0.669-0.51c-0.173-0.008-0.371-0.01-0.57-0.01c-0.198,0-0.52,0.074-0.792,0.372c-0.273,0.297-1.04,1.016-1.04,2.479c0,1.462,1.065,2.875,1.213,3.074c0.149,0.198,2.096,3.2,5.077,4.487c0.709,0.306,1.262,0.489,1.694,0.625c0.717,0.227,1.37,0.195,1.885,0.118c0.571-0.085,1.758-0.719,2.006-1.413c0.249-0.694,0.249-1.289,0.173-1.413c-0.074-0.124-0.272-0.198-0.57-0.347m-5.421,7.403H7.116V9.25h4.935v12.535Z"/>
+                    </svg>
+                    <span>Suporte WhatsApp</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Welcome Section -->
+        <div class="glass-strong rounded-2xl p-8 mb-8 text-center">
+            <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,16.5L18,9.5L16.5,8L11,13.5L7.5,10L6,11.5L11,16.5Z"/>
+                </svg>
+            </div>
+            <h3 class="text-2xl font-bold text-white mb-4">Bem-vindo ao Poupa.Ai!</h3>
+            <p class="text-lg text-gray-300 mb-6">Seu assistente financeiro pessoal que torna o controle de gastos simples e prático</p>
+            <p class="text-gray-400 max-w-3xl mx-auto">
+                Com o Poupa.Ai, você pode registrar suas receitas e despesas de forma rápida e intuitiva, 
+                seja digitando, falando ou até mesmo enviando fotos. Tudo isso direto no WhatsApp que você já usa todos os dias.
+            </p>
+        </div>
+        
+        <!-- Quick Start Steps -->
+        <div class="glass-strong rounded-2xl p-6 mb-8">
+            <h3 class="text-xl font-semibold text-white mb-6">🚀 Começando é Muito Simples</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="tutorial-step glass rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-primary">1</span>
+                    </div>
+                    <h4 class="text-lg font-semibold text-white mb-2">Acesse o WhatsApp</h4>
+                    <p class="text-gray-400 text-sm">Abra o WhatsApp e vá até o número do seu assistente financeiro</p>
+                </div>
+                
+                <div class="tutorial-step glass rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-accent bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-accent">2</span>
+                    </div>
+                    <h4 class="text-lg font-semibold text-white mb-2">Registre Seus Gastos</h4>
+                    <p class="text-gray-400 text-sm">Envie uma mensagem, áudio ou foto do seu gasto ou receita</p>
+                </div>
+                
+                <div class="tutorial-step glass rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-success bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <span class="text-2xl font-bold text-success">3</span>
+                    </div>
+                    <h4 class="text-lg font-semibold text-white mb-2">Acompanhe no Dashboard</h4>
+                    <p class="text-gray-400 text-sm">Visualize seus dados organizados em gráficos e relatórios</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- How to Use Section -->
+        <div class="glass-strong rounded-2xl p-6 mb-8">
+            <h3 class="text-xl font-semibold text-white mb-6">💡 Como Usar o Sistema</h3>
+            
+            <div class="space-y-6">
+                <!-- Text Messages -->
+                <div class="tutorial-step glass rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-primary bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M20,2H4A2,2 0 0,0 2,4V22L6,18H20A2,2 0 0,0 22,16V4A2,2 0 0,0 20,2M20,16H6L4,18V4H20V16Z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-semibold text-white mb-3">📝 Mensagens de Texto</h4>
+                            <p class="text-gray-300 mb-4">Simplesmente digite o que você gastou ou recebeu. O assistente inteligente entende e organiza automaticamente.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="example-card glass rounded-lg p-4">
+                                    <h5 class="font-semibold text-success mb-2">✅ Exemplos de Receitas:</h5>
+                                    <ul class="text-sm text-gray-300 space-y-1">
+                                        <li>• "Recebi o pagamento do mês de 2.500 reais"</li>
+                                        <li>• "No final de semana recebi 150"</li>
+                                        <li>• "Freelance pago, 850 reais"</li>
+                                        <li>• "Venda no mercado livre, 320"</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="example-card glass rounded-lg p-4">
+                                    <h5 class="font-semibold text-danger mb-2">❌ Exemplos de Despesas:</h5>
+                                    <ul class="text-sm text-gray-300 space-y-1">
+                                        <li>• "Abasteci o carro, gastei 40 reais"</li>
+                                        <li>• "Comprei uma garrafa d'água, gastei 3 reais"</li>
+                                        <li>• "Comprei uma pizza de 50 reais"</li>
+                                        <li>• "Paguei uma conta de luz de 200 reais"</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Voice Messages -->
+                <div class="tutorial-step glass rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-accent bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-semibold text-white mb-3">🎤 Mensagens de Áudio</h4>
+                            <p class="text-gray-300 mb-4">Ainda mais prático! Grave um áudio falando sobre seu gasto ou receita. O assistente entende perfeitamente e faz o lançamento automaticamente.</p>
+                            
+                            <div class="bg-accent bg-opacity-10 rounded-lg p-4">
+                                <p class="text-accent font-medium mb-2">💬 Exemplo de áudio:</p>
+                                <p class="text-gray-300 text-sm italic">"Oi, acabei de almoçar aqui no restaurante, gastei uns 35 reais no almoço"</p>
+                                <p class="text-gray-400 text-xs mt-2">→ O assistente identifica: Despesa de R$ 35,00 em Alimentação</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Photo Recognition -->
+                <div class="tutorial-step glass rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-warning bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-warning" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M4,4H7L9,2H15L17,4H20A2,2 0 0,1 22,6V18A2,2 0 0,1 20,20H4A2,2 0 0,1 2,18V6A2,2 0 0,1 4,4M12,7A5,5 0 0,0 7,12A5,5 0 0,0 12,17A5,5 0 0,0 17,12A5,5 0 0,0 12,7M12,9A3,3 0 0,1 15,12A3,3 0 0,1 12,15A3,3 0 0,1 9,12A3,3 0 0,1 12,9Z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-semibold text-white mb-3">📸 Reconhecimento por Foto</h4>
+                            <p class="text-gray-300 mb-4">Envie fotos de comprovantes, notas fiscais ou até mesmo prints da sua carteira digital. O assistente identifica automaticamente o valor e local do gasto.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="example-card glass rounded-lg p-4">
+                                    <h5 class="font-semibold text-warning mb-2">📱 Carteira Digital:</h5>
+                                    <p class="text-sm text-gray-300">Envie um print da sua carteira (Apple Pay, Google Pay, etc.) e o assistente identifica o gasto automaticamente.</p>
+                                </div>
+                                
+                                <div class="example-card glass rounded-lg p-4">
+                                    <h5 class="font-semibold text-warning mb-2">🧾 Comprovantes:</h5>
+                                    <p class="text-sm text-gray-300">Fotos de notas fiscais, cupons de cartão ou comprovantes de pagamento são processados automaticamente.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="glass-strong rounded-2xl p-6 mb-8">
+            <h3 class="text-xl font-semibold text-white mb-6">✨ Recursos Exclusivos</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="tutorial-step glass rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,16.5L18,9.5L16.5,8L11,13.5L7.5,10L6,11.5L11,16.5Z"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-lg font-semibold text-white mb-2">Categorização Automática</h4>
+                    <p class="text-gray-400 text-sm">O assistente identifica automaticamente se é alimentação, transporte, lazer, etc.</p>
+                </div>
+                
+                <div class="tutorial-step glass rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-accent bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,16.5L18,9.5L16.5,8L11,13.5L7.5,10L6,11.5L11,16.5Z"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-lg font-semibold text-white mb-2">Relatórios Inteligentes</h4>
+                    <p class="text-gray-400 text-sm">Visualize gráficos e relatórios detalhados do seu comportamento financeiro.</p>
+                </div>
+                
+                <div class="tutorial-step glass rounded-xl p-6 text-center">
+                    <div class="w-12 h-12 bg-success bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-6 h-6 text-success" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,16.5L18,9.5L16.5,8L11,13.5L7.5,10L6,11.5L11,16.5Z"/>
+                        </svg>
+                    </div>
+                    <h4 class="text-lg font-semibold text-white mb-2">Lembretes Inteligentes</h4>
+                    <p class="text-gray-400 text-sm">Receba notificações sobre vencimentos e metas financeiras.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Support Section -->
+        <div class="glass-strong rounded-2xl p-6 mb-8">
+            <h3 class="text-xl font-semibold text-white mb-6">🆘 Precisa de Ajuda?</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="tutorial-step glass rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-success bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M17.472,14.382c-0.297-0.149-1.758-0.867-2.03-0.967c-0.273-0.099-0.471-0.148-0.67,0.15c-0.197,0.297-0.767,0.967-0.94,1.164c-0.173,0.199-0.347,0.223-0.644,0.074c-0.297-0.149-1.255-0.462-2.39-1.475c-0.883-0.788-1.48-1.761-1.653-2.059c-0.173-0.297-0.018-0.458,0.13-0.606c0.134-0.133,0.298-0.347,0.446-0.52c0.149-0.174,0.198-0.298,0.298-0.497c0.099-0.198,0.05-0.372-0.025-0.52c-0.074-0.149-0.669-1.612-0.916-2.207c-0.24-0.579-0.487-0.5-0.669-0.51c-0.173-0.008-0.371-0.01-0.57-0.01c-0.198,0-0.52,0.074-0.792,0.372c-0.273,0.297-1.04,1.016-1.04,2.479c0,1.462,1.065,2.875,1.213,3.074c0.149,0.198,2.096,3.2,5.077,4.487c0.709,0.306,1.262,0.489,1.694,0.625c0.717,0.227,1.37,0.195,1.885,0.118c0.571-0.085,1.758-0.719,2.006-1.413c0.249-0.694,0.249-1.289,0.173-1.413c-0.074-0.124-0.272-0.198-0.57-0.347m-5.421,7.403H7.116V9.25h4.935v12.535Z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-semibold text-white mb-2">Suporte via WhatsApp</h4>
+                            <p class="text-gray-300 mb-4">Nossa equipe de suporte está sempre disponível para te ajudar. Clique no botão abaixo para falar conosco diretamente no WhatsApp.</p>
+                            <a href="https://wa.me/5511999999999?text=Olá! Preciso de ajuda com o Poupa.Ai" 
+                               target="_blank" 
+                               class="whatsapp-link inline-flex items-center space-x-2 bg-success text-white px-4 py-2 rounded-lg hover:bg-opacity-80 transition-all duration-200">
+                                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M17.472,14.382c-0.297-0.149-1.758-0.867-2.03-0.967c-0.273-0.099-0.471-0.148-0.67,0.15c-0.197,0.297-0.767,0.967-0.94,1.164c-0.173,0.199-0.347,0.223-0.644,0.074c-0.297-0.149-1.255-0.462-2.39-1.475c-0.883-0.788-1.48-1.761-1.653-2.059c-0.173-0.297-0.018-0.458,0.13-0.606c0.134-0.133,0.298-0.347,0.446-0.52c0.149-0.174,0.198-0.298,0.298-0.497c0.099-0.198,0.05-0.372-0.025-0.52c-0.074-0.149-0.669-1.612-0.916-2.207c-0.24-0.579-0.487-0.5-0.669-0.51c-0.173-0.008-0.371-0.01-0.57-0.01c-0.198,0-0.52,0.074-0.792,0.372c-0.273,0.297-1.04,1.016-1.04,2.479c0,1.462,1.065,2.875,1.213,3.074c0.149,0.198,2.096,3.2,5.077,4.487c0.709,0.306,1.262,0.489,1.694,0.625c0.717,0.227,1.37,0.195,1.885,0.118c0.571-0.085,1.758-0.719,2.006-1.413c0.249-0.694,0.249-1.289,0.173-1.413c-0.074-0.124-0.272-0.198-0.57-0.347m-5.421,7.403H7.116V9.25h4.935v12.535Z"/>
+                                </svg>
+                                <span>Falar com Suporte</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tutorial-step glass rounded-xl p-6">
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 bg-primary bg-opacity-20 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M11,16.5L18,9.5L16.5,8L11,13.5L7.5,10L6,11.5L11,16.5Z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="text-lg font-semibold text-white mb-2">FAQ Rápido</h4>
+                            <div class="space-y-3">
+                                <div>
+                                    <p class="text-sm font-medium text-white">Como faço para registrar um gasto?</p>
+                                    <p class="text-xs text-gray-400">Simplesmente envie uma mensagem, áudio ou foto do gasto para o número do assistente.</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-white">O assistente entende áudios?</p>
+                                    <p class="text-xs text-gray-400">Sim! O assistente usa inteligência artificial para entender perfeitamente seus áudios.</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-medium text-white">Posso ver meus dados em tempo real?</p>
+                                    <p class="text-xs text-gray-400">Sim! Acesse o dashboard para ver gráficos e relatórios atualizados instantaneamente.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Call to Action -->
+        <div class="glass-strong rounded-2xl p-8 text-center">
+            <h3 class="text-2xl font-bold text-white mb-4">Pronto para Começar?</h3>
+            <p class="text-lg text-gray-300 mb-6">Agora que você sabe como usar o Poupa.Ai, é hora de colocar em prática!</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="dashboard.html" class="bg-gradient-to-r from-primary to-accent text-white px-8 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                    Ir para Dashboard
+                </a>
+                <a href="transacoes.html" class="glass text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:bg-opacity-10 transition-all duration-200">
+                    Ver Transações
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function tutorialApp() {
+            return {
+                userProfile: {
+                    name: 'Usuário',
+                    role: 'Usuário Poupa.Ai',
+                    avatar: null
+                },
+                
+                init() {
+                    // Check if user is logged in
+                    if (!localStorage.getItem('isLoggedIn')) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    // Load user data
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    this.userProfile.name = user.name || 'Usuário';
+                    this.userProfile.role = user.role || 'Usuário Poupa.Ai';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
