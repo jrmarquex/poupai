@@ -765,14 +765,114 @@
                 },
                 
                 exportReport(format) {
-                    // In a real app, this would generate and download the file
-                    alert(`Exportando relatório em formato ${format.toUpperCase()}...`);
-                    console.log('Exporting report:', {
-                        format,
+                    const data = {
                         filters: this.filters,
-                        data: this.reportData,
-                        transactions: this.filteredTransactions
-                    });
+                        reportData: this.reportData,
+                        transactions: this.filteredTransactions,
+                        generatedAt: new Date().toISOString(),
+                        period: this.getPeriodLabel()
+                    };
+                    
+                    let content, filename, mimeType;
+                    
+                    switch(format) {
+                        case 'pdf':
+                            this.exportToPDF(data);
+                            return;
+                        case 'excel':
+                            this.exportToExcel(data);
+                            return;
+                        case 'xml':
+                            this.exportToXML(data);
+                            return;
+                    }
+                },
+                
+                exportToPDF(data) {
+                    // Create a simple PDF content
+                    const content = `
+                        Relatório Financeiro - Poupa.Ai
+                        Período: ${data.period}
+                        Gerado em: ${new Date().toLocaleDateString('pt-BR')}
+                        
+                        RESUMO FINANCEIRO:
+                        Total de Receitas: R$ ${data.reportData.totalReceitas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                        Total de Despesas: R$ ${data.reportData.totalDespesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                        Saldo Líquido: R$ ${data.reportData.saldoLiquido.toLocaleString('pt-BR', {minimumFractionDigits: 2})}
+                        Total de Transações: ${data.reportData.totalTransacoes}
+                        
+                        TRANSAÇÕES:
+                        ${data.transactions.map(t => 
+                            `${t.date} | ${t.description} | ${t.type} | R$ ${t.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`
+                        ).join('\n')}
+                    `;
+                    
+                    const blob = new Blob([content], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `relatorio-financeiro-${new Date().toISOString().split('T')[0]}.txt`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                },
+                
+                exportToExcel(data) {
+                    // Create CSV content for Excel
+                    const headers = ['Data', 'Descrição', 'Categoria', 'Tipo', 'Valor'];
+                    const csvContent = [
+                        headers.join(','),
+                        ...data.transactions.map(t => [
+                            t.date,
+                            `"${t.description}"`,
+                            t.category,
+                            t.type,
+                            t.amount.toFixed(2)
+                        ].join(','))
+                    ].join('\n');
+                    
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `relatorio-financeiro-${new Date().toISOString().split('T')[0]}.csv`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                },
+                
+                exportToXML(data) {
+                    const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+<relatorio>
+    <cabecalho>
+        <titulo>Relatório Financeiro - Poupa.Ai</titulo>
+        <periodo>${data.period}</periodo>
+        <geradoEm>${new Date().toISOString()}</geradoEm>
+    </cabecalho>
+    <resumo>
+        <totalReceitas>${data.reportData.totalReceitas}</totalReceitas>
+        <totalDespesas>${data.reportData.totalDespesas}</totalDespesas>
+        <saldoLiquido>${data.reportData.saldoLiquido}</saldoLiquido>
+        <totalTransacoes>${data.reportData.totalTransacoes}</totalTransacoes>
+    </resumo>
+    <transacoes>
+        ${data.transactions.map(t => `
+        <transacao>
+            <id>${t.id}</id>
+            <data>${t.date}</data>
+            <descricao>${t.description}</descricao>
+            <categoria>${t.category}</categoria>
+            <tipo>${t.type}</tipo>
+            <valor>${t.amount}</valor>
+        </transacao>`).join('')}
+    </transacoes>
+</relatorio>`;
+                    
+                    const blob = new Blob([xmlContent], { type: 'application/xml' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `relatorio-financeiro-${new Date().toISOString().split('T')[0]}.xml`;
+                    a.click();
+                    URL.revokeObjectURL(url);
                 }
             }
         }

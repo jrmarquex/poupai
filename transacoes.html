@@ -181,12 +181,36 @@
             
             <div class="flex items-center space-x-4">
                 <!-- Add Transaction Button -->
-                <button @click="showAddModal = true" class="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 focus-ring">
+                <button @click="showAddModal = true" class="bg-gradient-to-r from-primary to-emerald-500 text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 focus-ring">
                     <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
                     </svg>
                     Nova Transação
                 </button>
+                
+                <!-- Export Buttons -->
+                <div class="flex items-center space-x-2">
+                    <button @click="exportData('pdf')" class="bg-gradient-to-r from-red-500 to-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        PDF
+                    </button>
+                    
+                    <button @click="exportData('excel')" class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        Excel
+                    </button>
+                    
+                    <button @click="exportData('xml')" class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-2 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                        <svg class="w-4 h-4 inline mr-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        XML
+                    </button>
+                </div>
                 
                 <!-- Filter Button -->
                 <button @click="showFilters = !showFilters" class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
@@ -299,12 +323,12 @@
                                 </td>
                                 <td class="py-4 px-4">
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
-                                          :class="transaction.type === 'Receita' ? 'bg-success bg-opacity-20 text-success' : 'bg-danger bg-opacity-20 text-danger'"
+                                          :class="transaction.type === 'Receita' ? 'bg-emerald-500 bg-opacity-20 text-emerald-400' : 'bg-orange-500 bg-opacity-20 text-orange-400'"
                                           x-text="transaction.type"></span>
                                 </td>
                                 <td class="py-4 px-4 text-right">
-                                    <span class="font-semibold"
-                                          :class="transaction.type === 'Receita' ? 'text-success' : 'text-danger'"
+                                    <span class="font-semibold text-lg"
+                                          :class="transaction.type === 'Receita' ? 'text-emerald-400' : 'text-orange-400'"
                                           x-text="(transaction.type === 'Receita' ? '+' : '-') + 'R$ ' + transaction.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></span>
                                 </td>
                                 <td class="py-4 px-4 text-center">
@@ -540,12 +564,12 @@
                 
                 getCategoryColor(category) {
                     const colors = {
-                        'alimentação': 'bg-chart-food bg-opacity-20 text-chart-food',
-                        'transporte': 'bg-chart-transport bg-opacity-20 text-chart-transport',
-                        'lazer': 'bg-chart-leisure bg-opacity-20 text-chart-leisure',
-                        'outros': 'bg-chart-others bg-opacity-20 text-chart-others'
+                        'alimentação': 'bg-emerald-500 bg-opacity-20 text-emerald-400',
+                        'transporte': 'bg-blue-500 bg-opacity-20 text-blue-400',
+                        'lazer': 'bg-purple-500 bg-opacity-20 text-purple-400',
+                        'outros': 'bg-gray-500 bg-opacity-20 text-gray-400'
                     };
-                    return colors[category] || 'bg-gray-500 bg-opacity-20 text-gray-500';
+                    return colors[category] || 'bg-gray-500 bg-opacity-20 text-gray-400';
                 },
                 
                 addTransaction() {
@@ -592,6 +616,99 @@
                 
                 applyFilters() {
                     this.showFilters = false;
+                },
+                
+                exportData(format) {
+                    const data = {
+                        transactions: this.filteredTransactions,
+                        generatedAt: new Date().toISOString(),
+                        totalTransactions: this.filteredTransactions.length
+                    };
+                    
+                    switch(format) {
+                        case 'pdf':
+                            this.exportToPDF(data);
+                            break;
+                        case 'excel':
+                            this.exportToExcel(data);
+                            break;
+                        case 'xml':
+                            this.exportToXML(data);
+                            break;
+                    }
+                },
+                
+                exportToPDF(data) {
+                    const content = `
+                        Relatório de Transações - Poupa.Ai
+                        Gerado em: ${new Date().toLocaleDateString('pt-BR')}
+                        Total de Transações: ${data.totalTransactions}
+                        
+                        TRANSAÇÕES:
+                        ${data.transactions.map(t => 
+                            `${t.date} | ${t.description} | ${t.category} | ${t.type} | R$ ${t.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`
+                        ).join('\n')}
+                    `;
+                    
+                    const blob = new Blob([content], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `transacoes-${new Date().toISOString().split('T')[0]}.txt`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                },
+                
+                exportToExcel(data) {
+                    const headers = ['Data', 'Descrição', 'Categoria', 'Tipo', 'Valor'];
+                    const csvContent = [
+                        headers.join(','),
+                        ...data.transactions.map(t => [
+                            t.date,
+                            `"${t.description}"`,
+                            t.category,
+                            t.type,
+                            t.amount.toFixed(2)
+                        ].join(','))
+                    ].join('\n');
+                    
+                    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `transacoes-${new Date().toISOString().split('T')[0]}.csv`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                },
+                
+                exportToXML(data) {
+                    const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
+<transacoes>
+    <cabecalho>
+        <titulo>Relatório de Transações - Poupa.Ai</titulo>
+        <geradoEm>${new Date().toISOString()}</geradoEm>
+        <totalTransacoes>${data.totalTransactions}</totalTransacoes>
+    </cabecalho>
+    <lista>
+        ${data.transactions.map(t => `
+        <transacao>
+            <id>${t.id}</id>
+            <data>${t.date}</data>
+            <descricao>${t.description}</descricao>
+            <categoria>${t.category}</categoria>
+            <tipo>${t.type}</tipo>
+            <valor>${t.amount}</valor>
+        </transacao>`).join('')}
+    </lista>
+</transacoes>`;
+                    
+                    const blob = new Blob([xmlContent], { type: 'application/xml' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `transacoes-${new Date().toISOString().split('T')[0]}.xml`;
+                    a.click();
+                    URL.revokeObjectURL(url);
                 }
             }
         }
