@@ -1,0 +1,1224 @@
+{
+  "timestamp": "2025-10-15T14:22:23.257Z",
+  "version": "1.0",
+  "tables": {
+    "clientes": {
+      "count": 4,
+      "data": [
+        {
+          "whatsapp": "5511913142143",
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "status": true
+        },
+        {
+          "whatsapp": "5511997245501",
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "status": true
+        },
+        {
+          "whatsapp": "555199528953",
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "status": true
+        },
+        {
+          "whatsapp": "5521998934748",
+          "clientid": "a0b9ae28-2806-4e44-aec2-9f735c5b76cf",
+          "status": true
+        }
+      ]
+    },
+    "movimentacoes": {
+      "count": 132,
+      "data": [
+        {
+          "id": "f635e",
+          "data_movimentacao": "2022-11-07",
+          "valor_movimentacao": 85,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Transferência de João da Silva para Thomas Henrique Martins"
+        },
+        {
+          "id": "ac36e",
+          "data_movimentacao": "2022-11-07",
+          "valor_movimentacao": 85,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Transferência de João da Silva para Thomas Henrique Martins"
+        },
+        {
+          "id": "c608a",
+          "data_movimentacao": "2022-11-07",
+          "valor_movimentacao": 85,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Transferência de João da Silva para Thomas Henrique Martins"
+        },
+        {
+          "id": "0d72d",
+          "data_movimentacao": "2022-11-07",
+          "valor_movimentacao": 85,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Transferência de João da Silva para Thomas Henrique Martins"
+        },
+        {
+          "id": "4b79b",
+          "data_movimentacao": "2023-04-17",
+          "valor_movimentacao": 140,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa pessoal",
+          "category": "Outros",
+          "observation": "Transferência de GREICE MELO DA SILVA para THAYNA CRISTINA COSTA VIEIRA"
+        },
+        {
+          "id": "7e08d",
+          "data_movimentacao": "2023-04-17",
+          "valor_movimentacao": 140,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa pessoal",
+          "category": "Transporte",
+          "observation": "Transferência de GREICE MELO DA SILVA para THAYNA CRISTINA COSTA VIEIRA"
+        },
+        {
+          "id": "09a09",
+          "data_movimentacao": "2025-07-01",
+          "valor_movimentacao": 100,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "barzinho"
+        },
+        {
+          "id": "a84c3",
+          "data_movimentacao": "2025-07-03",
+          "valor_movimentacao": 100,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "barzinho"
+        },
+        {
+          "id": "3a21f",
+          "data_movimentacao": "2025-07-03",
+          "valor_movimentacao": 100,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "barzinho"
+        },
+        {
+          "id": "4ec47",
+          "data_movimentacao": "2025-03-07",
+          "valor_movimentacao": 100,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "Alimentação",
+          "observation": "alimenteção"
+        },
+        {
+          "id": "06ba0",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 89.18,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "Ifood"
+        },
+        {
+          "id": "68def",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 10.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho do predio"
+        },
+        {
+          "id": "81498",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 25.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho do prédio"
+        },
+        {
+          "id": "c4faf",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 35.89,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "IFood"
+        },
+        {
+          "id": "83d16",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 9.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho do prédio"
+        },
+        {
+          "id": "5444b",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 10,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "cc798",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 12,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "fbe46",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 0,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "despesas"
+        },
+        {
+          "id": "34f5e",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 67.87,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "iFood"
+        },
+        {
+          "id": "90902",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 10.31,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "Venda"
+        },
+        {
+          "id": "216b0",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 2.05,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "92019",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 37.4,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercado"
+        },
+        {
+          "id": "1eb51",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 26,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "mercado"
+        },
+        {
+          "id": "a50b0",
+          "data_movimentacao": "2025-07-13",
+          "valor_movimentacao": 1765,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "vendas"
+        },
+        {
+          "id": "1a25a",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 16,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "Almoço"
+        },
+        {
+          "id": "624ce",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 31.72,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "a0bc1",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 10,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "68ef4",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 10,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "monster"
+        },
+        {
+          "id": "e11cc",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 25,
+          "clientid": "a0b9ae28-2806-4e44-aec2-9f735c5b76cf",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "gasto"
+        },
+        {
+          "id": "fd900",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 100,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Lovable"
+        },
+        {
+          "id": "a5af0",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 40,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Black Desert Online"
+        },
+        {
+          "id": "60a7b",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 20,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercado avulso"
+        },
+        {
+          "id": "bb1f3",
+          "data_movimentacao": "2025-07-14",
+          "valor_movimentacao": 50,
+          "clientid": "89864049-7d89-4f6e-a15b-3a38b810dd57",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "ifood"
+        },
+        {
+          "id": "b0cd9",
+          "data_movimentacao": "2025-07-15",
+          "valor_movimentacao": 7.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "f6504",
+          "data_movimentacao": "2025-07-15",
+          "valor_movimentacao": 12,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "conta"
+        },
+        {
+          "id": "5b203",
+          "data_movimentacao": "2025-07-11",
+          "valor_movimentacao": 1024,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Serviços",
+          "observation": "Transferência de pagador desconhecido para Bar Lanches e Mercearia Saint Germann Ltda"
+        },
+        {
+          "id": "74d6f",
+          "data_movimentacao": "2025-07-11",
+          "valor_movimentacao": 1024,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Produtos",
+          "observation": "Transferência de Bar Lanches e Mercearia Saint Germann Ltda para cliente"
+        },
+        {
+          "id": "43585",
+          "data_movimentacao": "2023-10-02",
+          "valor_movimentacao": 18.69,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "Serviços",
+          "observation": "Transferência de Desconhecido para Mercadosdossonho"
+        },
+        {
+          "id": "b523c",
+          "data_movimentacao": "2025-07-15",
+          "valor_movimentacao": 50,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "transporte",
+          "observation": "gasolina"
+        },
+        {
+          "id": "41d07",
+          "data_movimentacao": "2025-07-15",
+          "valor_movimentacao": 25.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "769c2",
+          "data_movimentacao": "2025-07-15",
+          "valor_movimentacao": 60.68,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "2e425",
+          "data_movimentacao": "2023-07-16",
+          "valor_movimentacao": 24,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "Alimentos",
+          "observation": "Transferência de MC PASSEL para o pagador"
+        },
+        {
+          "id": "9d4e4",
+          "data_movimentacao": "2025-07-16",
+          "valor_movimentacao": 69,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "f686e",
+          "data_movimentacao": "2023-07-17",
+          "valor_movimentacao": 19,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "Alimentos",
+          "observation": "Transferência de Toka do Gordão para [recebedor não identificado]"
+        },
+        {
+          "id": "dd14b",
+          "data_movimentacao": "2023-07-17",
+          "valor_movimentacao": 19,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "Alimentos",
+          "observation": "Transferência de Toka do Gordão para [Recebedor Desconhecido]"
+        },
+        {
+          "id": "e9053",
+          "data_movimentacao": "2025-07-17",
+          "valor_movimentacao": 20,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "transporte",
+          "observation": "gasolina"
+        },
+        {
+          "id": "ac21c",
+          "data_movimentacao": "2025-07-17",
+          "valor_movimentacao": 50.18,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "43cd8",
+          "data_movimentacao": "2025-07-17",
+          "valor_movimentacao": 355,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "Produtos",
+          "observation": "Transferência de Everson Santana para fornecedor"
+        },
+        {
+          "id": "4ce6d",
+          "data_movimentacao": "2025-07-17",
+          "valor_movimentacao": 68.34,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "Almoço"
+        },
+        {
+          "id": "f66f4",
+          "data_movimentacao": "2025-07-17",
+          "valor_movimentacao": 18,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "bolo"
+        },
+        {
+          "id": "7510e",
+          "data_movimentacao": "2025-07-17",
+          "valor_movimentacao": 19,
+          "clientid": "a0b9ae28-2806-4e44-aec2-9f735c5b76cf",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "café da manhã"
+        },
+        {
+          "id": "212b1",
+          "data_movimentacao": "2025-07-17",
+          "valor_movimentacao": 10,
+          "clientid": "a0b9ae28-2806-4e44-aec2-9f735c5b76cf",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "noite"
+        },
+        {
+          "id": "92e38",
+          "data_movimentacao": "2025-07-18",
+          "valor_movimentacao": 50,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "corte de cabelo"
+        },
+        {
+          "id": "8c1ad",
+          "data_movimentacao": "2025-07-18",
+          "valor_movimentacao": 27,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "Venda"
+        },
+        {
+          "id": "1e48b",
+          "data_movimentacao": "2025-07-18",
+          "valor_movimentacao": 15.78,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercado"
+        },
+        {
+          "id": "7992f",
+          "data_movimentacao": "2025-07-18",
+          "valor_movimentacao": 49.9,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "a8a59",
+          "data_movimentacao": "2025-07-18",
+          "valor_movimentacao": 49.9,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Alimentação",
+          "observation": "Transferência de Arruda para Refrições"
+        },
+        {
+          "id": "70cde",
+          "data_movimentacao": "2025-07-18",
+          "valor_movimentacao": 5.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Produtos",
+          "observation": "Transferência de Larissa E para minimercado"
+        },
+        {
+          "id": "086e0",
+          "data_movimentacao": "2023-10-01",
+          "valor_movimentacao": 37.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Produtos",
+          "observation": "Transferência de MINIMERCADO LARISSA E para conta"
+        },
+        {
+          "id": "1c1bd",
+          "data_movimentacao": "2025-07-21",
+          "valor_movimentacao": 13.68,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "310ee",
+          "data_movimentacao": "2025-07-21",
+          "valor_movimentacao": 28.47,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "33f40",
+          "data_movimentacao": "2025-07-21",
+          "valor_movimentacao": 4.47,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "cef3e",
+          "data_movimentacao": "2025-07-21",
+          "valor_movimentacao": 0,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "Restaurante Ribeirão-maua"
+        },
+        {
+          "id": "0f48a",
+          "data_movimentacao": "2025-07-21",
+          "valor_movimentacao": 130,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "valor corrigido"
+        },
+        {
+          "id": "31e0a",
+          "data_movimentacao": "2025-07-21",
+          "valor_movimentacao": 166.31,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "restaurante"
+        },
+        {
+          "id": "ecec0",
+          "data_movimentacao": "2025-07-22",
+          "valor_movimentacao": 35,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "black desert"
+        },
+        {
+          "id": "b712f",
+          "data_movimentacao": "2025-07-23",
+          "valor_movimentacao": 25.73,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "1bfdd",
+          "data_movimentacao": "2025-07-23",
+          "valor_movimentacao": 25.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "32820",
+          "data_movimentacao": "2025-07-23",
+          "valor_movimentacao": 22.75,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "doce"
+        },
+        {
+          "id": "30ba1",
+          "data_movimentacao": "2025-07-23",
+          "valor_movimentacao": 6.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "refrigerante"
+        },
+        {
+          "id": "3333b",
+          "data_movimentacao": "2025-07-23",
+          "valor_movimentacao": 8,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "água e energético"
+        },
+        {
+          "id": "a2e80",
+          "data_movimentacao": "2025-07-23",
+          "valor_movimentacao": 700,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "7ebdc",
+          "data_movimentacao": "2025-07-23",
+          "valor_movimentacao": 42.2,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "f0d95",
+          "data_movimentacao": "2025-07-23",
+          "valor_movimentacao": 25,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "91134",
+          "data_movimentacao": "2025-07-25",
+          "valor_movimentacao": 25,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "pago"
+        },
+        {
+          "id": "32fde",
+          "data_movimentacao": "2025-07-25",
+          "valor_movimentacao": 35,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Black Desert"
+        },
+        {
+          "id": "8a859",
+          "data_movimentacao": "2025-07-25",
+          "valor_movimentacao": 17.23,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "47b23",
+          "data_movimentacao": "2025-07-25",
+          "valor_movimentacao": 7.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "7fe25",
+          "data_movimentacao": "2025-07-25",
+          "valor_movimentacao": 131.93,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "presente"
+        },
+        {
+          "id": "4e6ea",
+          "data_movimentacao": "2025-07-25",
+          "valor_movimentacao": 10,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "d9dcf",
+          "data_movimentacao": "2025-07-25",
+          "valor_movimentacao": 12,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "bcc26",
+          "data_movimentacao": "2025-07-26",
+          "valor_movimentacao": 40,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "transporte",
+          "observation": "gasolina"
+        },
+        {
+          "id": "89820",
+          "data_movimentacao": "2025-07-26",
+          "valor_movimentacao": 567.78,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "despesas do mês"
+        },
+        {
+          "id": "61aac",
+          "data_movimentacao": "2025-07-26",
+          "valor_movimentacao": 25.98,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "bd5d8",
+          "data_movimentacao": "2025-07-29",
+          "valor_movimentacao": 26,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "5239f",
+          "data_movimentacao": "2025-07-29",
+          "valor_movimentacao": 19,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "pixbet"
+        },
+        {
+          "id": "56e98",
+          "data_movimentacao": "2025-07-29",
+          "valor_movimentacao": 10,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "empréstimo"
+        },
+        {
+          "id": "7da3d",
+          "data_movimentacao": "2025-07-30",
+          "valor_movimentacao": 1000,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "Venda"
+        },
+        {
+          "id": "2415c",
+          "data_movimentacao": "2025-07-30",
+          "valor_movimentacao": 9.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "compra"
+        },
+        {
+          "id": "3dee0",
+          "data_movimentacao": "2025-07-31",
+          "valor_movimentacao": 45,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "flores"
+        },
+        {
+          "id": "4cdbe",
+          "data_movimentacao": "2025-07-31",
+          "valor_movimentacao": 4000,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "258b6",
+          "data_movimentacao": "2025-07-31",
+          "valor_movimentacao": 19.48,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "ae317",
+          "data_movimentacao": "2025-07-31",
+          "valor_movimentacao": 99.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "presente"
+        },
+        {
+          "id": "da576",
+          "data_movimentacao": "2025-08-02",
+          "valor_movimentacao": 131.29,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "McDonald's"
+        },
+        {
+          "id": "92b4c",
+          "data_movimentacao": "2025-08-02",
+          "valor_movimentacao": 154.48,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "McDonald's"
+        },
+        {
+          "id": "6ff8c",
+          "data_movimentacao": "2025-08-02",
+          "valor_movimentacao": 40,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "Almoço Renato"
+        },
+        {
+          "id": "011a0",
+          "data_movimentacao": "2025-08-03",
+          "valor_movimentacao": 70,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "pizza"
+        },
+        {
+          "id": "312f8",
+          "data_movimentacao": "2025-08-02",
+          "valor_movimentacao": 41.95,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Produtos",
+          "observation": "Transferência de Larissa E para Minimercado"
+        },
+        {
+          "id": "3044f",
+          "data_movimentacao": "2025-08-02",
+          "valor_movimentacao": 15.48,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Produtos",
+          "observation": "Transferência de Larissa E para Minimercado"
+        },
+        {
+          "id": "5132c",
+          "data_movimentacao": "2025-08-02",
+          "valor_movimentacao": 49.37,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Produtos",
+          "observation": "Transferência de Nubank Mastercard Gold para Minimercado Larissa E"
+        },
+        {
+          "id": "eb582",
+          "data_movimentacao": "2025-08-03",
+          "valor_movimentacao": 11.07,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "Refrigerante e água"
+        },
+        {
+          "id": "b6b6b",
+          "data_movimentacao": "2025-08-03",
+          "valor_movimentacao": 20,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "transporte",
+          "observation": "gasolina"
+        },
+        {
+          "id": "ca596",
+          "data_movimentacao": "2025-08-03",
+          "valor_movimentacao": 25,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "velas"
+        },
+        {
+          "id": "dbe68",
+          "data_movimentacao": "2023-08-04",
+          "valor_movimentacao": 136.87,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "Serviços",
+          "observation": "Transferência de Titcto para Titcto"
+        },
+        {
+          "id": "d1236",
+          "data_movimentacao": "2025-08-05",
+          "valor_movimentacao": 39,
+          "clientid": "800fcbf0-95d5-4c1b-b79d-fdc3755cc5d9",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "marmita"
+        },
+        {
+          "id": "d3f24",
+          "data_movimentacao": "2025-08-24",
+          "valor_movimentacao": 9.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "dab2a",
+          "data_movimentacao": "2025-08-24",
+          "valor_movimentacao": 104.13,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "receita"
+        },
+        {
+          "id": "2d8a2",
+          "data_movimentacao": "2025-08-26",
+          "valor_movimentacao": 2.5,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "água"
+        },
+        {
+          "id": "5a383",
+          "data_movimentacao": "2025-08-26",
+          "valor_movimentacao": 29.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "Almoço"
+        },
+        {
+          "id": "30afc",
+          "data_movimentacao": "2025-08-26",
+          "valor_movimentacao": 160,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "conta de internet"
+        },
+        {
+          "id": "d64ac",
+          "data_movimentacao": "2025-08-27",
+          "valor_movimentacao": 10.99,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Monster"
+        },
+        {
+          "id": "f89cc",
+          "data_movimentacao": "2025-08-27",
+          "valor_movimentacao": 10,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Água"
+        },
+        {
+          "id": "96303",
+          "data_movimentacao": "2025-08-28",
+          "valor_movimentacao": 33,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "Almoço"
+        },
+        {
+          "id": "bc3b8",
+          "data_movimentacao": "2025-08-29",
+          "valor_movimentacao": 30,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "gasto"
+        },
+        {
+          "id": "495d6",
+          "data_movimentacao": "2025-08-29",
+          "valor_movimentacao": 36,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "9d12e",
+          "data_movimentacao": "2025-08-30",
+          "valor_movimentacao": 43,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "jantar"
+        },
+        {
+          "id": "8c7e9",
+          "data_movimentacao": "2025-08-30",
+          "valor_movimentacao": 10,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Transferência de Pedro Paulo Dos Anjos para Outros"
+        },
+        {
+          "id": "8a920",
+          "data_movimentacao": "2025-08-30",
+          "valor_movimentacao": 200,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "4964c",
+          "data_movimentacao": "2025-08-30",
+          "valor_movimentacao": 400,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "salário ou renda extra",
+          "observation": "trabalho no stand"
+        },
+        {
+          "id": "b3f8a",
+          "data_movimentacao": "2025-08-31",
+          "valor_movimentacao": 45,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "36110",
+          "data_movimentacao": "2025-08-31",
+          "valor_movimentacao": 32,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "adega"
+        },
+        {
+          "id": "5614c",
+          "data_movimentacao": "2025-08-31",
+          "valor_movimentacao": 7.38,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "mercadinho"
+        },
+        {
+          "id": "9dc3d",
+          "data_movimentacao": "2025-08-31",
+          "valor_movimentacao": 88,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "Cacau Show"
+        },
+        {
+          "id": "227b7",
+          "data_movimentacao": "2025-09-01",
+          "valor_movimentacao": 10,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "rifa"
+        },
+        {
+          "id": "20c46",
+          "data_movimentacao": "2025-09-03",
+          "valor_movimentacao": 26.48,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "67586",
+          "data_movimentacao": "2025-09-04",
+          "valor_movimentacao": 125,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "almoço"
+        },
+        {
+          "id": "cb163",
+          "data_movimentacao": "2025-09-04",
+          "valor_movimentacao": 60,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "jantar"
+        },
+        {
+          "id": "a6983",
+          "data_movimentacao": "2025-09-07",
+          "valor_movimentacao": 40,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "café da manhã"
+        },
+        {
+          "id": "30311",
+          "data_movimentacao": "2025-09-07",
+          "valor_movimentacao": 60,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "Outros",
+          "observation": "gasto com pai"
+        },
+        {
+          "id": "ebd14",
+          "data_movimentacao": "2025-09-08",
+          "valor_movimentacao": 12,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Receita",
+          "category": "Outros",
+          "observation": "venda"
+        },
+        {
+          "id": "28488",
+          "data_movimentacao": "2025-09-08",
+          "valor_movimentacao": 22.98,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "Almoço"
+        },
+        {
+          "id": "cb35d",
+          "data_movimentacao": "2025-09-08",
+          "valor_movimentacao": 30,
+          "clientid": "660a9484-dc41-4aa3-a01d-aec3d477fdfe",
+          "type": "Despesa",
+          "category": "alimentação",
+          "observation": "mercadinho"
+        }
+      ]
+    }
+  }
+}

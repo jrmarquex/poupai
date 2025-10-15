@@ -90,12 +90,12 @@
             outline: 2px solid #20C997;
             outline-offset: 2px;
         }
-        
+
         /* Chart animations */
         .chart-segment {
             transition: all 0.3s ease;
         }
-        
+
         .chart-segment:hover {
             transform: scale(1.05);
         }
@@ -155,7 +155,7 @@
                     <p class="text-xs text-gray-400">Dashboard Financeiro</p>
                 </div>
             </div>
-            
+
             <!-- User Profile -->
             <div class="flex items-center space-x-3 mb-8">
                 <div class="relative">
@@ -186,21 +186,21 @@
                     <span>Minha Carteira</span>
                 </a>
                 
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                <a href="transacoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                     <span>Transações</span>
                 </a>
                 
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                <a href="relatorios.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                     <span>Relatórios</span>
                 </a>
                 
-                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                <a href="configuracoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
@@ -243,7 +243,7 @@
                     <svg class="w-4 h-4 absolute left-3 top-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                     </svg>
-                </div>
+                    </div>
                 
                 <!-- Notifications -->
                 <button class="relative p-2 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
@@ -261,17 +261,17 @@
                         <span x-text="userProfile.name"></span>
                         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M7 10l5 5 5-5z"/>
-                        </svg>
-                    </button>
-                    
-                    <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition class="absolute right-0 mt-2 w-48 glass-strong rounded-lg shadow-lg py-2 z-50">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Perfil</a>
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Configurações</a>
-                        <hr class="border-glass-border my-2">
-                        <a href="#" @click="logout" class="block px-4 py-2 text-sm text-red-400 hover:bg-white hover:bg-opacity-10 transition-colors">Sair</a>
-                    </div>
+                    </svg>
+                </button>
+
+                <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-transition class="absolute right-0 mt-2 w-48 glass-strong rounded-lg shadow-lg py-2 z-50">
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Perfil</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Configurações</a>
+                    <hr class="border-glass-border my-2">
+                    <a href="#" @click="logout" class="block px-4 py-2 text-sm text-red-400 hover:bg-white hover:bg-opacity-10 transition-colors">Sair</a>
                 </div>
             </div>
+        </div>
         </div>
         
         <!-- Financial Summary Cards -->
@@ -292,9 +292,9 @@
                 </div>
                 <div class="w-full bg-gray-700 rounded-full h-2">
                     <div class="bg-success h-2 rounded-full" style="width: 75%"></div>
+                    </div>
                 </div>
-            </div>
-            
+
             <!-- Despesas Card -->
             <div class="glass-strong rounded-2xl p-6 card-hover">
                 <div class="flex items-center justify-between mb-4">
@@ -312,7 +312,7 @@
                 <div class="w-full bg-gray-700 rounded-full h-2">
                     <div class="bg-danger h-2 rounded-full" style="width: 60%"></div>
                 </div>
-            </div>
+                        </div>
             
             <!-- Saldo Líquido Card -->
             <div class="glass-strong rounded-2xl p-6 card-hover">
@@ -356,9 +356,9 @@
                     <canvas id="pieChart"></canvas>
                 </div>
             </div>
-            
+
             <!-- Line Chart - Evolução Financeira -->
-            <div class="glass-strong rounded-2xl p-6">
+                <div class="glass-strong rounded-2xl p-6">
                 <div class="flex items-center justify-between mb-6">
                     <h3 class="text-xl font-semibold text-white">Evolução Financeira</h3>
                     <select class="glass px-3 py-1 rounded-lg text-sm">
@@ -381,8 +381,8 @@
                     <h3 class="text-xl font-semibold text-white">Atividades Recentes</h3>
                     <a href="#" class="text-primary hover:underline text-sm">Ver todas</a>
                 </div>
-                
-                <div class="space-y-4">
+                    
+                    <div class="space-y-4">
                     <template x-for="activity in recentActivities" :key="activity.id">
                         <div class="flex items-center space-x-4 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-5 transition-colors">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center"
@@ -402,8 +402,8 @@
                             </div>
                         </div>
                     </template>
-                </div>
-            </div>
+                        </div>
+                    </div>
             
             <!-- Export Options -->
             <div class="glass-strong rounded-2xl p-6">
@@ -413,7 +413,7 @@
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                 </div>
-                
+
                 <div class="space-y-4">
                     <button @click="exportData('pdf')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
                         <svg class="w-5 h-5 text-danger" fill="currentColor" viewBox="0 0 24 24">
@@ -432,7 +432,7 @@
                         <div class="text-left">
                             <p class="text-white font-medium">Exportar Excel</p>
                             <p class="text-xs text-gray-400">Planilha de dados</p>
-                        </div>
+                                </div>
                     </button>
                     
                     <button @click="exportData('xml')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
@@ -452,9 +452,9 @@
                         <div class="text-left">
                             <p class="text-white font-medium">Exportar CSV</p>
                             <p class="text-xs text-gray-400">Dados separados por vírgula</p>
-                        </div>
+                                </div>
                     </button>
-                </div>
+                            </div>
                 
                 <!-- Quick Stats -->
                 <div class="mt-6 pt-6 border-t border-glass-border">
@@ -468,12 +468,12 @@
                             <span class="text-gray-400">Última Atualização:</span>
                             <span class="text-white" x-text="new Date().toLocaleString('pt-BR')"></span>
                         </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    
+
     <!-- Floating Elements -->
     <div class="fixed top-4 left-4 w-8 h-8 bg-warning rounded-full flex items-center justify-center floating z-30">
         <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -485,7 +485,7 @@
         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
         </svg>
-    </div>
+        </div>
 
     <script>
         function dashboardApp() {
@@ -652,7 +652,7 @@
                     // In a real application, this would trigger the actual export
                     console.log(`Exporting data as ${format}`);
                 },
-                
+
                 logout() {
                     localStorage.removeItem('isLoggedIn');
                     localStorage.removeItem('user');

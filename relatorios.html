@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios - Poupa.Ai</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0B0F14',
+                        'primary': '#20C997',
+                        'secondary': '#A78BFA',
+                        'accent': '#22D3EE',
+                        'success': '#10B981',
+                        'warning': '#F59E0B',
+                        'danger': '#EF4444',
+                        'card-bg': 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)',
+                        'sidebar-bg': 'rgba(15, 23, 42, 0.8)',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .sidebar-glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 100%);
+        }
+        
+        .gradient-mesh {
+            background: 
+                radial-gradient(at 40% 20%, rgba(32, 201, 151, 0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(167, 139, 250, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+        }
+        
+        .focus-ring:focus {
+            outline: 2px solid #20C997;
+            outline-offset: 2px;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        
+        .export-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .export-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(32, 201, 151, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="relatoriosApp()">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-40">
+        <div class="p-6">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white">Poupa.Ai</h1>
+                    <p class="text-xs text-gray-400">Dashboard Financeiro</p>
+                </div>
+            </div>
+            
+            <!-- User Profile -->
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="relative">
+                    <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
+                         alt="Avatar" 
+                         class="w-12 h-12 rounded-full border-2 border-primary">
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-dark-bg"></div>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold" x-text="userProfile.name"></h3>
+                    <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
+                </div>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Minha Carteira</span>
+                </a>
+                
+                <a href="transacoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Transações</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Relatórios</span>
+                </a>
+                
+                <a href="configuracoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="ml-64 p-6">
+        <!-- Top Bar -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <h2 class="text-3xl font-bold text-white">Relatórios</h2>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-400">Período:</span>
+                    <span class="text-lg font-semibold text-white" x-text="getPeriodLabel()"></span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Export Buttons -->
+                <div class="flex items-center space-x-2">
+                    <button @click="exportReport('pdf')" class="export-btn bg-danger text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-80 transition-all duration-200">
+                        <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        PDF
+                    </button>
+                    
+                    <button @click="exportReport('excel')" class="export-btn bg-success text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-80 transition-all duration-200">
+                        <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        Excel
+                    </button>
+                    
+                    <button @click="exportReport('xml')" class="export-btn bg-warning text-white px-4 py-2 rounded-lg font-semibold hover:bg-opacity-80 transition-all duration-200">
+                        <svg class="w-4 h-4 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                        </svg>
+                        XML
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Filters Panel -->
+        <div class="glass-strong rounded-2xl p-6 mb-6">
+            <h3 class="text-lg font-semibold text-white mb-4">Filtros do Relatório</h3>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Date Range -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Período</label>
+                    <select x-model="filters.dateRange" @change="updateDateRange()" class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="today">Hoje</option>
+                        <option value="week">Esta semana</option>
+                        <option value="month">Este mês</option>
+                        <option value="quarter">Este trimestre</option>
+                        <option value="year">Este ano</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                </div>
+                
+                <!-- Custom Date Range -->
+                <div x-show="filters.dateRange === 'custom'">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Data Inicial</label>
+                    <input x-model="filters.startDate" type="date" 
+                           class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <div x-show="filters.dateRange === 'custom'">
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Data Final</label>
+                    <input x-model="filters.endDate" type="date" 
+                           class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <!-- Transaction Type -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Tipo de Lançamento</label>
+                    <select x-model="filters.type" class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="all">Todos os tipos</option>
+                        <option value="Receita">Apenas Receitas</option>
+                        <option value="Despesa">Apenas Despesas</option>
+                    </select>
+                </div>
+                
+                <!-- Category -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Categoria</label>
+                    <select x-model="filters.category" class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="all">Todas as categorias</option>
+                        <option value="alimentação">Alimentação</option>
+                        <option value="transporte">Transporte</option>
+                        <option value="lazer">Lazer</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-4 mt-4">
+                <button @click="clearFilters" class="px-4 py-2 text-gray-400 hover:text-white transition-colors">
+                    Limpar Filtros
+                </button>
+                <button @click="generateReport" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-80 transition-colors">
+                    Gerar Relatório
+                </button>
+            </div>
+        </div>
+        
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+            <div class="glass-strong rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-400">Total de Receitas</p>
+                        <p class="text-2xl font-bold text-success" x-text="'R$ ' + reportData.totalReceitas.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
+                    </div>
+                    <div class="w-12 h-12 bg-success bg-opacity-20 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-success" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-strong rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-400">Total de Despesas</p>
+                        <p class="text-2xl font-bold text-danger" x-text="'R$ ' + reportData.totalDespesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
+                    </div>
+                    <div class="w-12 h-12 bg-danger bg-opacity-20 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-danger" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-strong rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-400">Saldo Líquido</p>
+                        <p class="text-2xl font-bold" 
+                           :class="reportData.saldoLiquido >= 0 ? 'text-success' : 'text-danger'"
+                           x-text="'R$ ' + reportData.saldoLiquido.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
+                    </div>
+                    <div class="w-12 h-12 bg-primary bg-opacity-20 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="glass-strong rounded-2xl p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-400">Total de Transações</p>
+                        <p class="text-2xl font-bold text-white" x-text="reportData.totalTransacoes"></p>
+                    </div>
+                    <div class="w-12 h-12 bg-accent bg-opacity-20 rounded-xl flex items-center justify-center">
+                        <svg class="w-6 h-6 text-accent" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <!-- Pie Chart - Expenses by Category -->
+            <div class="glass-strong rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4">Despesas por Categoria</h3>
+                <div class="chart-container">
+                    <canvas id="pieChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Line Chart - Monthly Trend -->
+            <div class="glass-strong rounded-2xl p-6">
+                <h3 class="text-lg font-semibold text-white mb-4">Tendência Mensal</h3>
+                <div class="chart-container">
+                    <canvas id="lineChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Detailed Report Table -->
+        <div class="glass-strong rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-white">Relatório Detalhado</h3>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-400" x-text="'Mostrando ' + filteredTransactions.length + ' transações'"></span>
+                    <select x-model="sortBy" class="px-3 py-1 glass rounded-lg text-sm">
+                        <option value="date-desc">Data (mais recente)</option>
+                        <option value="date-asc">Data (mais antiga)</option>
+                        <option value="amount-desc">Valor (maior)</option>
+                        <option value="amount-asc">Valor (menor)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-glass-border">
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Data</th>
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Descrição</th>
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Categoria</th>
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Tipo</th>
+                            <th class="text-right py-3 px-4 text-gray-400 font-medium">Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-glass-border">
+                        <template x-for="transaction in filteredTransactions" :key="transaction.id">
+                            <tr class="hover:bg-white hover:bg-opacity-5">
+                                <td class="py-4 px-4 text-gray-300" x-text="formatDate(transaction.date)"></td>
+                                <td class="py-4 px-4 text-white font-medium" x-text="transaction.description"></td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                                          :class="getCategoryColor(transaction.category)"
+                                          x-text="transaction.category"></span>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                                          :class="transaction.type === 'Receita' ? 'bg-success bg-opacity-20 text-success' : 'bg-danger bg-opacity-20 text-danger'"
+                                          x-text="transaction.type"></span>
+                                </td>
+                                <td class="py-4 px-4 text-right">
+                                    <span class="font-semibold"
+                                          :class="transaction.type === 'Receita' ? 'text-success' : 'text-danger'"
+                                          x-text="(transaction.type === 'Receita' ? '+' : '-') + 'R$ ' + transaction.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></span>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function relatoriosApp() {
+            return {
+                userProfile: {
+                    name: 'Usuário',
+                    role: 'Usuário Poupa.Ai',
+                    avatar: null
+                },
+                
+                filters: {
+                    dateRange: 'month',
+                    startDate: '',
+                    endDate: '',
+                    type: 'all',
+                    category: 'all'
+                },
+                
+                sortBy: 'date-desc',
+                
+                reportData: {
+                    totalReceitas: 0,
+                    totalDespesas: 0,
+                    saldoLiquido: 0,
+                    totalTransacoes: 0
+                },
+                
+                transactions: [
+                    {
+                        id: 1,
+                        description: 'Freelance Design',
+                        amount: 850.00,
+                        type: 'Receita',
+                        category: 'outros',
+                        date: '2024-11-30',
+                        time: '10:42:23'
+                    },
+                    {
+                        id: 2,
+                        description: 'Uber - Centro',
+                        amount: 25.00,
+                        type: 'Despesa',
+                        category: 'transporte',
+                        date: '2024-11-30',
+                        time: '12:50:40'
+                    },
+                    {
+                        id: 3,
+                        description: 'iFood - Jantar',
+                        amount: 42.90,
+                        type: 'Despesa',
+                        category: 'alimentação',
+                        date: '2024-11-29',
+                        time: '19:30:00'
+                    },
+                    {
+                        id: 4,
+                        description: 'Salário CLT',
+                        amount: 2800.00,
+                        type: 'Receita',
+                        category: 'outros',
+                        date: '2024-11-28',
+                        time: '09:00:00'
+                    },
+                    {
+                        id: 5,
+                        description: 'Netflix',
+                        amount: 25.90,
+                        type: 'Despesa',
+                        category: 'lazer',
+                        date: '2024-11-27',
+                        time: '08:00:00'
+                    },
+                    {
+                        id: 6,
+                        description: 'Supermercado',
+                        amount: 120.50,
+                        type: 'Despesa',
+                        category: 'alimentação',
+                        date: '2024-11-26',
+                        time: '16:30:00'
+                    }
+                ],
+                
+                get filteredTransactions() {
+                    let filtered = [...this.transactions];
+                    
+                    // Apply filters
+                    if (this.filters.type !== 'all') {
+                        filtered = filtered.filter(t => t.type === this.filters.type);
+                    }
+                    
+                    if (this.filters.category !== 'all') {
+                        filtered = filtered.filter(t => t.category === this.filters.category);
+                    }
+                    
+                    // Apply sorting
+                    if (this.sortBy === 'date-desc') {
+                        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    } else if (this.sortBy === 'date-asc') {
+                        filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    } else if (this.sortBy === 'amount-desc') {
+                        filtered.sort((a, b) => b.amount - a.amount);
+                    } else if (this.sortBy === 'amount-asc') {
+                        filtered.sort((a, b) => a.amount - b.amount);
+                    }
+                    
+                    return filtered;
+                },
+                
+                init() {
+                    // Check if user is logged in
+                    if (!localStorage.getItem('isLoggedIn')) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    // Load user data
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    this.userProfile.name = user.name || 'Usuário';
+                    this.userProfile.role = user.role || 'Usuário Poupa.Ai';
+                    
+                    // Initialize charts
+                    this.$nextTick(() => {
+                        this.initCharts();
+                        this.calculateReportData();
+                    });
+                },
+                
+                updateDateRange() {
+                    const today = new Date();
+                    const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                    const startOfWeek = new Date(today);
+                    startOfWeek.setDate(today.getDate() - today.getDay());
+                    
+                    switch (this.filters.dateRange) {
+                        case 'today':
+                            this.filters.startDate = today.toISOString().split('T')[0];
+                            this.filters.endDate = today.toISOString().split('T')[0];
+                            break;
+                        case 'week':
+                            this.filters.startDate = startOfWeek.toISOString().split('T')[0];
+                            this.filters.endDate = today.toISOString().split('T')[0];
+                            break;
+                        case 'month':
+                            this.filters.startDate = startOfMonth.toISOString().split('T')[0];
+                            this.filters.endDate = today.toISOString().split('T')[0];
+                            break;
+                        case 'quarter':
+                            const quarterStart = new Date(today.getFullYear(), Math.floor(today.getMonth() / 3) * 3, 1);
+                            this.filters.startDate = quarterStart.toISOString().split('T')[0];
+                            this.filters.endDate = today.toISOString().split('T')[0];
+                            break;
+                        case 'year':
+                            const yearStart = new Date(today.getFullYear(), 0, 1);
+                            this.filters.startDate = yearStart.toISOString().split('T')[0];
+                            this.filters.endDate = today.toISOString().split('T')[0];
+                            break;
+                    }
+                },
+                
+                calculateReportData() {
+                    const filtered = this.filteredTransactions;
+                    
+                    this.reportData.totalReceitas = filtered
+                        .filter(t => t.type === 'Receita')
+                        .reduce((sum, t) => sum + t.amount, 0);
+                    
+                    this.reportData.totalDespesas = filtered
+                        .filter(t => t.type === 'Despesa')
+                        .reduce((sum, t) => sum + t.amount, 0);
+                    
+                    this.reportData.saldoLiquido = this.reportData.totalReceitas - this.reportData.totalDespesas;
+                    this.reportData.totalTransacoes = filtered.length;
+                },
+                
+                initCharts() {
+                    this.initPieChart();
+                    this.initLineChart();
+                },
+                
+                initPieChart() {
+                    const ctx = document.getElementById('pieChart').getContext('2d');
+                    const expenses = this.transactions.filter(t => t.type === 'Despesa');
+                    const categoryTotals = {};
+                    
+                    expenses.forEach(expense => {
+                        categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + expense.amount;
+                    });
+                    
+                    new Chart(ctx, {
+                        type: 'pie',
+                        data: {
+                            labels: Object.keys(categoryTotals),
+                            datasets: [{
+                                data: Object.values(categoryTotals),
+                                backgroundColor: [
+                                    '#20C997',
+                                    '#A78BFA',
+                                    '#22D3EE',
+                                    '#F59E0B',
+                                    '#EF4444'
+                                ],
+                                borderWidth: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: '#ffffff',
+                                        font: {
+                                            family: 'Inter'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+                
+                initLineChart() {
+                    const ctx = document.getElementById('lineChart').getContext('2d');
+                    
+                    // Generate monthly data for the last 6 months
+                    const monthlyData = [];
+                    const labels = [];
+                    const today = new Date();
+                    
+                    for (let i = 5; i >= 0; i--) {
+                        const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+                        labels.push(date.toLocaleDateString('pt-BR', { month: 'short', year: '2-digit' }));
+                        
+                        const monthTransactions = this.transactions.filter(t => {
+                            const transactionDate = new Date(t.date);
+                            return transactionDate.getMonth() === date.getMonth() && 
+                                   transactionDate.getFullYear() === date.getFullYear();
+                        });
+                        
+                        const receitas = monthTransactions
+                            .filter(t => t.type === 'Receita')
+                            .reduce((sum, t) => sum + t.amount, 0);
+                        
+                        const despesas = monthTransactions
+                            .filter(t => t.type === 'Despesa')
+                            .reduce((sum, t) => sum + t.amount, 0);
+                        
+                        monthlyData.push({ receitas, despesas });
+                    }
+                    
+                    new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Receitas',
+                                data: monthlyData.map(d => d.receitas),
+                                borderColor: '#10B981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                tension: 0.4
+                            }, {
+                                label: 'Despesas',
+                                data: monthlyData.map(d => d.despesas),
+                                borderColor: '#EF4444',
+                                backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                tension: 0.4
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    labels: {
+                                        color: '#ffffff',
+                                        font: {
+                                            family: 'Inter'
+                                        }
+                                    }
+                                }
+                            },
+                            scales: {
+                                y: {
+                                    beginAtZero: true,
+                                    ticks: {
+                                        color: '#ffffff',
+                                        font: {
+                                            family: 'Inter'
+                                        }
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                },
+                                x: {
+                                    ticks: {
+                                        color: '#ffffff',
+                                        font: {
+                                            family: 'Inter'
+                                        }
+                                    },
+                                    grid: {
+                                        color: 'rgba(255, 255, 255, 0.1)'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                },
+                
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('pt-BR');
+                },
+                
+                getCategoryColor(category) {
+                    const colors = {
+                        'alimentação': 'bg-chart-food bg-opacity-20 text-chart-food',
+                        'transporte': 'bg-chart-transport bg-opacity-20 text-chart-transport',
+                        'lazer': 'bg-chart-leisure bg-opacity-20 text-chart-leisure',
+                        'outros': 'bg-chart-others bg-opacity-20 text-chart-others'
+                    };
+                    return colors[category] || 'bg-gray-500 bg-opacity-20 text-gray-500';
+                },
+                
+                getPeriodLabel() {
+                    const labels = {
+                        'today': 'Hoje',
+                        'week': 'Esta semana',
+                        'month': 'Este mês',
+                        'quarter': 'Este trimestre',
+                        'year': 'Este ano',
+                        'custom': 'Personalizado'
+                    };
+                    return labels[this.filters.dateRange] || 'Período';
+                },
+                
+                generateReport() {
+                    this.calculateReportData();
+                    this.initCharts();
+                },
+                
+                clearFilters() {
+                    this.filters = {
+                        dateRange: 'month',
+                        startDate: '',
+                        endDate: '',
+                        type: 'all',
+                        category: 'all'
+                    };
+                    this.updateDateRange();
+                },
+                
+                exportReport(format) {
+                    // In a real app, this would generate and download the file
+                    alert(`Exportando relatório em formato ${format.toUpperCase()}...`);
+                    console.log('Exporting report:', {
+                        format,
+                        filters: this.filters,
+                        data: this.reportData,
+                        transactions: this.filteredTransactions
+                    });
+                }
+            }
+        }
+    </script>
+</body>
+</html>

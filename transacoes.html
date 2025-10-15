@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transações - Poupa.Ai</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0B0F14',
+                        'primary': '#20C997',
+                        'secondary': '#A78BFA',
+                        'accent': '#22D3EE',
+                        'success': '#10B981',
+                        'warning': '#F59E0B',
+                        'danger': '#EF4444',
+                        'card-bg': 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)',
+                        'sidebar-bg': 'rgba(15, 23, 42, 0.8)',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .sidebar-glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 100%);
+        }
+        
+        .gradient-mesh {
+            background: 
+                radial-gradient(at 40% 20%, rgba(32, 201, 151, 0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(167, 139, 250, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+        }
+        
+        .focus-ring:focus {
+            outline: 2px solid #20C997;
+            outline-offset: 2px;
+        }
+        
+        .transaction-item {
+            transition: all 0.3s ease;
+        }
+        
+        .transaction-item:hover {
+            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="transacoesApp()">
+    <!-- Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-40">
+        <div class="p-6">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="w-10 h-10 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white">Poupa.Ai</h1>
+                    <p class="text-xs text-gray-400">Dashboard Financeiro</p>
+                </div>
+            </div>
+            
+            <!-- User Profile -->
+            <div class="flex items-center space-x-3 mb-8">
+                <div class="relative">
+                    <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
+                         alt="Avatar" 
+                         class="w-12 h-12 rounded-full border-2 border-primary">
+                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-dark-bg"></div>
+                </div>
+                <div>
+                    <h3 class="text-white font-semibold" x-text="userProfile.name"></h3>
+                    <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
+                </div>
+            </div>
+            
+            <!-- Navigation Menu -->
+            <nav class="space-y-2">
+                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Minha Carteira</span>
+                </a>
+                
+                <a href="#" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Transações</span>
+                </a>
+                
+                <a href="relatorios.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Relatórios</span>
+                </a>
+                
+                <a href="configuracoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Configurações</span>
+                </a>
+            </nav>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="ml-64 p-6">
+        <!-- Top Bar -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <h2 class="text-3xl font-bold text-white">Transações</h2>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-400">Total:</span>
+                    <span class="text-lg font-semibold text-white" x-text="filteredTransactions.length"></span>
+                    <span class="text-sm text-gray-400">transações</span>
+                </div>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <!-- Add Transaction Button -->
+                <button @click="showAddModal = true" class="bg-gradient-to-r from-primary to-accent text-white px-6 py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 focus-ring">
+                    <svg class="w-5 h-5 inline mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+                    </svg>
+                    Nova Transação
+                </button>
+                
+                <!-- Filter Button -->
+                <button @click="showFilters = !showFilters" class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+                    </svg>
+                    <span>Filtros</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Filters Panel -->
+        <div x-show="showFilters" x-transition class="glass-strong rounded-2xl p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Date Range -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Período</label>
+                    <select x-model="filters.dateRange" class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="all">Todos os períodos</option>
+                        <option value="today">Hoje</option>
+                        <option value="week">Esta semana</option>
+                        <option value="month">Este mês</option>
+                        <option value="year">Este ano</option>
+                        <option value="custom">Personalizado</option>
+                    </select>
+                </div>
+                
+                <!-- Transaction Type -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Tipo</label>
+                    <select x-model="filters.type" class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="all">Todos os tipos</option>
+                        <option value="Receita">Receitas</option>
+                        <option value="Despesa">Despesas</option>
+                    </select>
+                </div>
+                
+                <!-- Category -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Categoria</label>
+                    <select x-model="filters.category" class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="all">Todas as categorias</option>
+                        <option value="alimentação">Alimentação</option>
+                        <option value="transporte">Transporte</option>
+                        <option value="lazer">Lazer</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                
+                <!-- Amount Range -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Valor</label>
+                    <select x-model="filters.amountRange" class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="all">Qualquer valor</option>
+                        <option value="0-50">R$ 0 - R$ 50</option>
+                        <option value="50-200">R$ 50 - R$ 200</option>
+                        <option value="200-500">R$ 200 - R$ 500</option>
+                        <option value="500+">R$ 500+</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex justify-end space-x-4 mt-4">
+                <button @click="clearFilters" class="px-4 py-2 text-gray-400 hover:text-white transition-colors">
+                    Limpar Filtros
+                </button>
+                <button @click="applyFilters" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-80 transition-colors">
+                    Aplicar Filtros
+                </button>
+            </div>
+        </div>
+        
+        <!-- Transactions List -->
+        <div class="glass-strong rounded-2xl p-6">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold text-white">Lista de Transações</h3>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-400" x-text="'Mostrando ' + filteredTransactions.length + ' de ' + transactions.length + ' transações'"></span>
+                    <select x-model="sortBy" class="px-3 py-1 glass rounded-lg text-sm">
+                        <option value="date-desc">Data (mais recente)</option>
+                        <option value="date-asc">Data (mais antiga)</option>
+                        <option value="amount-desc">Valor (maior)</option>
+                        <option value="amount-asc">Valor (menor)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Transactions Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="border-b border-glass-border">
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Data</th>
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Descrição</th>
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Categoria</th>
+                            <th class="text-left py-3 px-4 text-gray-400 font-medium">Tipo</th>
+                            <th class="text-right py-3 px-4 text-gray-400 font-medium">Valor</th>
+                            <th class="text-center py-3 px-4 text-gray-400 font-medium">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-glass-border">
+                        <template x-for="transaction in filteredTransactions" :key="transaction.id">
+                            <tr class="transaction-item hover:bg-white hover:bg-opacity-5">
+                                <td class="py-4 px-4 text-gray-300" x-text="formatDate(transaction.date)"></td>
+                                <td class="py-4 px-4 text-white font-medium" x-text="transaction.description"></td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                                          :class="getCategoryColor(transaction.category)"
+                                          x-text="transaction.category"></span>
+                                </td>
+                                <td class="py-4 px-4">
+                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium"
+                                          :class="transaction.type === 'Receita' ? 'bg-success bg-opacity-20 text-success' : 'bg-danger bg-opacity-20 text-danger'"
+                                          x-text="transaction.type"></span>
+                                </td>
+                                <td class="py-4 px-4 text-right">
+                                    <span class="font-semibold"
+                                          :class="transaction.type === 'Receita' ? 'text-success' : 'text-danger'"
+                                          x-text="(transaction.type === 'Receita' ? '+' : '-') + 'R$ ' + transaction.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></span>
+                                </td>
+                                <td class="py-4 px-4 text-center">
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <button @click="editTransaction(transaction)" class="text-primary hover:text-accent transition-colors">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                                            </svg>
+                                        </button>
+                                        <button @click="deleteTransaction(transaction.id)" class="text-danger hover:text-red-300 transition-colors">
+                                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+                
+                <!-- Empty State -->
+                <div x-show="filteredTransactions.length === 0" class="text-center py-12">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <h3 class="text-lg font-semibold text-gray-400 mb-2">Nenhuma transação encontrada</h3>
+                    <p class="text-gray-500">Tente ajustar os filtros ou adicione uma nova transação</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Transaction Modal -->
+    <div x-show="showAddModal" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div class="glass-strong rounded-2xl p-6 w-full max-w-md mx-4">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-xl font-semibold text-white">Nova Transação</h3>
+                <button @click="showAddModal = false" class="text-gray-400 hover:text-white">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                    </svg>
+                </button>
+            </div>
+            
+            <form @submit.prevent="addTransaction" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Descrição</label>
+                    <input x-model="newTransaction.description" type="text" required
+                           class="w-full px-3 py-2 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                           placeholder="Ex: Uber, iFood, Salário...">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Valor</label>
+                        <input x-model="newTransaction.amount" type="number" step="0.01" required
+                               class="w-full px-3 py-2 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                               placeholder="0.00">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Tipo</label>
+                        <select x-model="newTransaction.type" required
+                                class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="">Selecione</option>
+                            <option value="Receita">Receita</option>
+                            <option value="Despesa">Despesa</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Categoria</label>
+                    <select x-model="newTransaction.category" required
+                            class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="">Selecione</option>
+                        <option value="alimentação">Alimentação</option>
+                        <option value="transporte">Transporte</option>
+                        <option value="lazer">Lazer</option>
+                        <option value="outros">Outros</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Data</label>
+                    <input x-model="newTransaction.date" type="date" required
+                           class="w-full px-3 py-2 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                </div>
+                
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" @click="showAddModal = false" 
+                            class="px-4 py-2 text-gray-400 hover:text-white transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" 
+                            class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-opacity-80 transition-colors">
+                        Adicionar
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function transacoesApp() {
+            return {
+                userProfile: {
+                    name: 'Usuário',
+                    role: 'Usuário Poupa.Ai',
+                    avatar: null
+                },
+                
+                showAddModal: false,
+                showFilters: false,
+                sortBy: 'date-desc',
+                
+                filters: {
+                    dateRange: 'all',
+                    type: 'all',
+                    category: 'all',
+                    amountRange: 'all'
+                },
+                
+                newTransaction: {
+                    description: '',
+                    amount: '',
+                    type: '',
+                    category: '',
+                    date: new Date().toISOString().split('T')[0]
+                },
+                
+                transactions: [
+                    {
+                        id: 1,
+                        description: 'Freelance Design',
+                        amount: 850.00,
+                        type: 'Receita',
+                        category: 'outros',
+                        date: '2024-11-30',
+                        time: '10:42:23'
+                    },
+                    {
+                        id: 2,
+                        description: 'Uber - Centro',
+                        amount: 25.00,
+                        type: 'Despesa',
+                        category: 'transporte',
+                        date: '2024-11-30',
+                        time: '12:50:40'
+                    },
+                    {
+                        id: 3,
+                        description: 'iFood - Jantar',
+                        amount: 42.90,
+                        type: 'Despesa',
+                        category: 'alimentação',
+                        date: '2024-11-29',
+                        time: '19:30:00'
+                    },
+                    {
+                        id: 4,
+                        description: 'Salário CLT',
+                        amount: 2800.00,
+                        type: 'Receita',
+                        category: 'outros',
+                        date: '2024-11-28',
+                        time: '09:00:00'
+                    },
+                    {
+                        id: 5,
+                        description: 'Netflix',
+                        amount: 25.90,
+                        type: 'Despesa',
+                        category: 'lazer',
+                        date: '2024-11-27',
+                        time: '08:00:00'
+                    },
+                    {
+                        id: 6,
+                        description: 'Supermercado',
+                        amount: 120.50,
+                        type: 'Despesa',
+                        category: 'alimentação',
+                        date: '2024-11-26',
+                        time: '16:30:00'
+                    }
+                ],
+                
+                get filteredTransactions() {
+                    let filtered = [...this.transactions];
+                    
+                    // Apply filters
+                    if (this.filters.type !== 'all') {
+                        filtered = filtered.filter(t => t.type === this.filters.type);
+                    }
+                    
+                    if (this.filters.category !== 'all') {
+                        filtered = filtered.filter(t => t.category === this.filters.category);
+                    }
+                    
+                    // Apply sorting
+                    if (this.sortBy === 'date-desc') {
+                        filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+                    } else if (this.sortBy === 'date-asc') {
+                        filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+                    } else if (this.sortBy === 'amount-desc') {
+                        filtered.sort((a, b) => b.amount - a.amount);
+                    } else if (this.sortBy === 'amount-asc') {
+                        filtered.sort((a, b) => a.amount - b.amount);
+                    }
+                    
+                    return filtered;
+                },
+                
+                init() {
+                    // Check if user is logged in
+                    if (!localStorage.getItem('isLoggedIn')) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+                    
+                    // Load user data
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    this.userProfile.name = user.name || 'Usuário';
+                    this.userProfile.role = user.role || 'Usuário Poupa.Ai';
+                },
+                
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('pt-BR');
+                },
+                
+                getCategoryColor(category) {
+                    const colors = {
+                        'alimentação': 'bg-chart-food bg-opacity-20 text-chart-food',
+                        'transporte': 'bg-chart-transport bg-opacity-20 text-chart-transport',
+                        'lazer': 'bg-chart-leisure bg-opacity-20 text-chart-leisure',
+                        'outros': 'bg-chart-others bg-opacity-20 text-chart-others'
+                    };
+                    return colors[category] || 'bg-gray-500 bg-opacity-20 text-gray-500';
+                },
+                
+                addTransaction() {
+                    const transaction = {
+                        id: Date.now(),
+                        ...this.newTransaction,
+                        amount: parseFloat(this.newTransaction.amount),
+                        time: new Date().toLocaleTimeString('pt-BR')
+                    };
+                    
+                    this.transactions.unshift(transaction);
+                    
+                    // Reset form
+                    this.newTransaction = {
+                        description: '',
+                        amount: '',
+                        type: '',
+                        category: '',
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                    
+                    this.showAddModal = false;
+                },
+                
+                editTransaction(transaction) {
+                    // In a real app, this would open an edit modal
+                    console.log('Edit transaction:', transaction);
+                },
+                
+                deleteTransaction(id) {
+                    if (confirm('Tem certeza que deseja excluir esta transação?')) {
+                        this.transactions = this.transactions.filter(t => t.id !== id);
+                    }
+                },
+                
+                clearFilters() {
+                    this.filters = {
+                        dateRange: 'all',
+                        type: 'all',
+                        category: 'all',
+                        amountRange: 'all'
+                    };
+                },
+                
+                applyFilters() {
+                    this.showFilters = false;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

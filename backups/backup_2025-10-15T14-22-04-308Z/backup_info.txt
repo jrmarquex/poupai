@@ -1,0 +1,19 @@
+BACKUP CRIADO EM: 2025-10-15T14:22:05.095Z
+    
+TABELAS BACKUPADAS:
+- clientes: 4 registros
+- movimentacoes: 132 registros
+
+ARQUIVOS CRIADOS:
+- backup_completo.json: Dados completos em formato JSON
+- restore_backup.sql: Script SQL para restauração
+- backup_info.txt: Este arquivo
+
+COMO RESTAURAR:
+1. Acesse o Supabase Dashboard
+2. Vá em SQL Editor
+3. Execute o arquivo restore_backup.sql
+4. Ou use o backup_completo.json via API
+
+IMPORTANTE: Este backup foi criado ANTES de executar as migrations.
+Se algo der errado, use este backup para restaurar o estado anterior.
