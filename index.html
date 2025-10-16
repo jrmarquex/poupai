@@ -149,38 +149,49 @@
         
         /* Mobile Menu Fixes */
         @media (max-width: 768px) {
-            /* Fix mobile menu height and spacing */
+            /* Fix mobile menu height and spacing - MUCH MORE COMPACT */
             .mobile-menu {
-                max-height: 60vh !important;
+                max-height: 40vh !important;
                 overflow-y: auto !important;
-                padding: 0.5rem 0 !important;
+                padding: 0.25rem 0 !important;
             }
             
             .mobile-menu-item {
-                padding: 0.5rem 1rem !important;
-                margin: 0.25rem 0 !important;
-                font-size: 0.875rem !important;
+                padding: 0.375rem 0.75rem !important;
+                margin: 0.125rem 0 !important;
+                font-size: 0.8rem !important;
+                line-height: 1.2 !important;
             }
             
             .mobile-menu-button {
-                padding: 0.5rem 1rem !important;
-                margin: 0.25rem 0 !important;
-                font-size: 0.875rem !important;
+                padding: 0.375rem 0.75rem !important;
+                margin: 0.125rem 0 !important;
+                font-size: 0.8rem !important;
+                line-height: 1.2 !important;
             }
             
-            /* Fix header height */
+            /* Fix header height - MORE COMPACT */
             .header-mobile {
-                padding: 0.75rem 1rem !important;
+                padding: 0.5rem 1rem !important;
             }
             
-            /* Fix logo size */
+            /* Fix logo size - SMALLER */
             .logo-mobile {
-                font-size: 1.125rem !important;
+                font-size: 1rem !important;
             }
             
             .logo-icon-mobile {
-                width: 1.5rem !important;
-                height: 1.5rem !important;
+                width: 1.25rem !important;
+                height: 1.25rem !important;
+            }
+            
+            /* Reduce mobile menu container spacing */
+            .mobile-menu .container {
+                padding: 0.5rem 1rem !important;
+            }
+            
+            .mobile-menu .space-y-1 {
+                gap: 0.125rem !important;
             }
         }
             /* Fix container padding */
@@ -264,6 +275,37 @@
         
         /* Extra small screens */
         @media (max-width: 480px) {
+            /* Even more compact mobile menu */
+            .mobile-menu {
+                max-height: 35vh !important;
+                padding: 0.125rem 0 !important;
+            }
+            
+            .mobile-menu-item {
+                padding: 0.25rem 0.5rem !important;
+                margin: 0.0625rem 0 !important;
+                font-size: 0.75rem !important;
+            }
+            
+            .mobile-menu-button {
+                padding: 0.25rem 0.5rem !important;
+                margin: 0.0625rem 0 !important;
+                font-size: 0.75rem !important;
+            }
+            
+            .header-mobile {
+                padding: 0.375rem 0.75rem !important;
+            }
+            
+            .logo-mobile {
+                font-size: 0.875rem !important;
+            }
+            
+            .logo-icon-mobile {
+                width: 1rem !important;
+                height: 1rem !important;
+            }
+            
             .hero-title {
                 font-size: 1.75rem !important;
             }
@@ -405,18 +447,18 @@
         
         <!-- Mobile Menu -->
         <div x-show="mobileMenuOpen" x-transition class="md:hidden glass-strong border-t border-glass-border mobile-menu">
-            <div class="container mx-auto px-4 py-2 space-y-1">
+            <div class="container mx-auto px-3 py-1 space-y-0.5">
                 <a href="#como-funciona" class="block text-gray-300 hover:text-primary transition-colors focus-ring mobile-menu-item">Como Funciona</a>
                 <a href="#recursos" class="block text-gray-300 hover:text-primary transition-colors focus-ring mobile-menu-item">Recursos</a>
                 <a href="#para-quem" class="block text-gray-300 hover:text-primary transition-colors focus-ring mobile-menu-item">Para Quem</a>
                 <a href="#preco" class="block text-gray-300 hover:text-primary transition-colors focus-ring mobile-menu-item">Preço</a>
                 <a href="#faq" class="block text-gray-300 hover:text-primary transition-colors focus-ring mobile-menu-item">FAQ</a>
                 <a href="#contato" class="block text-gray-300 hover:text-primary transition-colors focus-ring mobile-menu-item">Contato</a>
-                <a href="login.html" class="block relative bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 text-primary px-3 py-2 rounded-lg font-semibold hover:from-primary/30 hover:to-accent/30 hover:border-primary/50 transition-all duration-200 focus-ring group mobile-menu-button">
+                <a href="login.html" class="block relative bg-gradient-to-r from-primary/20 to-accent/20 border border-primary/30 text-primary px-2 py-1.5 rounded-lg font-semibold hover:from-primary/30 hover:to-accent/30 hover:border-primary/50 transition-all duration-200 focus-ring group mobile-menu-button">
                     <!-- Professional icon -->
-                    <div class="flex items-center space-x-2">
-                        <div class="w-3 h-3 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
-                            <svg class="w-2 h-2 text-white" fill="currentColor" viewBox="0 0 24 24">
+                    <div class="flex items-center space-x-1.5">
+                        <div class="w-2.5 h-2.5 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center">
+                            <svg class="w-1.5 h-1.5 text-white" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                             </svg>
                         </div>
@@ -426,7 +468,7 @@
                     <!-- Hover glow effect -->
                     <div class="absolute inset-0 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
                 </a>
-                <a href="#hero-cta" class="block bg-gradient-to-r from-primary to-accent text-white px-4 py-2 rounded-lg font-semibold text-center focus-ring mobile-menu-button">
+                <a href="#hero-cta" class="block bg-gradient-to-r from-primary to-accent text-white px-3 py-1.5 rounded-lg font-semibold text-center focus-ring mobile-menu-button">
                     Começar no WhatsApp
                 </a>
             </div>
