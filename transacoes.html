@@ -50,11 +50,12 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .glass-strong {
-            background: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+        .sidebar-glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
         }
+        
         
         .gradient-bg {
             background: linear-gradient(135deg, #0B0F14 0%, #1A1F2E 100%);
@@ -84,7 +85,7 @@
 
 <body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="transacoesApp()">
     <!-- Sidebar -->
-    <div class="fixed inset-y-0 left-0 w-64 glass-strong z-50">
+    <div class="fixed inset-y-0 left-0 w-64 sidebar-glass z-50">
         <div class="flex flex-col h-full">
             <!-- Logo -->
             <div class="flex items-center space-x-3 px-6 py-6">
