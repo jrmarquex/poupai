@@ -17,7 +17,7 @@ ADD COLUMN IF NOT EXISTS profile_photo_type VARCHAR(20) DEFAULT 'url';
 ALTER TABLE clientes 
 ADD COLUMN IF NOT EXISTS profile_photo_updated_at TIMESTAMP DEFAULT NOW();
 
--- Criar trigger para atualizar timestamp da foto
+-- Criar trigger para atualizar timestamp da fotore
 CREATE OR REPLACE FUNCTION update_profile_photo_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN

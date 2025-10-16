@@ -165,14 +165,14 @@
         
         /* Custom gradient backgrounds */
         .gradient-bg {
-            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
         }
         
         .gradient-mesh {
             background: 
-                radial-gradient(at 40% 20%, rgba(32, 201, 151, 0.1) 0px, transparent 50%),
-                radial-gradient(at 80% 0%, rgba(167, 139, 250, 0.1) 0px, transparent 50%),
-                radial-gradient(at 0% 50%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+                radial-gradient(at 40% 20%, rgba(16, 185, 129, 0.05) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(59, 130, 246, 0.05) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(245, 158, 11, 0.05) 0px, transparent 50%);
         }
         
         /* Smooth scrolling */
@@ -203,12 +203,12 @@
         }
     </style>
 </head>
-<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen">
+<body class="bg-gray-50 text-gray-800 font-inter gradient-bg gradient-mesh min-h-screen">
     <!-- Skip to content link for accessibility -->
     <a href="#main-content" class="skip-link focus-ring">Pular para o conteúdo principal</a>
     
     <!-- Header -->
-    <header x-data="{ mobileMenuOpen: false }" class="fixed top-0 w-full z-50 glass transition-all duration-300">
+    <header x-data="{ mobileMenuOpen: false }" class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 transition-all duration-300">
         <nav class="container mx-auto px-4 py-4 flex items-center justify-between">
             <!-- Logo -->
             <div class="flex items-center space-x-2">
@@ -217,18 +217,18 @@
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                 </div>
-                <span class="text-xl font-bold text-white">Poupa.AI</span>
+                <span class="text-xl font-bold text-gray-800">Poupa.AI</span>
             </div>
             
             <!-- Desktop Navigation -->
             <div class="hidden md:flex items-center space-x-8">
-                <a href="#como-funciona" class="text-gray-300 hover:text-primary transition-colors focus-ring">Como Funciona</a>
-                <a href="#recursos" class="text-gray-300 hover:text-primary transition-colors focus-ring">Recursos</a>
-                <a href="#para-quem" class="text-gray-300 hover:text-primary transition-colors focus-ring">Para Quem</a>
-                <a href="#preco" class="text-gray-300 hover:text-primary transition-colors focus-ring">Preço</a>
-                <a href="#faq" class="text-gray-300 hover:text-primary transition-colors focus-ring">FAQ</a>
-                <a href="#contato" class="text-gray-300 hover:text-primary transition-colors focus-ring">Contato</a>
-                <a href="login.html" class="text-gray-300 hover:text-primary transition-colors focus-ring">Dashboard</a>
+                <a href="#como-funciona" class="text-gray-600 hover:text-primary transition-colors focus-ring">Como Funciona</a>
+                <a href="#recursos" class="text-gray-600 hover:text-primary transition-colors focus-ring">Recursos</a>
+                <a href="#para-quem" class="text-gray-600 hover:text-primary transition-colors focus-ring">Para Quem</a>
+                <a href="#preco" class="text-gray-600 hover:text-primary transition-colors focus-ring">Preço</a>
+                <a href="#faq" class="text-gray-600 hover:text-primary transition-colors focus-ring">FAQ</a>
+                <a href="#contato" class="text-gray-600 hover:text-primary transition-colors focus-ring">Contato</a>
+                <a href="login.html" class="text-gray-600 hover:text-primary transition-colors focus-ring">Dashboard</a>
             </div>
             
             <!-- CTA Button -->
