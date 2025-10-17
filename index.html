@@ -387,6 +387,33 @@
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
+        /* Mobile Chat Layout - WhatsApp Style */
+        @media (max-width: 768px) {
+            .mobile-chat-scroll-container {
+                display: flex !important;
+                flex-direction: row !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                scroll-snap-type: x mandatory !important;
+                gap: 1rem !important;
+                padding-bottom: 1rem !important;
+            }
+
+            .mobile-chat-card {
+                flex: 0 0 auto !important;
+                width: 85vw !important;
+                max-width: 85vw !important;
+                scroll-snap-align: start !important;
+            }
+
+            /* Hide scrollbar for cleaner look */
+            .mobile-chat-scroll-container::-webkit-scrollbar {
+                display: none !important;
+            }
+            .mobile-chat-scroll-container {
+                -ms-overflow-style: none !important;
+                scrollbar-width: none !important;
+            }
         }
     </style>
 </head>
@@ -439,10 +466,12 @@
             </div>
             
             <!-- Mobile menu button -->
-            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-white focus-ring" aria-label="Menu mobile">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="!mobileMenuOpen" d="M4 6h16M4 12h16M4 18h16"></path>
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" x-show="mobileMenuOpen" d="M6 18L18 6M6 6l12 12"></path>
+            <button @click="mobileMenuOpen = !mobileMenuOpen" class="md:hidden text-white focus-ring relative w-6 h-6" aria-label="Menu mobile">
+                <svg class="w-6 h-6 absolute inset-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-show="!mobileMenuOpen">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+                <svg class="w-6 h-6 absolute inset-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-show="mobileMenuOpen">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                 </svg>
             </button>
         </nav>
@@ -1025,7 +1054,7 @@
         <section class="py-16 bg-black bg-opacity-30">
             <div class="container mx-auto px-4">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-bold mb-4">Interaja com o Meu Assessor 24h por dia</h2>
+                    <h2 class="text-4xl font-bold mb-4">Interaja com seu Assistente 24h por dia</h2>
                     <p class="text-xl text-gray-300 max-w-2xl mx-auto">Pergunte o que quiser e como quiser sobre as suas finanças. Veja alguns exemplos abaixo.</p>
                 </div>
                 
@@ -1063,23 +1092,10 @@
                         </div>
                     </div>
                     
-                    <!-- Linha 2 - Esquerda para direita -->
-                    <div class="flex animate-scroll-left mb-6">
+                    <!-- Linha 2 - Estática -->
+                    <div class="flex mb-6">
                         <div class="flex space-x-4 whitespace-nowrap">
                             <!-- Sequência 1 -->
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quanto gastei hoje?</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Saldo do mês?</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Transações da semana</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quanto tenho pra pagar?</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Resumo financeiro</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos com alimentação</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Receitas do mês</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Tenho saldo positivo?</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quais gastos fixos?</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Como está meu saldo?</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei boletos hoje?</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Recebi quanto esse mês?</span>
-                            <!-- Sequência 2 (duplicada para loop contínuo) -->
                             <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Quanto gastei hoje?</span>
                             <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Saldo do mês?</span>
                             <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Transações da semana</span>
@@ -1127,23 +1143,10 @@
                         </div>
                     </div>
                     
-                    <!-- Linha 4 - Esquerda para direita -->
-                    <div class="flex animate-scroll-left mb-6">
+                    <!-- Linha 4 - Estática -->
+                    <div class="flex mb-6">
                         <div class="flex space-x-4 whitespace-nowrap">
                             <!-- Sequência 1 -->
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos com transporte</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Resumo do dia</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Categorias de gastos</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Relatório mensal</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Extrato da semana</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos por categoria</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Análise de padrões</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Metas financeiras</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Orçamento do mês</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Previsão de gastos</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Relatório anual</span>
-                            <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Comparativo mensal</span>
-                            <!-- Sequência 2 (duplicada para loop contínuo) -->
                             <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos com transporte</span>
                             <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Resumo do dia</span>
                             <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Categorias de gastos</span>
@@ -1520,9 +1523,9 @@
                     <p class="text-xl text-gray-300 max-w-3xl mx-auto">Seu assistente financeiro pessoal, sempre à mão. Registre gastos e receitas com texto, áudio ou fotos, e deixe a inteligência artificial organizar tudo para você.</p>
                 </div>
 
-                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mobile-grid">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto mobile-chat-scroll-container">
                     <!-- Exemplo 1: Trabalhador CLT - Gastos Diários -->
-                    <div class="relative bg-gray-800 rounded-2xl shadow-lg overflow-hidden w-full mx-auto border border-gray-700 glass-strong">
+                    <div class="relative bg-gray-800 rounded-2xl shadow-lg overflow-hidden w-full mx-auto border border-gray-700 glass-strong mobile-chat-card">
                         <!-- Chat Header -->
                         <div class="flex items-center p-4 bg-gray-900 border-b border-gray-700">
                             <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
@@ -1605,7 +1608,7 @@
                     </div>
 
                     <!-- Exemplo 2: Freelancer Fotógrafo -->
-                    <div class="relative bg-gray-800 rounded-2xl shadow-lg overflow-hidden w-full mx-auto border border-gray-700 glass-strong">
+                    <div class="relative bg-gray-800 rounded-2xl shadow-lg overflow-hidden w-full mx-auto border border-gray-700 glass-strong mobile-chat-card">
                         <!-- Chat Header -->
                         <div class="flex items-center p-4 bg-gray-900 border-b border-gray-700">
                             <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
@@ -1688,7 +1691,7 @@
                     </div>
 
                     <!-- Exemplo 3: Trabalhador Informal (Uber/Delivery) -->
-                    <div class="relative bg-gray-800 rounded-2xl shadow-lg overflow-hidden w-full mx-auto border border-gray-700 glass-strong">
+                    <div class="relative bg-gray-800 rounded-2xl shadow-lg overflow-hidden w-full mx-auto border border-gray-700 glass-strong mobile-chat-card">
                         <!-- Chat Header -->
                         <div class="flex items-center p-4 bg-gray-900 border-b border-gray-700">
                             <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
