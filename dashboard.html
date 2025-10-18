@@ -165,6 +165,122 @@
                 padding: 0.75rem 1rem !important;
                 font-size: 0.875rem !important;
             }
+            
+            /* Mobile header optimization */
+            .mobile-header {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                padding: 1rem !important;
+            }
+            
+            .mobile-header-left {
+                width: 100% !important;
+                justify-content: space-between !important;
+            }
+            
+            .mobile-header-right {
+                width: 100% !important;
+                flex-direction: column !important;
+                gap: 0.75rem !important;
+            }
+            
+            /* Mobile search bar */
+            .mobile-search {
+                width: 100% !important;
+                max-width: none !important;
+            }
+            
+            /* Mobile buttons */
+            .mobile-button {
+                width: 100% !important;
+                justify-content: center !important;
+                padding: 0.75rem 1rem !important;
+                font-size: 0.875rem !important;
+            }
+            
+            /* Mobile financial cards */
+            .mobile-financial-card {
+                padding: 1rem !important;
+                text-align: center !important;
+            }
+            
+            .mobile-financial-value {
+                font-size: 1.5rem !important;
+                margin: 0.5rem 0 !important;
+            }
+            
+            .mobile-financial-change {
+                font-size: 0.75rem !important;
+            }
+            
+            /* Mobile charts */
+            .mobile-chart-container {
+                height: 200px !important;
+                padding: 0.5rem !important;
+            }
+            
+            /* Mobile activities */
+            .mobile-activity-item {
+                padding: 0.75rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            
+            .mobile-activity-text {
+                font-size: 0.875rem !important;
+            }
+            
+            /* Mobile export buttons */
+            .mobile-export-grid {
+                grid-template-columns: 1fr !important;
+                gap: 0.75rem !important;
+            }
+            
+            .mobile-export-button {
+                width: 100% !important;
+                padding: 0.75rem !important;
+                font-size: 0.875rem !important;
+            }
+            
+            /* Mobile dropdown */
+            .mobile-dropdown {
+                width: 100% !important;
+                margin-top: 0.5rem !important;
+            }
+            
+            /* Mobile user profile */
+            .mobile-user-profile {
+                flex-direction: column !important;
+                text-align: center !important;
+                padding: 0.75rem !important;
+            }
+            
+            .mobile-user-avatar {
+                margin: 0 auto 0.5rem auto !important;
+            }
+        }
+        
+        /* Extra small screens */
+        @media (max-width: 480px) {
+            .main-content-mobile {
+                padding: 0.5rem !important;
+            }
+            
+            .mobile-title {
+                font-size: 1.25rem !important;
+            }
+            
+            .mobile-financial-value {
+                font-size: 1.25rem !important;
+            }
+            
+            .mobile-chart-container {
+                height: 150px !important;
+            }
+            
+            .mobile-button {
+                padding: 0.625rem 0.75rem !important;
+                font-size: 0.8rem !important;
+            }
         }
         
         /* Custom gradient backgrounds */
@@ -396,10 +512,10 @@
     <!-- Main Content -->
     <div class="ml-64 p-6 main-content-mobile">
         <!-- Top Bar -->
-        <div class="flex items-center justify-between mb-8">
-            <div class="flex items-center space-x-4">
-                <h2 class="text-3xl font-bold text-white">Dashboard</h2>
-                <button class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+        <div class="flex items-center justify-between mb-8 mobile-header">
+            <div class="flex items-center space-x-4 mobile-header-left">
+                <h2 class="text-3xl font-bold text-white mobile-title">Dashboard</h2>
+                <button class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-button">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M3 17V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
                     </svg>
@@ -407,11 +523,11 @@
                 </button>
             </div>
             
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4 mobile-header-right">
                 <!-- WhatsApp Assistant Button -->
                 <a href="https://wa.me/5511999999999?text=Olá! Preciso de ajuda com o Poupa.Ai" 
                    target="_blank" 
-                   class="bg-success text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-80 transition-all duration-200 flex items-center space-x-2">
+                   class="bg-success text-white px-6 py-3 rounded-lg font-semibold hover:bg-opacity-80 transition-all duration-200 flex items-center space-x-2 mobile-button">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M17.472,14.382c-0.297-0.149-1.758-0.867-2.03-0.967c-0.273-0.099-0.471-0.148-0.67,0.15c-0.197,0.297-0.767,0.967-0.94,1.164c-0.173,0.199-0.347,0.223-0.644,0.074c-0.297-0.149-1.255-0.462-2.39-1.475c-0.883-0.788-1.48-1.761-1.653-2.059c-0.173-0.297-0.018-0.458,0.13-0.606c0.134-0.133,0.298-0.347,0.446-0.52c0.149-0.174,0.198-0.298,0.298-0.497c0.099-0.198,0.05-0.372-0.025-0.52c-0.074-0.149-0.669-1.612-0.916-2.207c-0.24-0.579-0.487-0.5-0.669-0.51c-0.173-0.008-0.371-0.01-0.57-0.01c-0.198,0-0.52,0.074-0.792,0.372c-0.273,0.297-1.04,1.016-1.04,2.479c0,1.462,1.065,2.875,1.213,3.074c0.149,0.198,2.096,3.2,5.077,4.487c0.709,0.306,1.262,0.489,1.694,0.625c0.717,0.227,1.37,0.195,1.885,0.118c0.571-0.085,1.758-0.719,2.006-1.413c0.249-0.694,0.249-1.289,0.173-1.413c-0.074-0.124-0.272-0.198-0.57-0.347m-5.421,7.403H7.116V9.25h4.935v12.535Z"/>
                     </svg>
@@ -421,7 +537,7 @@
                 <!-- Search -->
                 <div class="relative">
                     <input type="text" placeholder="Buscar..." 
-                           class="w-64 px-4 py-2 pl-10 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary">
+                           class="w-64 px-4 py-2 pl-10 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary mobile-search">
                     <svg class="w-4 h-4 absolute left-3 top-3 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
                     </svg>
@@ -459,7 +575,7 @@
         <!-- Financial Summary Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 mobile-grid">
             <!-- Receitas Card -->
-            <div class="glass-strong rounded-2xl p-6 card-hover mobile-card">
+            <div class="glass-strong rounded-2xl p-6 card-hover mobile-card mobile-financial-card">
                 <div class="flex items-center justify-between mb-4">
                     <div class="w-12 h-12 bg-gradient-to-br from-success to-chart-green rounded-xl flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -468,8 +584,8 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm text-gray-400">Ganhos</p>
-                        <p class="text-2xl font-bold text-success" x-text="'R$ ' + financialSummary.receitas.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
-                        <p class="text-xs text-success">+12% este mês</p>
+                        <p class="text-2xl font-bold text-success mobile-financial-value" x-text="'R$ ' + financialSummary.receitas.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
+                        <p class="text-xs text-success mobile-financial-change">+12% este mês</p>
                     </div>
                 </div>
                 <div class="w-full bg-gray-700 rounded-full h-2">
@@ -478,7 +594,7 @@
                 </div>
 
             <!-- Despesas Card -->
-            <div class="glass-strong rounded-2xl p-6 card-hover mobile-card">
+            <div class="glass-strong rounded-2xl p-6 card-hover mobile-card mobile-financial-card">
                 <div class="flex items-center justify-between mb-4">
                     <div class="w-12 h-12 bg-gradient-to-br from-danger to-chart-orange rounded-xl flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -487,8 +603,8 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm text-gray-400">Gastos</p>
-                        <p class="text-2xl font-bold text-danger" x-text="'R$ ' + financialSummary.despesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
-                        <p class="text-xs text-danger">+8% este mês</p>
+                        <p class="text-2xl font-bold text-danger mobile-financial-value" x-text="'R$ ' + financialSummary.despesas.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
+                        <p class="text-xs text-danger mobile-financial-change">+8% este mês</p>
                     </div>
                 </div>
                 <div class="w-full bg-gray-700 rounded-full h-2">
@@ -497,7 +613,7 @@
                         </div>
             
             <!-- Saldo Líquido Card -->
-            <div class="glass-strong rounded-2xl p-6 card-hover mobile-card">
+            <div class="glass-strong rounded-2xl p-6 card-hover mobile-card mobile-financial-card">
                 <div class="flex items-center justify-between mb-4">
                     <div class="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-xl flex items-center justify-center">
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -506,10 +622,10 @@
                     </div>
                     <div class="text-right">
                         <p class="text-sm text-gray-400">Saldo Líquido</p>
-                        <p class="text-2xl font-bold" 
+                        <p class="text-2xl font-bold mobile-financial-value" 
                            :class="financialSummary.saldo >= 0 ? 'text-success' : 'text-danger'"
                            x-text="'R$ ' + financialSummary.saldo.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
-                        <p class="text-xs text-gray-400">
+                        <p class="text-xs text-gray-400 mobile-financial-change">
                             <span>Ganhos - Gastos</span>
                         </p>
                     </div>
@@ -534,7 +650,7 @@
                         <option>Este Ano</option>
                     </select>
                 </div>
-                <div class="relative h-64">
+                <div class="relative h-64 mobile-chart-container">
                     <canvas id="pieChart"></canvas>
                 </div>
             </div>
@@ -549,7 +665,7 @@
                         <option>Últimos 90 dias</option>
                     </select>
                 </div>
-                <div class="relative h-64">
+                <div class="relative h-64 mobile-chart-container">
                     <canvas id="lineChart"></canvas>
                 </div>
             </div>
@@ -566,7 +682,7 @@
                     
                     <div class="space-y-4">
                     <template x-for="activity in recentActivities" :key="activity.id">
-                        <div class="flex items-center space-x-4 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-5 transition-colors">
+                        <div class="flex items-center space-x-4 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-5 transition-colors mobile-activity-item">
                             <div class="w-10 h-10 rounded-full flex items-center justify-center"
                                  :class="activity.type === 'Receita' ? 'bg-emerald-500 bg-opacity-20' : 'bg-orange-500 bg-opacity-20'">
                                 <svg class="w-5 h-5" :class="activity.type === 'Receita' ? 'text-emerald-400' : 'text-orange-400'" fill="currentColor" viewBox="0 0 24 24">
@@ -574,13 +690,13 @@
                                 </svg>
                             </div>
                             <div class="flex-1">
-                                <p class="text-white font-medium" x-text="activity.description"></p>
-                                <p class="text-sm text-gray-300" x-text="activity.time"></p>
+                                <p class="text-white font-medium mobile-activity-text" x-text="activity.description"></p>
+                                <p class="text-sm text-gray-300 mobile-activity-text" x-text="activity.time"></p>
                         </div>
                             <div class="text-right">
-                                <p class="font-semibold text-lg" :class="activity.type === 'Receita' ? 'text-emerald-400' : 'text-orange-400'"
+                                <p class="font-semibold text-lg mobile-activity-text" :class="activity.type === 'Receita' ? 'text-emerald-400' : 'text-orange-400'"
                                    x-text="(activity.type === 'Receita' ? '+' : '-') + 'R$ ' + activity.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
-                                <p class="text-xs text-gray-300" x-text="activity.status"></p>
+                                <p class="text-xs text-gray-300 mobile-activity-text" x-text="activity.status"></p>
                             </div>
                         </div>
                     </template>
@@ -596,8 +712,8 @@
                     </svg>
                 </div>
 
-                <div class="space-y-4">
-                    <button @click="exportData('pdf')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                <div class="space-y-4 mobile-export-grid">
+                    <button @click="exportData('pdf')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-export-button">
                         <svg class="w-5 h-5 text-danger" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                         </svg>
@@ -607,7 +723,7 @@
                         </div>
                     </button>
                     
-                    <button @click="exportData('excel')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <button @click="exportData('excel')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-export-button">
                         <svg class="w-5 h-5 text-success" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                         </svg>
@@ -617,7 +733,7 @@
                                 </div>
                     </button>
                     
-                    <button @click="exportData('xml')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <button @click="exportData('xml')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-export-button">
                         <svg class="w-5 h-5 text-warning" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                         </svg>
@@ -627,14 +743,14 @@
                         </div>
                     </button>
                     
-                    <button @click="exportData('csv')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <button @click="exportData('csv')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-export-button">
                         <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
                         </svg>
                         <div class="text-left">
                             <p class="text-white font-medium">Exportar CSV</p>
                             <p class="text-xs text-gray-400">Dados separados por vírgula</p>
-                                </div>
+                        </div>
                     </button>
                             </div>
                 
