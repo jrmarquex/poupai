@@ -261,20 +261,6 @@
                 </div>
             </div>
 
-            <!-- User Profile -->
-            <div class="flex items-center space-x-3 mb-8">
-                <div class="relative">
-                    <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
-                         alt="Avatar" 
-                         class="w-12 h-12 rounded-full border-2 border-primary">
-                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-dark-bg"></div>
-                </div>
-                <div>
-                    <h3 class="text-white font-semibold" x-text="userProfile.name"></h3>
-                    <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
-                </div>
-            </div>
-            
             <!-- Navigation Menu -->
             <nav class="space-y-2">
                 <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white">
@@ -422,6 +408,14 @@
             </div>
             
             <div class="flex items-center space-x-4">
+                <!-- User Avatar -->
+                <div class="relative">
+                    <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
+                         alt="Avatar" 
+                         class="w-10 h-10 rounded-full border-2 border-primary">
+                    <div class="absolute -bottom-1 -right-1 w-3 h-3 bg-success rounded-full border-2 border-dark-bg"></div>
+                </div>
+                
                 <!-- WhatsApp Assistant Button -->
                 <a href="https://wa.me/5511999999999?text=Olá! Preciso de ajuda com o Poupa.Ai" 
                    target="_blank" 
@@ -671,12 +665,6 @@
         </div>
 
     <!-- Floating Elements -->
-    <div class="fixed top-4 left-4 w-8 h-8 bg-warning rounded-full flex items-center justify-center floating z-30">
-        <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-        </svg>
-    </div>
-    
     <div class="fixed bottom-4 right-4 w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center floating z-30">
         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
