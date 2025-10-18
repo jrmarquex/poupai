@@ -113,19 +113,6 @@
                 </div>
             </div>
             
-            <!-- User Profile -->
-            <div class="flex items-center space-x-3 mb-8">
-                <div class="relative">
-                    <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
-                         alt="Avatar" 
-                         class="w-12 h-12 rounded-full border-2 border-primary">
-                    <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-success rounded-full border-2 border-dark-bg"></div>
-                </div>
-                <div>
-                    <h3 class="text-white font-semibold" x-text="userProfile.name"></h3>
-                    <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
-                </div>
-            </div>
             
             <!-- Navigation Menu -->
             <nav class="space-y-2">
@@ -209,6 +196,17 @@
                         </svg>
                         XML
                     </button>
+                </div>
+                
+                <!-- User Avatar -->
+                <div class="flex items-center space-x-3">
+                    <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
+                         alt="Avatar" 
+                         class="w-10 h-10 rounded-full border-2 border-primary">
+                    <div>
+                        <p class="text-white font-medium" x-text="userProfile.name"></p>
+                        <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
+                    </div>
                 </div>
             </div>
         </div>
