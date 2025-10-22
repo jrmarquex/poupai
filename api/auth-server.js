@@ -211,9 +211,9 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Verificar se é login admin
-        if (identifier === 'admin' && senha === '1234') {
-            // Buscar dados do cliente admin (5511997245501)
+        // Verificar se é login de cliente teste (apenas visualização)
+        if (identifier === 'cliente' && senha === '1234') {
+            // Buscar dados do cliente admin (5511997245501) para visualização
             const { data: clienteAdmin, error: adminError } = await supabase
                 .from('clientes')
                 .select('*')
@@ -245,6 +245,72 @@ app.post('/api/auth/login', async (req, res) => {
                 clienteId = novoAdmin.clientid;
             } else {
                 clienteId = clienteAdmin.clientid;
+            }
+
+            // Gerar token JWT para cliente teste (apenas visualização)
+            const token = jwt.sign(
+                { 
+                    clientid: clienteId, 
+                    whatsapp: '5511997245501', 
+                    nome: 'Cliente Teste', 
+                    email: 'cliente@poupai.com',
+                    isTestUser: true,
+                    permissions: ['read'] // Apenas leitura
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: '24h' }
+            );
+
+            return res.json({
+                success: true,
+                message: 'Login de cliente teste realizado com sucesso',
+                token,
+                cliente: {
+                    clientid: clienteId,
+                    whatsapp: '5511997245501',
+                    nome: 'Cliente Teste',
+                    email: 'cliente@poupai.com',
+                    primeiro_acesso: false,
+                    isTestUser: true,
+                    permissions: ['read']
+                }
+            });
+        }
+
+        // Verificar se é login do dono do sistema (5511997245501)
+        if (identifier === '5511997245501' && senha === '1234') {
+            // Buscar dados do cliente admin
+            const { data: clienteAdmin, error: adminError } = await supabase
+                .from('clientes')
+                .select('*')
+                .eq('whatsapp', '5511997245501')
+                .single();
+
+            if (adminError && adminError.code !== 'PGRST116') {
+                throw adminError;
+            }
+
+            // Se não existe, criar cliente admin
+            let clienteId;
+            if (!clienteAdmin) {
+                const { data: novoAdmin, error: createError } = await supabase
+                    .from('clientes')
+                    .insert({
+                        whatsapp: '5511997245501',
+                        nome: 'Administrador do Sistema',
+                        email: 'admin@poupai.com',
+                        senha_hash: await bcrypt.hash('1234', 10),
+                        primeiro_acesso: false,
+                        ultimo_login: new Date().toISOString(),
+                        status: true
+                    })
+                    .select()
+                    .single();
+
+                if (createError) throw createError;
+                clienteId = novoAdmin.clientid;
+            } else {
+                clienteId = clienteAdmin.clientid;
                 
                 // Atualizar último login
                 await supabase
@@ -257,14 +323,15 @@ app.post('/api/auth/login', async (req, res) => {
                     .eq('clientid', clienteId);
             }
 
-            // Gerar token JWT para admin
+            // Gerar token JWT para admin (permissões completas)
             const token = jwt.sign(
                 { 
                     clientid: clienteId, 
                     whatsapp: '5511997245501', 
-                    nome: 'Administrador', 
+                    nome: 'Administrador do Sistema', 
                     email: 'admin@poupai.com',
-                    isAdmin: true
+                    isAdmin: true,
+                    permissions: ['read', 'write', 'delete', 'admin'] // Todas as permissões
                 },
                 process.env.JWT_SECRET,
                 { expiresIn: '24h' }
@@ -272,15 +339,16 @@ app.post('/api/auth/login', async (req, res) => {
 
             return res.json({
                 success: true,
-                message: 'Login admin realizado com sucesso',
+                message: 'Login de administrador realizado com sucesso',
                 token,
                 cliente: {
                     clientid: clienteId,
                     whatsapp: '5511997245501',
-                    nome: 'Administrador',
+                    nome: 'Administrador do Sistema',
                     email: 'admin@poupai.com',
                     primeiro_acesso: false,
-                    isAdmin: true
+                    isAdmin: true,
+                    permissions: ['read', 'write', 'delete', 'admin']
                 }
             });
         }
@@ -350,7 +418,8 @@ app.post('/api/auth/login', async (req, res) => {
                 clientid: cliente.clientid, 
                 whatsapp: cliente.whatsapp, 
                 nome: cliente.nome, 
-                email: cliente.email 
+                email: cliente.email,
+                permissions: ['read', 'write'] // Permissões normais de cliente
             },
             process.env.JWT_SECRET,
             { expiresIn: '24h' }
@@ -365,7 +434,8 @@ app.post('/api/auth/login', async (req, res) => {
                 whatsapp: cliente.whatsapp,
                 nome: cliente.nome,
                 email: cliente.email,
-                primeiro_acesso: cliente.primeiro_acesso
+                primeiro_acesso: cliente.primeiro_acesso,
+                permissions: ['read', 'write']
             }
         });
 

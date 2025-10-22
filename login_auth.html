@@ -216,9 +216,9 @@
                     <form @submit.prevent="login" class="space-y-4">
                         <!-- WhatsApp ou Email -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">WhatsApp, Email ou Admin</label>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">WhatsApp, Email ou Acesso Especial</label>
                             <input type="text" x-model="loginForm.identifier" 
-                                   placeholder="admin, (11) 99999-9999 ou seu@email.com"
+                                   placeholder="cliente, 5511997245501, (11) 99999-9999 ou seu@email.com"
                                    class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                    required>
                         </div>
@@ -351,11 +351,22 @@
                     this.message = '';
                     
                     try {
-                        // Verificar se é login admin
-                        if (this.loginForm.identifier === 'admin' && this.loginForm.senha === '1234') {
-                            this.showMessage('Login admin realizado com sucesso! Redirecionando...', 'success');
+                        // Verificar se é login de cliente teste (apenas visualização)
+                        if (this.loginForm.identifier === 'cliente' && this.loginForm.senha === '1234') {
+                            localStorage.setItem('loginType', 'cliente');
+                            this.showMessage('Login de cliente teste realizado! Redirecionando...', 'success');
                             setTimeout(() => {
-                                window.location.href = 'dashboard.html';
+                                window.location.href = 'dashboard.html?login=cliente';
+                            }, 2000);
+                            return;
+                        }
+                        
+                        // Verificar se é login do dono do sistema
+                        if (this.loginForm.identifier === '5511997245501' && this.loginForm.senha === '1234') {
+                            localStorage.setItem('loginType', 'admin');
+                            this.showMessage('Login de administrador realizado! Redirecionando...', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html?login=admin';
                             }, 2000);
                             return;
                         }

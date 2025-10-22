@@ -835,10 +835,13 @@
             // Sistema de Dashboard com dados reais das movimentações do cliente admin (5511997245501)
             return {
                 userProfile: {
-                    name: 'Administrador',
-                    role: 'Administrador Poupa.Ai',
-                    whatsapp: '5511997245501',
-                    avatar: null
+                    name: 'Usuário',
+                    role: 'Usuário Poupa.Ai',
+                    whatsapp: '',
+                    avatar: null,
+                    isAdmin: false,
+                    isTestUser: false,
+                    permissions: []
                 },
                 
                 financialSummary: {
@@ -867,11 +870,54 @@
                 
                 async init() {
                     console.log('Inicializando dashboard com dados reais...');
+                    this.detectarTipoUsuario();
                     await this.carregarDadosDashboard();
                     await this.carregarAtividadesRecentes();
                     await this.carregarGastosPorCategoria();
                     await this.carregarEvolucaoFinanceira();
                     this.loading = false;
+                },
+                
+                detectarTipoUsuario() {
+                    // Detectar tipo de usuário baseado na URL ou localStorage
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const loginType = urlParams.get('login') || localStorage.getItem('loginType');
+                    
+                    if (loginType === 'cliente') {
+                        this.userProfile = {
+                            name: 'Cliente Teste',
+                            role: 'Cliente Poupa.Ai (Apenas Visualização)',
+                            whatsapp: '5511997245501',
+                            avatar: null,
+                            isAdmin: false,
+                            isTestUser: true,
+                            permissions: ['read']
+                        };
+                        console.log('Modo: Cliente Teste (apenas visualização)');
+                    } else if (loginType === 'admin' || loginType === '5511997245501') {
+                        this.userProfile = {
+                            name: 'Administrador do Sistema',
+                            role: 'Administrador Poupa.Ai',
+                            whatsapp: '5511997245501',
+                            avatar: null,
+                            isAdmin: true,
+                            isTestUser: false,
+                            permissions: ['read', 'write', 'delete', 'admin']
+                        };
+                        console.log('Modo: Administrador (permissões completas)');
+                    } else {
+                        // Modo padrão para demonstração
+                        this.userProfile = {
+                            name: 'Usuário Demo',
+                            role: 'Usuário Poupa.Ai',
+                            whatsapp: '',
+                            avatar: null,
+                            isAdmin: false,
+                            isTestUser: false,
+                            permissions: ['read']
+                        };
+                        console.log('Modo: Demonstração');
+                    }
                 },
                 
                 async carregarDadosDashboard() {
