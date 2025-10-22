@@ -406,7 +406,8 @@
                             };
                         }
                         
-                        if (body.identifier === '5511997245501' && body.senha === 'Hyundaimax@@9') {
+                        // Aceitar tanto WhatsApp quanto email para o admin
+                        if ((body.identifier === '5511997245501' || body.identifier === 'frmarques.oli@gmail.com') && body.senha === 'Hyundaimax@@9') {
                             return {
                                 success: true,
                                 cliente: {
