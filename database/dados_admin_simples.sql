@@ -1,5 +1,5 @@
--- Script para inserir dados de exemplo para o cliente admin (5511997245501)
--- Execute este script no SQL Editor do Supabase após executar auth_system.sql
+-- Script simplificado para inserir dados do administrador (5511997245501)
+-- Execute este script no SQL Editor do Supabase
 
 -- 1. INSERIR/ATUALIZAR CLIENTE ADMIN COM SENHA REAL
 INSERT INTO clientes (
@@ -26,13 +26,19 @@ INSERT INTO clientes (
     status = EXCLUDED.status,
     ultimo_login = EXCLUDED.ultimo_login;
 
--- 2. BUSCAR O CLIENTID DO ADMIN
--- (Execute esta query para obter o clientid)
-SELECT clientid FROM clientes WHERE whatsapp = '5511997245501';
+-- 2. VERIFICAR SE O CLIENTE FOI INSERIDO/ATUALIZADO
+SELECT 
+    clientid,
+    whatsapp,
+    nome,
+    email,
+    primeiro_acesso,
+    status,
+    ultimo_login
+FROM clientes 
+WHERE whatsapp = '5511997245501';
 
 -- 3. INSERIR MOVIMENTAÇÕES DE EXEMPLO PARA O ADMIN
--- Substitua 'CLIENTID_AQUI' pelo clientid obtido na query acima
-
 -- Receitas (Ganhos)
 INSERT INTO movimentacoes (id, data_movimentacao, valor_movimentacao, clientid, type, category, observation) VALUES
 ('mov_001', '2024-01-15', 2800.00, (SELECT clientid FROM clientes WHERE whatsapp = '5511997245501'), 'receita', 'salario', 'Salário CLT - Janeiro'),
@@ -96,29 +102,3 @@ JOIN clientes c ON m.clientid = c.clientid
 WHERE c.whatsapp = '5511997245501'
 ORDER BY m.created_at DESC
 LIMIT 10;
-
--- 6. VERIFICAR GASTOS POR CATEGORIA (últimos 30 dias)
-SELECT 
-    m.category,
-    COUNT(*) as quantidade,
-    SUM(m.valor_movimentacao) as valor_total,
-    AVG(m.valor_movimentacao) as valor_medio
-FROM movimentacoes m
-JOIN clientes c ON m.clientid = c.clientid
-WHERE c.whatsapp = '5511997245501'
-AND m.type = 'despesa'
-AND m.data_movimentacao >= CURRENT_DATE - INTERVAL '30 days'
-GROUP BY m.category
-ORDER BY valor_total DESC;
-
--- 7. VERIFICAR EVOLUÇÃO MENSAL
-SELECT 
-    DATE_TRUNC('month', m.data_movimentacao) as mes,
-    SUM(CASE WHEN m.type = 'receita' THEN m.valor_movimentacao ELSE 0 END) as receitas_mes,
-    SUM(CASE WHEN m.type = 'despesa' THEN m.valor_movimentacao ELSE 0 END) as despesas_mes,
-    SUM(CASE WHEN m.type = 'receita' THEN m.valor_movimentacao ELSE -m.valor_movimentacao END) as saldo_mes
-FROM movimentacoes m
-JOIN clientes c ON m.clientid = c.clientid
-WHERE c.whatsapp = '5511997245501'
-GROUP BY DATE_TRUNC('month', m.data_movimentacao)
-ORDER BY mes DESC;
