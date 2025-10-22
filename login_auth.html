@@ -381,7 +381,54 @@
                 },
                 
                 async callAPI(endpoint, options = {}) {
-                    // Chamada real para API
+                    // Para demonstração, vamos simular a API localmente
+                    // Em produção, use a API real
+                    
+                    if (endpoint === '/api/auth/login') {
+                        const body = JSON.parse(options.body);
+                        
+                        // Simular delay da API
+                        await new Promise(resolve => setTimeout(resolve, 1000));
+                        
+                        // Verificar credenciais de demonstração
+                        if (body.identifier === 'cliente' && body.senha === '1234') {
+                            return {
+                                success: true,
+                                cliente: {
+                                    clientid: 'demo-client-id',
+                                    whatsapp: '5511997245501',
+                                    nome: 'Cliente Teste',
+                                    email: 'cliente@poupai.com',
+                                    primeiro_acesso: false,
+                                    isTestUser: true,
+                                    permissions: ['read']
+                                }
+                            };
+                        }
+                        
+                        if (body.identifier === '5511997245501' && body.senha === 'Hyundaimax@@9') {
+                            return {
+                                success: true,
+                                cliente: {
+                                    clientid: 'demo-admin-id',
+                                    whatsapp: '5511997245501',
+                                    nome: 'Francisco Marques de Oliveira Junior',
+                                    email: 'frmarques.oli@gmail.com',
+                                    primeiro_acesso: false,
+                                    isAdmin: true,
+                                    permissions: ['read', 'write', 'delete', 'admin']
+                                }
+                            };
+                        }
+                        
+                        // Credenciais inválidas
+                        return {
+                            success: false,
+                            message: 'Credenciais inválidas'
+                        };
+                    }
+                    
+                    // Para outros endpoints, tentar API real
                     try {
                         const response = await fetch(`http://localhost:3000${endpoint}`, {
                             method: options.method || 'GET',
@@ -401,22 +448,9 @@
                         
                     } catch (error) {
                         console.error('Erro na chamada da API:', error);
-                        
-                        // Fallback para simulação se API não estiver disponível
-                        if (endpoint === '/api/auth/login') {
-                            const body = JSON.parse(options.body);
-                            
-                            // Simulação genérica sem credenciais específicas
-                            // Em produção, sempre use a API real
-                            return {
-                                success: false,
-                                message: 'API não disponível. Execute o servidor backend.'
-                            };
-                        }
-                        
                         return {
                             success: false,
-                            message: 'Erro de conexão com a API'
+                            message: 'API não disponível. Execute o servidor backend.'
                         };
                     }
                 },

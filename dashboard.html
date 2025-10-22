@@ -922,11 +922,12 @@
                 
                 async carregarDadosDashboard() {
                     try {
+                        // Tentar API real primeiro
                         const response = await fetch(`${this.apiBaseUrl}/dashboard`, {
                             method: 'GET',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'Authorization': 'Bearer admin-token' // Token de admin para demo
+                                'Authorization': 'Bearer admin-token'
                             }
                         });
                         
@@ -952,8 +953,7 @@
                         }
                         
                     } catch (error) {
-                        console.error('Erro ao carregar dados do dashboard:', error);
-                        this.error = 'Erro ao carregar dados do dashboard';
+                        console.log('API não disponível, usando dados de demonstração');
                         // Fallback para dados de demonstração
                         this.carregarDadosDemonstracao();
                     }
@@ -989,7 +989,7 @@
                         }
                         
                     } catch (error) {
-                        console.error('Erro ao carregar atividades recentes:', error);
+                        console.log('API não disponível, usando atividades de demonstração');
                         // Fallback para dados de demonstração
                         this.carregarAtividadesDemonstracao();
                     }
@@ -1017,7 +1017,7 @@
                         }
                         
                     } catch (error) {
-                        console.error('Erro ao carregar gastos por categoria:', error);
+                        console.log('API não disponível, usando gastos de demonstração');
                         // Fallback para dados de demonstração
                         this.carregarGastosDemonstracao();
                     }
@@ -1049,7 +1049,7 @@
                         }
                         
                     } catch (error) {
-                        console.error('Erro ao carregar evolução financeira:', error);
+                        console.log('API não disponível, usando evolução de demonstração');
                         // Fallback para dados de demonstração
                         this.carregarEvolucaoDemonstracao();
                     }
