@@ -147,6 +147,11 @@
             100% { transform: translateX(-50%); }
         }
         
+        @keyframes scrollLeft {
+            0% { transform: translateX(-50%); }
+            100% { transform: translateX(0%); }
+        }
+        
         /* Mobile Menu Fixes - ULTRA COMPACT */
         @media (max-width: 768px) {
             /* Fix mobile menu height and spacing - ULTRA COMPACT */
@@ -1151,8 +1156,8 @@
                         </div>
                     </div>
                     
-                    <!-- Linha 3 - Esquerda para direita -->
-                    <div class="flex animate-scroll-left mb-6">
+                    <!-- Linha 3 - Direita para esquerda -->
+                    <div class="flex animate-scroll-right mb-6">
                         <div class="flex space-x-4 whitespace-nowrap">
                             <!-- Sequência 1 -->
                             <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Paguei 120 de aluguel</span>
@@ -1183,8 +1188,8 @@
                         </div>
                     </div>
                     
-                    <!-- Linha 4 - Estática -->
-                    <div class="flex mb-6">
+                    <!-- Linha 4 - Esquerda para direita -->
+                    <div class="flex animate-scroll-left mb-6">
                         <div class="flex space-x-4 whitespace-nowrap">
                             <!-- Sequência 1 -->
                             <span class="bg-gray-800 bg-opacity-50 px-6 py-3 rounded-full text-gray-300 text-lg font-medium">Gastos com transporte</span>
