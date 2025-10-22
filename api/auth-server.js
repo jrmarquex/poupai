@@ -278,7 +278,7 @@ app.post('/api/auth/login', async (req, res) => {
         }
 
         // Verificar se é login do dono do sistema (5511997245501)
-        if (identifier === '5511997245501' && senha === '1234') {
+        if (identifier === '5511997245501') {
             // Buscar dados do cliente admin
             const { data: clienteAdmin, error: adminError } = await supabase
                 .from('clientes')
@@ -290,46 +290,60 @@ app.post('/api/auth/login', async (req, res) => {
                 throw adminError;
             }
 
-            // Se não existe, criar cliente admin
-            let clienteId;
             if (!clienteAdmin) {
-                const { data: novoAdmin, error: createError } = await supabase
-                    .from('clientes')
-                    .insert({
-                        whatsapp: '5511997245501',
-                        nome: 'Administrador do Sistema',
-                        email: 'admin@poupai.com',
-                        senha_hash: await bcrypt.hash('1234', 10),
-                        primeiro_acesso: false,
-                        ultimo_login: new Date().toISOString(),
-                        status: true
-                    })
-                    .select()
-                    .single();
+                return res.status(401).json({ 
+                    success: false, 
+                    message: 'Usuário administrador não encontrado. Faça o primeiro acesso.' 
+                });
+            }
 
-                if (createError) throw createError;
-                clienteId = novoAdmin.clientid;
-            } else {
-                clienteId = clienteAdmin.clientid;
-                
-                // Atualizar último login
+            // Verificar se está bloqueado
+            if (clienteAdmin.bloqueado_ate && new Date(clienteAdmin.bloqueado_ate) > new Date()) {
+                return res.status(423).json({
+                    success: false,
+                    message: 'Conta temporariamente bloqueada. Tente novamente mais tarde.'
+                });
+            }
+
+            // Verificar senha
+            const senhaValida = await bcrypt.compare(senha, clienteAdmin.senha_hash);
+            
+            if (!senhaValida) {
+                // Incrementar tentativas de login
                 await supabase
                     .from('clientes')
                     .update({
-                        ultimo_login: new Date().toISOString(),
-                        tentativas_login: 0,
+                        tentativas_login: clienteAdmin.tentativas_login + 1,
+                        bloqueado_ate: clienteAdmin.tentativas_login >= 4 
+                            ? new Date(Date.now() + 30 * 60 * 1000).toISOString() // 30 minutos
+                            : clienteAdmin.bloqueado_ate,
                         updated_at: new Date().toISOString()
                     })
-                    .eq('clientid', clienteId);
+                    .eq('clientid', clienteAdmin.clientid);
+
+                return res.status(401).json({ 
+                    success: false, 
+                    message: 'Senha incorreta' 
+                });
             }
+
+            // Login bem-sucedido - atualizar dados
+            await supabase
+                .from('clientes')
+                .update({
+                    ultimo_login: new Date().toISOString(),
+                    tentativas_login: 0,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('clientid', clienteAdmin.clientid);
 
             // Gerar token JWT para admin (permissões completas)
             const token = jwt.sign(
                 { 
-                    clientid: clienteId, 
-                    whatsapp: '5511997245501', 
-                    nome: 'Administrador do Sistema', 
-                    email: 'admin@poupai.com',
+                    clientid: clienteAdmin.clientid, 
+                    whatsapp: clienteAdmin.whatsapp, 
+                    nome: clienteAdmin.nome, 
+                    email: clienteAdmin.email,
                     isAdmin: true,
                     permissions: ['read', 'write', 'delete', 'admin'] // Todas as permissões
                 },
@@ -342,11 +356,11 @@ app.post('/api/auth/login', async (req, res) => {
                 message: 'Login de administrador realizado com sucesso',
                 token,
                 cliente: {
-                    clientid: clienteId,
-                    whatsapp: '5511997245501',
-                    nome: 'Administrador do Sistema',
-                    email: 'admin@poupai.com',
-                    primeiro_acesso: false,
+                    clientid: clienteAdmin.clientid,
+                    whatsapp: clienteAdmin.whatsapp,
+                    nome: clienteAdmin.nome,
+                    email: clienteAdmin.email,
+                    primeiro_acesso: clienteAdmin.primeiro_acesso,
                     isAdmin: true,
                     permissions: ['read', 'write', 'delete', 'admin']
                 }

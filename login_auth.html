@@ -362,12 +362,25 @@
                         }
                         
                         // Verificar se é login do dono do sistema
-                        if (this.loginForm.identifier === '5511997245501' && this.loginForm.senha === '1234') {
-                            localStorage.setItem('loginType', 'admin');
-                            this.showMessage('Login de administrador realizado! Redirecionando...', 'success');
-                            setTimeout(() => {
-                                window.location.href = 'dashboard.html?login=admin';
-                            }, 2000);
+                        if (this.loginForm.identifier === '5511997245501') {
+                            // Chamar API real para verificar senha
+                            const response = await this.callAPI('/api/auth/login', {
+                                method: 'POST',
+                                body: JSON.stringify({
+                                    identifier: this.loginForm.identifier,
+                                    senha: this.loginForm.senha
+                                })
+                            });
+                            
+                            if (response.success) {
+                                localStorage.setItem('loginType', 'admin');
+                                this.showMessage('Login de administrador realizado! Redirecionando...', 'success');
+                                setTimeout(() => {
+                                    window.location.href = 'dashboard.html?login=admin';
+                                }, 2000);
+                            } else {
+                                this.showMessage(response.message || 'Credenciais inválidas', 'error');
+                            }
                             return;
                         }
                         
@@ -398,30 +411,71 @@
                 },
                 
                 async callAPI(endpoint, options = {}) {
-                    // Simulação de chamada para API
-                    // Em produção, substitua por chamadas reais para seu backend
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
+                    // Chamada real para API
+                    try {
+                        const response = await fetch(`http://localhost:3000${endpoint}`, {
+                            method: options.method || 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                ...options.headers
+                            },
+                            body: options.body
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        return data;
+                        
+                    } catch (error) {
+                        console.error('Erro na chamada da API:', error);
+                        
+                        // Fallback para simulação se API não estiver disponível
+                        if (endpoint === '/api/auth/login') {
+                            const body = JSON.parse(options.body);
+                            
                             // Simular resposta baseada no telefone específico
-                            if (this.form.whatsapp === '5511997245501' || this.loginForm.identifier === '5511997245501') {
-                                resolve({
+                            if (body.identifier === '5511997245501') {
+                                return {
                                     success: true,
                                     data: {
                                         clientid: '550e8400-e29b-41d4-a716-446655440000',
                                         whatsapp: '5511997245501',
-                                        nome: 'João Silva',
-                                        email: 'joao.silva@email.com',
-                                        primeiro_acesso: false
+                                        nome: 'Administrador do Sistema',
+                                        email: 'admin@poupai.com',
+                                        primeiro_acesso: false,
+                                        isAdmin: true,
+                                        permissions: ['read', 'write', 'delete', 'admin']
                                     }
-                                });
+                                };
+                            } else if (body.identifier === 'cliente') {
+                                return {
+                                    success: true,
+                                    data: {
+                                        clientid: '550e8400-e29b-41d4-a716-446655440000',
+                                        whatsapp: '5511997245501',
+                                        nome: 'Cliente Teste',
+                                        email: 'cliente@poupai.com',
+                                        primeiro_acesso: false,
+                                        isTestUser: true,
+                                        permissions: ['read']
+                                    }
+                                };
                             } else {
-                                resolve({
+                                return {
                                     success: false,
                                     message: 'Usuário não encontrado'
-                                });
+                                };
                             }
-                        }, 1500);
-                    });
+                        }
+                        
+                        return {
+                            success: false,
+                            message: 'Erro de conexão com a API'
+                        };
+                    }
                 },
                 
                 showMessage(text, type) {

@@ -11,7 +11,7 @@
 
 ### **2. Administrador do Sistema (Permissões Completas)**
 - **Usuário:** `5511997245501`
-- **Senha:** `1234`
+- **Senha:** `[Sua senha cadastrada no primeiro acesso]`
 - **Permissões:** Todas (`read`, `write`, `delete`, `admin`)
 - **Finalidade:** Acesso completo do dono do sistema
 - **Dados:** Gerencia seus próprios dados e tem acesso administrativo
@@ -86,12 +86,24 @@ if (identifier === 'cliente' && senha === '1234') {
 }
 
 // Administrador
-if (identifier === '5511997245501' && senha === '1234') {
-    return {
-        permissions: ['read', 'write', 'delete', 'admin'],
-        isTestUser: false,
-        isAdmin: true
-    };
+if (identifier === '5511997245501') {
+    // Buscar dados do cliente admin
+    const clienteAdmin = await supabase
+        .from('clientes')
+        .select('*')
+        .eq('whatsapp', '5511997245501')
+        .single();
+    
+    // Verificar senha
+    const senhaValida = await bcrypt.compare(senha, clienteAdmin.senha_hash);
+    
+    if (senhaValida) {
+        return {
+            permissions: ['read', 'write', 'delete', 'admin'],
+            isTestUser: false,
+            isAdmin: true
+        };
+    }
 }
 ```
 
@@ -150,7 +162,7 @@ const authenticateToken = (req, res, next) => {
 
 ### **Cenário 2: Uso Administrativo**
 1. Acesse `login_auth.html`
-2. Use `5511997245501` / `1234`
+2. Use `5511997245501` / `[sua senha cadastrada]`
 3. Acesso completo ao sistema
 4. Pode gerenciar todas as funcionalidades
 5. Ideal para uso pessoal
