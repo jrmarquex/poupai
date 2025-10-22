@@ -3,7 +3,7 @@
 
 CREATE TABLE IF NOT EXISTS feedback (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES clientes(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES clientes(clientid) ON DELETE CASCADE,
     
     -- Informações básicas do feedback
     title VARCHAR(255) NOT NULL,
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS feedback (
     -- Resposta da equipe (opcional)
     admin_response TEXT,
     admin_response_at TIMESTAMP WITH TIME ZONE,
-    admin_user_id INTEGER REFERENCES clientes(id) ON DELETE SET NULL
+    admin_user_id UUID REFERENCES clientes(clientid) ON DELETE SET NULL
 );
 
 -- Índices para melhorar performance
@@ -56,7 +56,7 @@ CREATE TRIGGER trigger_update_feedback_updated_at
 -- Comentários para documentação
 COMMENT ON TABLE feedback IS 'Tabela para armazenar feedbacks dos usuários do sistema Poupa.Ai';
 COMMENT ON COLUMN feedback.id IS 'ID único do feedback';
-COMMENT ON COLUMN feedback.user_id IS 'ID do usuário que enviou o feedback';
+COMMENT ON COLUMN feedback.user_id IS 'UUID do usuário que enviou o feedback (referencia clientes.clientid)';
 COMMENT ON COLUMN feedback.title IS 'Título do feedback';
 COMMENT ON COLUMN feedback.description IS 'Descrição detalhada do feedback';
 COMMENT ON COLUMN feedback.rating IS 'Avaliação de 1 a 5 estrelas';
@@ -69,10 +69,10 @@ COMMENT ON COLUMN feedback.created_at IS 'Data de criação do feedback';
 COMMENT ON COLUMN feedback.updated_at IS 'Data da última atualização';
 COMMENT ON COLUMN feedback.admin_response IS 'Resposta da equipe de suporte';
 COMMENT ON COLUMN feedback.admin_response_at IS 'Data da resposta da equipe';
-COMMENT ON COLUMN feedback.admin_user_id IS 'ID do administrador que respondeu';
+COMMENT ON COLUMN feedback.admin_user_id IS 'UUID do administrador que respondeu (referencia clientes.clientid)';
 
 -- Exemplo de dados de teste (opcional)
 -- INSERT INTO feedback (user_id, title, description, rating, category, priority, contact_email) VALUES
--- (1, 'Sugestão de melhoria na interface', 'Gostaria de ver mais opções de personalização no dashboard.', 4, 'ui', 'medium', 'usuario@exemplo.com'),
--- (1, 'Problema ao exportar relatórios', 'O botão de exportar PDF não está funcionando corretamente.', 2, 'bug', 'high', 'usuario@exemplo.com'),
--- (1, 'Nova funcionalidade solicitada', 'Seria interessante ter notificações por WhatsApp.', 5, 'feature', 'medium', 'usuario@exemplo.com');
+-- ('550e8400-e29b-41d4-a716-446655440000', 'Sugestão de melhoria na interface', 'Gostaria de ver mais opções de personalização no dashboard.', 4, 'ui', 'medium', 'usuario@exemplo.com'),
+-- ('550e8400-e29b-41d4-a716-446655440000', 'Problema ao exportar relatórios', 'O botão de exportar PDF não está funcionando corretamente.', 2, 'bug', 'high', 'usuario@exemplo.com'),
+-- ('550e8400-e29b-41d4-a716-446655440000', 'Nova funcionalidade solicitada', 'Seria interessante ter notificações por WhatsApp.', 5, 'feature', 'medium', 'usuario@exemplo.com');

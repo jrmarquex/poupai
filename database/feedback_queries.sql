@@ -11,10 +11,10 @@ SELECT
     f.priority,
     f.status,
     f.created_at,
-    c.nome as user_name
+    c.whatsapp as user_whatsapp
 FROM feedback f
-JOIN clientes c ON f.user_id = c.id
-WHERE f.user_id = 1
+JOIN clientes c ON f.user_id = c.clientid
+WHERE f.user_id = '550e8400-e29b-41d4-a716-446655440000'
 ORDER BY f.created_at DESC;
 
 -- 2. BUSCAR FEEDBACKS POR CATEGORIA
