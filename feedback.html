@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback - Poupa.Ai</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0B0F14',
+                        'primary': '#20C997',
+                        'secondary': '#A78BFA',
+                        'accent': '#22D3EE',
+                        'success': '#10B981',
+                        'warning': '#F59E0B',
+                        'danger': '#EF4444',
+                        'card-bg': 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)',
+                        'sidebar-bg': 'rgba(15, 23, 42, 0.8)',
+                        'chart-green': '#10B981',
+                        'chart-blue': '#3B82F6',
+                        'chart-purple': '#A78BFA',
+                        'chart-orange': '#F59E0B'
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        .sidebar-glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            /* Hide sidebar on mobile */
+            .sidebar-mobile {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            .sidebar-mobile.open {
+                transform: translateX(0);
+            }
+            
+            /* Adjust main content for mobile */
+            .main-content-mobile {
+                margin-left: 0 !important;
+                padding: 1rem !important;
+            }
+            
+            /* Mobile sidebar overlay */
+            .sidebar-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 45;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+            
+            .sidebar-overlay.open {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            /* Mobile Bottom Menu */
+            .mobile-bottom-menu {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 50 !important;
+                background: rgba(15, 23, 42, 0.95) !important;
+                backdrop-filter: blur(20px) !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.1) !important;
+                padding: 0.75rem 1rem !important;
+            }
+            
+            .mobile-bottom-menu-content {
+                display: grid !important;
+                grid-template-columns: repeat(5, 1fr) !important;
+                gap: 0.5rem !important;
+            }
+            
+            .mobile-bottom-menu-item {
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                padding: 0.5rem !important;
+                text-decoration: none !important;
+                color: #9CA3AF !important;
+                font-size: 0.75rem !important;
+                transition: color 0.2s ease !important;
+                border-radius: 0.5rem !important;
+            }
+            
+            .mobile-bottom-menu-item:hover {
+                color: #20C997 !important;
+                background: rgba(32, 201, 151, 0.1) !important;
+            }
+            
+            .mobile-bottom-menu-item.active {
+                color: #20C997 !important;
+                background: rgba(32, 201, 151, 0.15) !important;
+            }
+            
+            .mobile-bottom-menu-icon {
+                width: 1.25rem !important;
+                height: 1.25rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            
+            /* Add bottom padding to body to prevent content overlap */
+            body {
+                padding-bottom: 4rem !important;
+            }
+        }
+        
+        /* Gradient background */
+        .gradient-bg {
+            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 50%, #0B0F14 100%);
+        }
+        
+        .gradient-mesh {
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(32, 201, 151, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(167, 139, 250, 0.1) 0%, transparent 50%);
+        }
+        
+        /* Card hover effects */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="feedbackApp()" x-init="mobileSidebarOpen = false">
+    <!-- Mobile Sidebar Overlay -->
+    <div @click="mobileSidebarOpen = false" class="md:hidden sidebar-overlay" :class="{ 'open': mobileSidebarOpen }"></div>
+    
+    <!-- Desktop Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-40 hidden md:block" x-data="{ sidebarOpen: true }">
+        <div class="flex flex-col h-full">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 px-6 py-6">
+                <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center">
+                    <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white">Poupa.Ai</h1>
+                    <p class="text-sm text-gray-400">Dashboard Financeiro</p>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="transacoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Transações</span>
+                </a>
+                
+                <a href="relatorios.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Relatórios</span>
+                </a>
+                
+                <a href="configuracoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Configurações</span>
+                </a>
+                
+                <a href="tutorial.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Guia Prático</span>
+                </a>
+                
+                <a href="feedback.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Feedback</span>
+                </a>
+            </nav>
+            
+            <!-- History Card -->
+            <div class="mt-8 glass rounded-xl p-4">
+                <div class="flex items-center space-x-3 mb-2">
+                    <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <h3 class="text-sm font-semibold text-white">Atividade Recente</h3>
+                </div>
+                <div class="space-y-2">
+                    <div class="flex items-center space-x-2 text-xs text-gray-400">
+                        <div class="w-2 h-2 bg-success rounded-full"></div>
+                        <span>Feedback enviado</span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-xs text-gray-400">
+                        <div class="w-2 h-2 bg-primary rounded-full"></div>
+                        <span>Sistema atualizado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Sidebar -->
+    <div class="md:hidden sidebar-mobile fixed left-0 top-0 h-full w-64 sidebar-glass z-50" :class="{ 'open': mobileSidebarOpen }">
+        <div class="flex flex-col h-full">
+            <!-- Logo -->
+            <div class="flex items-center space-x-3 px-4 py-4">
+                <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                    <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold text-white">Poupa.Ai</h1>
+                    <p class="text-xs text-gray-400">Dashboard</p>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <nav class="flex-1 px-2 py-4 space-y-1">
+                <a href="dashboard.html" @click="mobileSidebarOpen = false" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors mobile-nav-item">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="transacoes.html" @click="mobileSidebarOpen = false" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors mobile-nav-item">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Transações</span>
+                </a>
+                
+                <a href="relatorios.html" @click="mobileSidebarOpen = false" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors mobile-nav-item">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Relatórios</span>
+                </a>
+                
+                <a href="configuracoes.html" @click="mobileSidebarOpen = false" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors mobile-nav-item">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Configurações</span>
+                </a>
+                
+                <a href="tutorial.html" @click="mobileSidebarOpen = false" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors mobile-nav-item">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Guia Prático</span>
+                </a>
+                
+                <a href="feedback.html" @click="mobileSidebarOpen = false" class="flex items-center space-x-3 px-3 py-2 rounded-lg bg-primary text-white mobile-nav-item">
+                    <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                    <span>Feedback</span>
+                </a>
+            </nav>
+            
+            <!-- History Card -->
+            <div class="mt-6 glass rounded-lg p-3">
+                <div class="flex items-center space-x-2 mb-1">
+                    <svg class="w-4 h-4 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <h3 class="text-xs font-semibold text-white">Atividade</h3>
+                </div>
+                <div class="space-y-1">
+                    <div class="flex items-center space-x-2 text-xs text-gray-400">
+                        <div class="w-1.5 h-1.5 bg-success rounded-full"></div>
+                        <span>Feedback enviado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="ml-64 p-6 main-content-mobile">
+        <!-- Top Bar -->
+        <div class="flex items-center justify-between mb-8">
+            <div class="flex items-center space-x-4">
+                <h2 class="text-3xl font-bold text-white">Feedback</h2>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-400">Sua opinião é importante para nós</span>
+                </div>
+            </div>
+            
+            <!-- User Avatar -->
+            <div class="flex items-center space-x-3">
+                <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
+                     alt="Avatar" 
+                     class="w-10 h-10 rounded-full border-2 border-primary">
+                <div>
+                    <p class="text-white font-medium" x-text="userProfile.name"></p>
+                    <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feedback Form -->
+        <div class="glass-strong rounded-2xl p-8 mb-6">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg class="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                </div>
+                <h3 class="text-2xl font-bold text-white mb-4">Envie seu Feedback</h3>
+                <p class="text-lg text-gray-300 mb-6">Sua opinião nos ajuda a melhorar o Poupa.Ai</p>
+            </div>
+            
+            <form @submit.prevent="submitFeedback" class="space-y-6">
+                <!-- Rating -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-white">Como você avalia o Poupa.Ai?</label>
+                    <div class="flex space-x-2">
+                        <button type="button" @click="feedback.rating = 1" 
+                                :class="feedback.rating >= 1 ? 'text-warning' : 'text-gray-400'"
+                                class="text-3xl hover:text-warning transition-colors">
+                            ⭐
+                        </button>
+                        <button type="button" @click="feedback.rating = 2" 
+                                :class="feedback.rating >= 2 ? 'text-warning' : 'text-gray-400'"
+                                class="text-3xl hover:text-warning transition-colors">
+                            ⭐
+                        </button>
+                        <button type="button" @click="feedback.rating = 3" 
+                                :class="feedback.rating >= 3 ? 'text-warning' : 'text-gray-400'"
+                                class="text-3xl hover:text-warning transition-colors">
+                            ⭐
+                        </button>
+                        <button type="button" @click="feedback.rating = 4" 
+                                :class="feedback.rating >= 4 ? 'text-warning' : 'text-gray-400'"
+                                class="text-3xl hover:text-warning transition-colors">
+                            ⭐
+                        </button>
+                        <button type="button" @click="feedback.rating = 5" 
+                                :class="feedback.rating >= 5 ? 'text-warning' : 'text-gray-400'"
+                                class="text-3xl hover:text-warning transition-colors">
+                            ⭐
+                        </button>
+                    </div>
+                    <p class="text-sm text-gray-400" x-text="getRatingText()"></p>
+                </div>
+                
+                <!-- Category -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-white">Categoria do Feedback</label>
+                    <select x-model="feedback.category" class="w-full px-4 py-3 glass rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                        <option value="">Selecione uma categoria</option>
+                        <option value="bug">🐛 Bug/Problema</option>
+                        <option value="feature">💡 Sugestão de Funcionalidade</option>
+                        <option value="improvement">⚡ Melhoria</option>
+                        <option value="ui">🎨 Interface/Design</option>
+                        <option value="performance">⚡ Performance</option>
+                        <option value="general">💬 Feedback Geral</option>
+                    </select>
+                </div>
+                
+                <!-- Priority -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-white">Prioridade</label>
+                    <div class="flex space-x-4">
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" x-model="feedback.priority" value="low" class="text-primary focus:ring-primary">
+                            <span class="text-sm text-gray-300">Baixa</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" x-model="feedback.priority" value="medium" class="text-primary focus:ring-primary">
+                            <span class="text-sm text-gray-300">Média</span>
+                        </label>
+                        <label class="flex items-center space-x-2">
+                            <input type="radio" x-model="feedback.priority" value="high" class="text-primary focus:ring-primary">
+                            <span class="text-sm text-gray-300">Alta</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <!-- Title -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-white">Título do Feedback</label>
+                    <input type="text" x-model="feedback.title" 
+                           placeholder="Ex: Problema ao exportar relatórios"
+                           class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                           required>
+                </div>
+                
+                <!-- Description -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-white">Descrição Detalhada</label>
+                    <textarea x-model="feedback.description" 
+                              placeholder="Descreva seu feedback em detalhes..."
+                              rows="6"
+                              class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+                              required></textarea>
+                </div>
+                
+                <!-- Contact Info -->
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-white">Informações de Contato (Opcional)</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input type="email" x-model="feedback.email" 
+                               placeholder="Seu email (opcional)"
+                               class="px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary">
+                        <input type="tel" x-model="feedback.phone" 
+                               placeholder="Seu telefone (opcional)"
+                               class="px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary">
+                    </div>
+                </div>
+                
+                <!-- Submit Button -->
+                <div class="flex justify-center pt-6">
+                    <button type="submit" 
+                            :disabled="!feedback.title || !feedback.description || !feedback.category"
+                            class="bg-gradient-to-r from-primary to-accent text-white px-8 py-4 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                        <span x-show="!submitting">Enviar Feedback</span>
+                        <span x-show="submitting" class="flex items-center space-x-2">
+                            <svg class="w-5 h-5 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            <span>Enviando...</span>
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Recent Feedback -->
+        <div class="glass-strong rounded-2xl p-6">
+            <h3 class="text-xl font-semibold text-white mb-6">Seus Feedbacks Recentes</h3>
+            <div class="space-y-4">
+                <template x-for="item in recentFeedback" :key="item.id">
+                    <div class="glass rounded-lg p-4">
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-semibold text-white" x-text="item.title"></h4>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs px-2 py-1 rounded-full" 
+                                      :class="getPriorityClass(item.priority)" 
+                                      x-text="getPriorityText(item.priority)"></span>
+                                <span class="text-xs text-gray-400" x-text="formatDate(item.created_at)"></span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-300 mb-2" x-text="item.description"></p>
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs text-gray-400" x-text="getCategoryText(item.category)"></span>
+                                <div class="flex space-x-1">
+                                    <template x-for="i in 5" :key="i">
+                                        <span :class="i <= item.rating ? 'text-warning' : 'text-gray-400'" class="text-sm">⭐</span>
+                                    </template>
+                                </div>
+                            </div>
+                            <span class="text-xs px-2 py-1 rounded-full" 
+                                  :class="getStatusClass(item.status)" 
+                                  x-text="getStatusText(item.status)"></span>
+                        </div>
+                    </div>
+                </template>
+                
+                <div x-show="recentFeedback.length === 0" class="text-center py-8">
+                    <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                    <p class="text-gray-400">Nenhum feedback enviado ainda</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mobile Bottom Menu -->
+    <div class="md:hidden mobile-bottom-menu">
+        <div class="mobile-bottom-menu-content">
+            <a href="dashboard.html" class="mobile-bottom-menu-item">
+                <svg class="mobile-bottom-menu-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="transacoes.html" class="mobile-bottom-menu-item">
+                <svg class="mobile-bottom-menu-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+                <span>Transações</span>
+            </a>
+            <a href="relatorios.html" class="mobile-bottom-menu-item">
+                <svg class="mobile-bottom-menu-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+                </svg>
+                <span>Relatórios</span>
+            </a>
+            <a href="configuracoes.html" class="mobile-bottom-menu-item">
+                <svg class="mobile-bottom-menu-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M19.14,12.94c0.04-0.3,0.06-0.61,0.06-0.94c0-0.32-0.02-0.64-0.07-0.94l2.03-1.58c0.18-0.14,0.23-0.41,0.12-0.61 l-1.92-3.32c-0.12-0.22-0.37-0.29-0.59-0.22l-2.39,0.96c-0.5-0.38-1.03-0.7-1.62-0.94L14.4,2.81c-0.04-0.24-0.24-0.41-0.48-0.41 h-3.84c-0.24,0-0.43,0.17-0.47,0.41L9.25,5.35C8.66,5.59,8.12,5.92,7.63,6.29L5.24,5.33c-0.22-0.08-0.47,0-0.59,0.22L2.74,8.87 C2.62,9.08,2.66,9.34,2.86,9.48l2.03,1.58C4.84,11.36,4.8,11.69,4.8,12s0.02,0.64,0.07,0.94l-2.03,1.58 c-0.18,0.14-0.23,0.41-0.12,0.61l1.92,3.32c0.12,0.22,0.37,0.29,0.59,0.22l2.39-0.96c0.5,0.38,1.03,0.7,1.62,0.94l0.36,2.54 c0.05,0.24,0.24,0.41,0.48,0.41h3.84c0.24,0,0.44-0.17,0.47-0.41l0.36-2.54c0.59-0.24,1.13-0.56,1.62-0.94l2.39,0.96 c0.22,0.08,0.47,0,0.59-0.22l1.92-3.32c0.12-0.22,0.07-0.47-0.12-0.61L19.14,12.94z M12,15.6c-1.98,0-3.6-1.62-3.6-3.6 s1.62-3.6,3.6-3.6s3.6,1.62,3.6,3.6S13.98,15.6,12,15.6z"/>
+                </svg>
+                <span>Configurações</span>
+            </a>
+            <a href="feedback.html" class="mobile-bottom-menu-item active">
+                <svg class="mobile-bottom-menu-icon" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                <span>Feedback</span>
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        function feedbackApp() {
+            return {
+                mobileSidebarOpen: false,
+                submitting: false,
+                feedback: {
+                    rating: 0,
+                    category: '',
+                    priority: 'medium',
+                    title: '',
+                    description: '',
+                    email: '',
+                    phone: ''
+                },
+                userProfile: {
+                    name: 'Usuário Demo',
+                    role: 'Administrador',
+                    avatar: 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=U'
+                },
+                recentFeedback: [
+                    {
+                        id: 1,
+                        title: 'Sugestão de melhoria na interface',
+                        description: 'Gostaria de ver mais opções de personalização no dashboard.',
+                        category: 'ui',
+                        priority: 'medium',
+                        rating: 4,
+                        status: 'pending',
+                        created_at: '2024-01-15T10:30:00Z'
+                    },
+                    {
+                        id: 2,
+                        title: 'Problema ao exportar relatórios',
+                        description: 'O botão de exportar PDF não está funcionando corretamente.',
+                        category: 'bug',
+                        priority: 'high',
+                        rating: 2,
+                        status: 'in_progress',
+                        created_at: '2024-01-14T15:45:00Z'
+                    }
+                ],
+                
+                getRatingText() {
+                    const texts = {
+                        0: 'Selecione uma avaliação',
+                        1: 'Muito insatisfeito',
+                        2: 'Insatisfeito',
+                        3: 'Neutro',
+                        4: 'Satisfeito',
+                        5: 'Muito satisfeito'
+                    };
+                    return texts[this.feedback.rating] || '';
+                },
+                
+                getCategoryText(category) {
+                    const categories = {
+                        'bug': '🐛 Bug/Problema',
+                        'feature': '💡 Sugestão de Funcionalidade',
+                        'improvement': '⚡ Melhoria',
+                        'ui': '🎨 Interface/Design',
+                        'performance': '⚡ Performance',
+                        'general': '💬 Feedback Geral'
+                    };
+                    return categories[category] || category;
+                },
+                
+                getPriorityText(priority) {
+                    const priorities = {
+                        'low': 'Baixa',
+                        'medium': 'Média',
+                        'high': 'Alta'
+                    };
+                    return priorities[priority] || priority;
+                },
+                
+                getPriorityClass(priority) {
+                    const classes = {
+                        'low': 'bg-gray-500 text-white',
+                        'medium': 'bg-warning text-white',
+                        'high': 'bg-danger text-white'
+                    };
+                    return classes[priority] || 'bg-gray-500 text-white';
+                },
+                
+                getStatusText(status) {
+                    const statuses = {
+                        'pending': 'Pendente',
+                        'in_progress': 'Em Andamento',
+                        'resolved': 'Resolvido',
+                        'closed': 'Fechado'
+                    };
+                    return statuses[status] || status;
+                },
+                
+                getStatusClass(status) {
+                    const classes = {
+                        'pending': 'bg-warning text-white',
+                        'in_progress': 'bg-primary text-white',
+                        'resolved': 'bg-success text-white',
+                        'closed': 'bg-gray-500 text-white'
+                    };
+                    return classes[status] || 'bg-gray-500 text-white';
+                },
+                
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    return date.toLocaleDateString('pt-BR');
+                },
+                
+                async submitFeedback() {
+                    if (!this.feedback.title || !this.feedback.description || !this.feedback.category) {
+                        alert('Por favor, preencha todos os campos obrigatórios.');
+                        return;
+                    }
+                    
+                    this.submitting = true;
+                    
+                    try {
+                        // Simular envio do feedback
+                        await new Promise(resolve => setTimeout(resolve, 2000));
+                        
+                        // Adicionar ao histórico local
+                        const newFeedback = {
+                            id: Date.now(),
+                            ...this.feedback,
+                            status: 'pending',
+                            created_at: new Date().toISOString()
+                        };
+                        
+                        this.recentFeedback.unshift(newFeedback);
+                        
+                        // Limpar formulário
+                        this.feedback = {
+                            rating: 0,
+                            category: '',
+                            priority: 'medium',
+                            title: '',
+                            description: '',
+                            email: '',
+                            phone: ''
+                        };
+                        
+                        alert('Feedback enviado com sucesso! Obrigado pela sua contribuição.');
+                        
+                    } catch (error) {
+                        console.error('Erro ao enviar feedback:', error);
+                        alert('Erro ao enviar feedback. Tente novamente.');
+                    } finally {
+                        this.submitting = false;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
