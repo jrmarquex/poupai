@@ -211,7 +211,81 @@ app.post('/api/auth/login', async (req, res) => {
             });
         }
 
-        // Determinar se é WhatsApp ou email
+        // Verificar se é login admin
+        if (identifier === 'admin' && senha === '1234') {
+            // Buscar dados do cliente admin (5511997245501)
+            const { data: clienteAdmin, error: adminError } = await supabase
+                .from('clientes')
+                .select('*')
+                .eq('whatsapp', '5511997245501')
+                .single();
+
+            if (adminError && adminError.code !== 'PGRST116') {
+                throw adminError;
+            }
+
+            // Se não existe, criar cliente admin
+            let clienteId;
+            if (!clienteAdmin) {
+                const { data: novoAdmin, error: createError } = await supabase
+                    .from('clientes')
+                    .insert({
+                        whatsapp: '5511997245501',
+                        nome: 'Administrador',
+                        email: 'admin@poupai.com',
+                        senha_hash: await bcrypt.hash('1234', 10),
+                        primeiro_acesso: false,
+                        ultimo_login: new Date().toISOString(),
+                        status: true
+                    })
+                    .select()
+                    .single();
+
+                if (createError) throw createError;
+                clienteId = novoAdmin.clientid;
+            } else {
+                clienteId = clienteAdmin.clientid;
+                
+                // Atualizar último login
+                await supabase
+                    .from('clientes')
+                    .update({
+                        ultimo_login: new Date().toISOString(),
+                        tentativas_login: 0,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('clientid', clienteId);
+            }
+
+            // Gerar token JWT para admin
+            const token = jwt.sign(
+                { 
+                    clientid: clienteId, 
+                    whatsapp: '5511997245501', 
+                    nome: 'Administrador', 
+                    email: 'admin@poupai.com',
+                    isAdmin: true
+                },
+                process.env.JWT_SECRET,
+                { expiresIn: '24h' }
+            );
+
+            return res.json({
+                success: true,
+                message: 'Login admin realizado com sucesso',
+                token,
+                cliente: {
+                    clientid: clienteId,
+                    whatsapp: '5511997245501',
+                    nome: 'Administrador',
+                    email: 'admin@poupai.com',
+                    primeiro_acesso: false,
+                    isAdmin: true
+                }
+            });
+        }
+
+        // Login normal para outros usuários
         const isEmail = identifier.includes('@');
         const query = isEmail 
             ? supabase.from('clientes').select('*').eq('email', identifier)

@@ -832,56 +832,247 @@
 
     <script>
         function dashboardApp() {
-            // SECURITY NOTE: This is a DEMO dashboard with STATIC data only
-            // NO database connections, NO API calls, NO data persistence
-            // All data is hardcoded for demonstration purposes
+            // Sistema de Dashboard com dados reais das movimentações do cliente admin (5511997245501)
             return {
                 userProfile: {
-                    name: 'Usuário',
-                    role: 'Usuário Poupa.Ai',
+                    name: 'Administrador',
+                    role: 'Administrador Poupa.Ai',
+                    whatsapp: '5511997245501',
                     avatar: null
                 },
                 
                 financialSummary: {
-                    receitas: 3500.00,
-                    despesas: 1290.00,
-                    saldo: 2210.00
+                    receitas: 0,
+                    despesas: 0,
+                    saldo: 0,
+                    variacaoReceitas: 0,
+                    variacaoDespesas: 0
                 },
                 
-                recentActivities: [
-                    {
-                        id: 1,
-                        description: 'Freelance Design',
-                        amount: 850.00,
-                        type: 'Receita',
-                        time: '10:42:23 AM',
-                        status: 'Concluído'
-                    },
-                    {
-                        id: 2,
-                        description: 'Uber - Centro',
-                        amount: 25.00,
-                        type: 'Despesa',
-                        time: '12:50:40 AM',
-                        status: 'Pendente'
-                    },
-                    {
-                        id: 3,
-                        description: 'iFood - Jantar',
-                        amount: 42.90,
-                        type: 'Despesa',
-                        time: 'Ontem 19:30',
-                        status: 'Concluído'
-                    },
-                    {
-                        id: 4,
-                        description: 'Salário CLT',
-                        amount: 2800.00,
-                        type: 'Receita',
-                        time: 'Ontem 09:00',
-                        status: 'Concluído'
+                recentActivities: [],
+                
+                gastosPorCategoria: [],
+                
+                evolucaoFinanceira: {
+                    labels: [],
+                    receitas: [],
+                    despesas: []
+                },
+                
+                loading: true,
+                error: null,
+                
+                // Configurações da API
+                apiBaseUrl: 'http://localhost:3000/api', // Ajuste conforme sua API
+                
+                async init() {
+                    console.log('Inicializando dashboard com dados reais...');
+                    await this.carregarDadosDashboard();
+                    await this.carregarAtividadesRecentes();
+                    await this.carregarGastosPorCategoria();
+                    await this.carregarEvolucaoFinanceira();
+                    this.loading = false;
+                },
+                
+                async carregarDadosDashboard() {
+                    try {
+                        const response = await fetch(`${this.apiBaseUrl}/dashboard`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer admin-token' // Token de admin para demo
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            this.financialSummary = {
+                                receitas: data.dashboard.ganhos.valor,
+                                despesas: data.dashboard.gastos.valor,
+                                saldo: data.dashboard.saldoLiquido.valor,
+                                variacaoReceitas: data.dashboard.ganhos.variacao,
+                                variacaoDespesas: data.dashboard.gastos.variacao
+                            };
+                            
+                            this.userProfile.name = data.cliente.nome || 'Administrador';
+                            this.userProfile.whatsapp = data.cliente.whatsapp;
+                            
+                            console.log('Dados do dashboard carregados:', data.dashboard);
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erro ao carregar dados do dashboard:', error);
+                        this.error = 'Erro ao carregar dados do dashboard';
+                        // Fallback para dados de demonstração
+                        this.carregarDadosDemonstracao();
                     }
-                ],
+                },
+                
+                async carregarAtividadesRecentes() {
+                    try {
+                        const response = await fetch(`${this.apiBaseUrl}/dashboard/atividades-recentes?limite=10`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer admin-token'
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            this.recentActivities = data.atividades.map(atividade => ({
+                                id: atividade.id,
+                                description: atividade.observacao || `${atividade.categoria} - ${atividade.tipo}`,
+                                amount: atividade.valor,
+                                type: atividade.tipo === 'receita' ? 'Receita' : 'Despesa',
+                                time: atividade.hora,
+                                status: atividade.status
+                            }));
+                            
+                            console.log('Atividades recentes carregadas:', this.recentActivities);
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erro ao carregar atividades recentes:', error);
+                        // Fallback para dados de demonstração
+                        this.carregarAtividadesDemonstracao();
+                    }
+                },
+                
+                async carregarGastosPorCategoria() {
+                    try {
+                        const response = await fetch(`${this.apiBaseUrl}/dashboard/gastos-categoria?periodo=mes`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer admin-token'
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            this.gastosPorCategoria = data.gastosPorCategoria;
+                            console.log('Gastos por categoria carregados:', this.gastosPorCategoria);
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erro ao carregar gastos por categoria:', error);
+                        // Fallback para dados de demonstração
+                        this.carregarGastosDemonstracao();
+                    }
+                },
+                
+                async carregarEvolucaoFinanceira() {
+                    try {
+                        const response = await fetch(`${this.apiBaseUrl}/dashboard/evolucao-financeira?periodo=7dias`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer admin-token'
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            this.evolucaoFinanceira = {
+                                labels: data.labels,
+                                receitas: data.receitas,
+                                despesas: data.despesas
+                            };
+                            console.log('Evolução financeira carregada:', this.evolucaoFinanceira);
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erro ao carregar evolução financeira:', error);
+                        // Fallback para dados de demonstração
+                        this.carregarEvolucaoDemonstracao();
+                    }
+                },
+                
+                // Dados de demonstração como fallback
+                carregarDadosDemonstracao() {
+                    this.financialSummary = {
+                        receitas: 3500.00,
+                        despesas: 1290.00,
+                        saldo: 2210.00,
+                        variacaoReceitas: 12,
+                        variacaoDespesas: 8
+                    };
+                },
+                
+                carregarAtividadesDemonstracao() {
+                    this.recentActivities = [
+                        {
+                            id: 1,
+                            description: 'Freelance Design',
+                            amount: 850.00,
+                            type: 'Receita',
+                            time: '10:42:23 AM',
+                            status: 'Concluído'
+                        },
+                        {
+                            id: 2,
+                            description: 'Uber - Centro',
+                            amount: 25.00,
+                            type: 'Despesa',
+                            time: '12:50:40 AM',
+                            status: 'Pendente'
+                        },
+                        {
+                            id: 3,
+                            description: 'iFood - Jantar',
+                            amount: 42.90,
+                            type: 'Despesa',
+                            time: 'Ontem 19:30',
+                            status: 'Concluído'
+                        },
+                        {
+                            id: 4,
+                            description: 'Salário CLT',
+                            amount: 2800.00,
+                            type: 'Receita',
+                            time: 'Ontem 09:00',
+                            status: 'Concluído'
+                        }
+                    ];
+                },
+                
+                carregarGastosDemonstracao() {
+                    this.gastosPorCategoria = [
+                        { categoria: 'Transporte', valor: 450.00 },
+                        { categoria: 'Alimentação', valor: 320.00 },
+                        { categoria: 'Lazer', valor: 180.00 },
+                        { categoria: 'Outros', valor: 340.00 }
+                    ];
+                },
+                
+                carregarEvolucaoDemonstracao() {
+                    this.evolucaoFinanceira = {
+                        labels: ['Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb', 'Dom'],
+                        receitas: [500, 800, 600, 1200, 900, 700, 1000],
+                        despesas: [200, 300, 250, 400, 350, 280, 320]
+                    };
+                },
                 
                 init() {
                     // Check if user is logged in
