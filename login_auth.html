@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Poupa.Ai</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0B0F14',
+                        'primary': '#20C997',
+                        'secondary': '#A78BFA',
+                        'accent': '#22D3EE',
+                        'success': '#10B981',
+                        'warning': '#F59E0B',
+                        'danger': '#EF4444',
+                        'card-bg': 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)',
+                    },
+                    fontFamily: {
+                        'inter': ['Inter', 'sans-serif'],
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Glassmorphism effects */
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-strong {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        
+        /* Gradient background */
+        .gradient-bg {
+            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 50%, #0B0F14 100%);
+        }
+        
+        .gradient-mesh {
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(32, 201, 151, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(34, 211, 238, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(167, 139, 250, 0.1) 0%, transparent 50%);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .login-container {
+                padding: 1rem !important;
+                margin: 1rem !important;
+            }
+            
+            .login-form {
+                padding: 1.5rem !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="loginApp()">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <div class="absolute inset-0" style="background-image: url('data:image/svg+xml,<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"><g fill="none" fill-rule="evenodd"><g fill="%23ffffff" fill-opacity="0.1"><circle cx="30" cy="30" r="1"/></g></svg>');"></div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md login-container">
+            <!-- Logo -->
+            <div class="text-center mb-8 animate-fade-in">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                    </svg>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-2">Poupa.Ai</h1>
+                <p class="text-gray-400">Controle suas finanças com inteligência artificial</p>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="glass-strong rounded-2xl p-8 login-form animate-fade-in">
+                <!-- Primeiro Acesso -->
+                <div x-show="isFirstAccess" x-transition>
+                    <div class="text-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-success to-primary rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">Primeiro Acesso</h2>
+                        <p class="text-gray-400">Complete seu cadastro para começar a usar o Poupa.Ai</p>
+                    </div>
+                    
+                    <form @submit.prevent="registerFirstAccess" class="space-y-4">
+                        <!-- WhatsApp -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">WhatsApp</label>
+                            <input type="tel" x-model="form.whatsapp" 
+                                   placeholder="(11) 99999-9999"
+                                   class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                   required>
+                        </div>
+                        
+                        <!-- Nome -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Nome Completo</label>
+                            <input type="text" x-model="form.nome" 
+                                   placeholder="Seu nome completo"
+                                   class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                   required>
+                        </div>
+                        
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
+                            <input type="email" x-model="form.email" 
+                                   placeholder="seu@email.com"
+                                   class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                   required>
+                        </div>
+                        
+                        <!-- Senha -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Senha</label>
+                            <div class="relative">
+                                <input :type="showPassword ? 'text' : 'password'" x-model="form.senha" 
+                                       placeholder="Crie uma senha segura"
+                                       class="w-full px-4 py-3 pr-12 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                       required>
+                                <button type="button" @click="showPassword = !showPassword" 
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-show="!showPassword">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-show="showPassword">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Confirmar Senha -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Confirmar Senha</label>
+                            <input type="password" x-model="form.confirmarSenha" 
+                                   placeholder="Confirme sua senha"
+                                   class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                   required>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button type="submit" 
+                                :disabled="loading || form.senha !== form.confirmarSenha"
+                                class="w-full bg-gradient-to-r from-primary to-accent text-white py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            <span x-show="!loading">Criar Conta</span>
+                            <span x-show="loading" class="flex items-center justify-center">
+                                <svg class="w-5 h-5 animate-spin mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                Criando conta...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Login Normal -->
+                <div x-show="!isFirstAccess" x-transition>
+                    <div class="text-center mb-6">
+                        <div class="w-12 h-12 bg-gradient-to-br from-primary to-accent rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">Entrar</h2>
+                        <p class="text-gray-400">Acesse sua conta do Poupa.Ai</p>
+                    </div>
+                    
+                    <form @submit.prevent="login" class="space-y-4">
+                        <!-- WhatsApp ou Email -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">WhatsApp ou Email</label>
+                            <input type="text" x-model="loginForm.identifier" 
+                                   placeholder="(11) 99999-9999 ou seu@email.com"
+                                   class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                   required>
+                        </div>
+                        
+                        <!-- Senha -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-300 mb-2">Senha</label>
+                            <div class="relative">
+                                <input :type="showLoginPassword ? 'text' : 'password'" x-model="loginForm.senha" 
+                                       placeholder="Sua senha"
+                                       class="w-full px-4 py-3 pr-12 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
+                                       required>
+                                <button type="button" @click="showLoginPassword = !showLoginPassword" 
+                                        class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-show="!showLoginPassword">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" x-show="showLoginPassword">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <button type="submit" 
+                                :disabled="loading"
+                                class="w-full bg-gradient-to-r from-primary to-accent text-white py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
+                            <span x-show="!loading">Entrar</span>
+                            <span x-show="loading" class="flex items-center justify-center">
+                                <svg class="w-5 h-5 animate-spin mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                Entrando...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+                
+                <!-- Switch between modes -->
+                <div class="mt-6 text-center">
+                    <button @click="isFirstAccess = !isFirstAccess" 
+                            class="text-primary hover:text-accent transition-colors duration-200">
+                        <span x-show="isFirstAccess">Já tem uma conta? Entrar</span>
+                        <span x-show="!isFirstAccess">Primeiro acesso? Criar conta</span>
+                    </button>
+                </div>
+                
+                <!-- Error/Success Messages -->
+                <div x-show="message" x-transition class="mt-4 p-4 rounded-lg" 
+                     :class="messageType === 'error' ? 'bg-red-500/20 border border-red-500/30 text-red-300' : 'bg-green-500/20 border border-green-500/30 text-green-300'">
+                    <p x-text="message"></p>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="text-center mt-8 text-gray-400 text-sm">
+                <p>© 2024 Poupa.Ai - Todos os direitos reservados</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function loginApp() {
+            return {
+                isFirstAccess: true,
+                loading: false,
+                showPassword: false,
+                showLoginPassword: false,
+                message: '',
+                messageType: 'error',
+                form: {
+                    whatsapp: '',
+                    nome: '',
+                    email: '',
+                    senha: '',
+                    confirmarSenha: ''
+                },
+                loginForm: {
+                    identifier: '',
+                    senha: ''
+                },
+                
+                async registerFirstAccess() {
+                    if (this.form.senha !== this.form.confirmarSenha) {
+                        this.showMessage('As senhas não coincidem', 'error');
+                        return;
+                    }
+                    
+                    if (this.form.senha.length < 6) {
+                        this.showMessage('A senha deve ter pelo menos 6 caracteres', 'error');
+                        return;
+                    }
+                    
+                    this.loading = true;
+                    this.message = '';
+                    
+                    try {
+                        // Simular chamada para API
+                        const response = await this.callAPI('/api/auth/register', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                whatsapp: this.form.whatsapp,
+                                nome: this.form.nome,
+                                email: this.form.email,
+                                senha: this.form.senha
+                            })
+                        });
+                        
+                        if (response.success) {
+                            this.showMessage('Conta criada com sucesso! Redirecionando...', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html';
+                            }, 2000);
+                        } else {
+                            this.showMessage(response.message || 'Erro ao criar conta', 'error');
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erro ao registrar:', error);
+                        this.showMessage('Erro de conexão. Tente novamente.', 'error');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                async login() {
+                    this.loading = true;
+                    this.message = '';
+                    
+                    try {
+                        // Simular chamada para API
+                        const response = await this.callAPI('/api/auth/login', {
+                            method: 'POST',
+                            body: JSON.stringify({
+                                identifier: this.loginForm.identifier,
+                                senha: this.loginForm.senha
+                            })
+                        });
+                        
+                        if (response.success) {
+                            this.showMessage('Login realizado com sucesso! Redirecionando...', 'success');
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html';
+                            }, 2000);
+                        } else {
+                            this.showMessage(response.message || 'Credenciais inválidas', 'error');
+                        }
+                        
+                    } catch (error) {
+                        console.error('Erro ao fazer login:', error);
+                        this.showMessage('Erro de conexão. Tente novamente.', 'error');
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+                
+                async callAPI(endpoint, options = {}) {
+                    // Simulação de chamada para API
+                    // Em produção, substitua por chamadas reais para seu backend
+                    return new Promise((resolve) => {
+                        setTimeout(() => {
+                            // Simular resposta baseada no telefone específico
+                            if (this.form.whatsapp === '5511997245501' || this.loginForm.identifier === '5511997245501') {
+                                resolve({
+                                    success: true,
+                                    data: {
+                                        clientid: '550e8400-e29b-41d4-a716-446655440000',
+                                        whatsapp: '5511997245501',
+                                        nome: 'João Silva',
+                                        email: 'joao.silva@email.com',
+                                        primeiro_acesso: false
+                                    }
+                                });
+                            } else {
+                                resolve({
+                                    success: false,
+                                    message: 'Usuário não encontrado'
+                                });
+                            }
+                        }, 1500);
+                    });
+                },
+                
+                showMessage(text, type) {
+                    this.message = text;
+                    this.messageType = type;
+                    
+                    // Auto-hide success messages
+                    if (type === 'success') {
+                        setTimeout(() => {
+                            this.message = '';
+                        }, 5000);
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
