@@ -224,33 +224,17 @@ app.post('/api/auth/login', async (req, res) => {
                 throw adminError;
             }
 
-            // Se não existe, criar cliente admin
-            let clienteId;
             if (!clienteAdmin) {
-                const { data: novoAdmin, error: createError } = await supabase
-                    .from('clientes')
-                    .insert({
-                        whatsapp: '5511997245501',
-                        nome: 'Administrador',
-                        email: 'admin@poupai.com',
-                        senha_hash: await bcrypt.hash('1234', 10),
-                        primeiro_acesso: false,
-                        ultimo_login: new Date().toISOString(),
-                        status: true
-                    })
-                    .select()
-                    .single();
-
-                if (createError) throw createError;
-                clienteId = novoAdmin.clientid;
-            } else {
-                clienteId = clienteAdmin.clientid;
+                return res.status(401).json({ 
+                    success: false, 
+                    message: 'Cliente administrador não encontrado. Execute os scripts SQL primeiro.' 
+                });
             }
 
             // Gerar token JWT para cliente teste (apenas visualização)
             const token = jwt.sign(
                 { 
-                    clientid: clienteId, 
+                    clientid: clienteAdmin.clientid, 
                     whatsapp: '5511997245501', 
                     nome: 'Cliente Teste', 
                     email: 'cliente@poupai.com',
@@ -266,7 +250,7 @@ app.post('/api/auth/login', async (req, res) => {
                 message: 'Login de cliente teste realizado com sucesso',
                 token,
                 cliente: {
-                    clientid: clienteId,
+                    clientid: clienteAdmin.clientid,
                     whatsapp: '5511997245501',
                     nome: 'Cliente Teste',
                     email: 'cliente@poupai.com',

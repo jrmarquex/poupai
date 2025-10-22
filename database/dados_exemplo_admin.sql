@@ -1,7 +1,7 @@
 -- Script para inserir dados de exemplo para o cliente admin (5511997245501)
 -- Execute este script no SQL Editor do Supabase após executar auth_system.sql
 
--- 1. INSERIR/ATUALIZAR CLIENTE ADMIN
+-- 1. INSERIR/ATUALIZAR CLIENTE ADMIN COM SENHA REAL
 INSERT INTO clientes (
     whatsapp,
     nome,
@@ -12,9 +12,9 @@ INSERT INTO clientes (
     ultimo_login
 ) VALUES (
     '5511997245501',
-    'Administrador',
-    'admin@poupai.com',
-    '$2b$10$example_hash_admin_1234', -- Hash da senha "1234"
+    'Administrador do Sistema',
+    'frmarques.oli@gmail.com',
+    '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', -- Hash da senha "Hyundaimax@@9"
     false,
     true,
     NOW()

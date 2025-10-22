@@ -11,7 +11,7 @@
 
 ### **2. Administrador do Sistema (Permissões Completas)**
 - **Usuário:** `5511997245501`
-- **Senha:** `[Sua senha cadastrada no primeiro acesso]`
+- **Senha:** `Hyundaimax@@9`
 - **Permissões:** Todas (`read`, `write`, `delete`, `admin`)
 - **Finalidade:** Acesso completo do dono do sistema
 - **Dados:** Gerencia seus próprios dados e tem acesso administrativo
@@ -162,7 +162,7 @@ const authenticateToken = (req, res, next) => {
 
 ### **Cenário 2: Uso Administrativo**
 1. Acesse `login_auth.html`
-2. Use `5511997245501` / `[sua senha cadastrada]`
+2. Use `5511997245501` / `Hyundaimax@@9`
 3. Acesso completo ao sistema
 4. Pode gerenciar todas as funcionalidades
 5. Ideal para uso pessoal
