@@ -1064,6 +1064,10 @@
                         variacaoReceitas: 12,
                         variacaoDespesas: 8
                     };
+                    
+                    // Atualizar nome do usuário para demonstração
+                    this.userProfile.name = 'Francisco Marques de Oliveira Junior';
+                    this.userProfile.whatsapp = '5511997245501';
                 },
                 
                 carregarAtividadesDemonstracao() {
@@ -1099,16 +1103,32 @@
                             type: 'Receita',
                             time: 'Ontem 09:00',
                             status: 'Concluído'
+                        },
+                        {
+                            id: 5,
+                            description: 'Pizza',
+                            amount: 70.00,
+                            type: 'Despesa',
+                            time: 'Hoje 20:15',
+                            status: 'Concluído'
+                        },
+                        {
+                            id: 6,
+                            description: 'iFood',
+                            amount: 89.18,
+                            type: 'Despesa',
+                            time: 'Hoje 19:30',
+                            status: 'Concluído'
                         }
                     ];
                 },
                 
                 carregarGastosDemonstracao() {
                     this.gastosPorCategoria = [
-                        { categoria: 'Transporte', valor: 450.00 },
-                        { categoria: 'Alimentação', valor: 320.00 },
-                        { categoria: 'Lazer', valor: 180.00 },
-                        { categoria: 'Outros', valor: 340.00 }
+                        { categoria: 'Alimentação', valor: 450.00 },
+                        { categoria: 'Produtos', valor: 320.00 },
+                        { categoria: 'Outros', valor: 180.00 },
+                        { categoria: 'Transporte', valor: 340.00 }
                     ];
                 },
                 
