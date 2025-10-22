@@ -474,13 +474,13 @@
                             
                             this.transactions = data.transacoes.map(transacao => ({
                                 id: transacao.id,
-                                description: transacao.observacao || `${transacao.categoria} - ${transacao.tipo}`,
-                                amount: transacao.valor,
-                                type: transacao.tipo === 'receita' ? 'Receita' : 'Despesa',
-                                category: transacao.categoria,
+                                description: transacao.observation || `${transacao.category} - ${transacao.type}`,
+                                amount: transacao.valor_movimentacao,
+                                type: transacao.type,
+                                category: transacao.category,
                                 date: transacao.data_movimentacao,
-                                time: transacao.hora,
-                                status: transacao.status
+                                time: transacao.updated_at || '00:00:00',
+                                status: 'Concluído'
                             }));
                             
                             this.userProfile.name = data.cliente.nome || 'Administrador';
