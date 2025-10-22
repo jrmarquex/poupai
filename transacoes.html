@@ -352,12 +352,6 @@
                     <span>Dashboard</span>
                 </a>
                 
-                <a href="dashboard.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                    </svg>
-                    <span>Minha Carteira</span>
-                </a>
                 
                 <a href="transacoes.html" class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary text-white">
                     <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -597,18 +591,18 @@
 
     <script>
         function transacoesApp() {
-            // SECURITY NOTE: This is a DEMO page with STATIC data only
-            // NO database connections, NO API calls, NO data persistence
-            // All transactions are hardcoded for demonstration purposes
             return {
                 userProfile: {
                     name: 'Usuário',
                     role: 'Usuário Poupa.Ai',
-                    avatar: null
+                    avatar: null,
+                    whatsapp: '5511997245501'
                 },
                 
                 showFilters: false,
                 sortBy: 'date-desc',
+                loading: true,
+                error: null,
                 
                 filters: {
                     dateRange: 'all',
@@ -617,62 +611,115 @@
                     amountRange: 'all'
                 },
                 
-                transactions: [
-                    {
-                        id: 1,
-                        description: 'Freelance Design',
-                        amount: 850.00,
-                        type: 'Receita',
-                        category: 'outros',
-                        date: '2024-11-29',
-                        time: '14:30:00'
-                    },
-                    {
-                        id: 2,
-                        description: 'Uber - Centro',
-                        amount: 25.00,
-                        type: 'Despesa',
-                        category: 'transporte',
-                        date: '2024-11-29',
-                        time: '10:15:00'
-                    },
-                    {
-                        id: 3,
-                        description: 'iFood - Jantar',
-                        amount: 42.90,
-                        type: 'Despesa',
-                        category: 'alimentação',
-                        date: '2024-11-28',
-                        time: '19:45:00'
-                    },
-                    {
-                        id: 4,
-                        description: 'Salário',
-                        amount: 2800.00,
-                        type: 'Receita',
-                        category: 'outros',
-                        date: '2024-11-28',
-                        time: '08:00:00'
-                    },
-                    {
-                        id: 5,
-                        description: 'Netflix',
-                        amount: 25.90,
-                        type: 'Despesa',
-                        category: 'lazer',
-                        date: '2024-11-27',
-                        time: '08:00:00'
-                    },
-                    {
-                        id: 6,
-                        description: 'Supermercado',
-                        amount: 120.50,
-                        type: 'Despesa',
-                        category: 'alimentação',
-                        date: '2024-11-26',
-                        time: '16:30:00'
+                transactions: [],
+                
+                // Configurações da API
+                apiBaseUrl: 'http://localhost:3000/api',
+                
+                async init() {
+                    console.log('Inicializando transações com dados reais...');
+                    await this.carregarTransacoes();
+                    this.loading = false;
+                },
+                
+                async carregarTransacoes() {
+                    try {
+                        // Tentar API real primeiro
+                        const response = await fetch(`${this.apiBaseUrl}/transacoes/usuario/5511997245501`, {
+                            method: 'GET',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': 'Bearer admin-token'
+                            }
+                        });
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        
+                        const data = await response.json();
+                        
+                        if (data.success) {
+                            this.transactions = data.transacoes.map(transacao => ({
+                                id: transacao.id,
+                                description: transacao.observacao || `${transacao.categoria} - ${transacao.tipo}`,
+                                amount: transacao.valor,
+                                type: transacao.tipo === 'receita' ? 'Receita' : 'Despesa',
+                                category: transacao.categoria,
+                                date: transacao.data_movimentacao,
+                                time: transacao.hora,
+                                status: transacao.status
+                            }));
+                            
+                            this.userProfile.name = data.cliente.nome || 'Administrador';
+                            console.log('Transações carregadas:', this.transactions.length);
+                        }
+                        
+                    } catch (error) {
+                        console.log('API não disponível, usando dados de demonstração');
+                        // Fallback para dados de demonstração
+                        this.carregarTransacoesDemonstracao();
                     }
-                ],
+                },
+                
+                carregarTransacoesDemonstracao() {
+                    this.transactions = [
+                        {
+                            id: 1,
+                            description: 'Freelance Design',
+                            amount: 850.00,
+                            type: 'Receita',
+                            category: 'outros',
+                            date: '2024-11-29',
+                            time: '14:30:00'
+                        },
+                        {
+                            id: 2,
+                            description: 'Uber - Centro',
+                            amount: 25.00,
+                            type: 'Despesa',
+                            category: 'transporte',
+                            date: '2024-11-29',
+                            time: '10:15:00'
+                        },
+                        {
+                            id: 3,
+                            description: 'iFood - Jantar',
+                            amount: 42.90,
+                            type: 'Despesa',
+                            category: 'alimentação',
+                            date: '2024-11-28',
+                            time: '19:45:00'
+                        },
+                        {
+                            id: 4,
+                            description: 'Salário',
+                            amount: 2800.00,
+                            type: 'Receita',
+                            category: 'outros',
+                            date: '2024-11-28',
+                            time: '08:00:00'
+                        },
+                        {
+                            id: 5,
+                            description: 'Netflix',
+                            amount: 25.90,
+                            type: 'Despesa',
+                            category: 'lazer',
+                            date: '2024-11-27',
+                            time: '08:00:00'
+                        },
+                        {
+                            id: 6,
+                            description: 'Supermercado',
+                            amount: 120.50,
+                            type: 'Despesa',
+                            category: 'alimentação',
+                            date: '2024-11-26',
+                            time: '16:30:00'
+                        }
+                    ];
+                },
                 
                 get filteredTransactions() {
                     let filtered = [...this.transactions];
