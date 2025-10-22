@@ -1,7 +1,10 @@
 -- Script para inserir dados de exemplo para o cliente admin (5511997245501)
 -- Execute este script no SQL Editor do Supabase após executar auth_system.sql
 
--- 1. INSERIR/ATUALIZAR CLIENTE ADMIN COM SENHA REAL
+-- 1. INSERIR CLIENTE ADMIN COM SENHA REAL
+-- Primeiro, vamos deletar se já existir e inserir novamente
+DELETE FROM clientes WHERE whatsapp = '5511997245501';
+
 INSERT INTO clientes (
     whatsapp,
     nome,
@@ -18,13 +21,7 @@ INSERT INTO clientes (
     false,
     true,
     NOW()
-) ON CONFLICT (whatsapp) DO UPDATE SET
-    nome = EXCLUDED.nome,
-    email = EXCLUDED.email,
-    senha_hash = EXCLUDED.senha_hash,
-    primeiro_acesso = EXCLUDED.primeiro_acesso,
-    status = EXCLUDED.status,
-    ultimo_login = EXCLUDED.ultimo_login;
+);
 
 -- 2. BUSCAR O CLIENTID DO ADMIN
 -- (Execute esta query para obter o clientid)
