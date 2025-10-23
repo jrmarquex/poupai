@@ -49,6 +49,9 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- Sistema de Autenticação Híbrido -->
+    <script src="js/poupai-auth-hybrid.js"></script>
+    
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -869,13 +872,73 @@
                 apiBaseUrl: 'http://localhost:3000/api', // Ajuste conforme sua API
                 
                 async init() {
-                    console.log('Inicializando dashboard com dados reais...');
-                    this.detectarTipoUsuario();
-                    await this.carregarDadosDashboard();
-                    await this.carregarAtividadesRecentes();
-                    await this.carregarGastosPorCategoria();
-                    await this.carregarEvolucaoFinanceira();
+                    console.log('Inicializando dashboard com sistema híbrido...');
+                    
+                    // Verificar se está logado
+                    if (!window.PoupaAiAuth.verificarLogin()) {
+                        window.location.href = 'login_auth.html';
+                        return;
+                    }
+                    
+                    // Carregar dados usando sistema híbrido
+                    await this.carregarDadosHibridos();
                     this.loading = false;
+                },
+                
+                async carregarDadosHibridos() {
+                    try {
+                        // Usar sistema híbrido para carregar dados
+                        const dados = await window.carregarDashboard();
+                        
+                        if (dados.success) {
+                            // Atualizar perfil do usuário
+                            this.userProfile = {
+                                name: dados.cliente.nome,
+                                role: dados.isDemo ? 'Usuário Demo (Modo Demonstração)' : 'Usuário Poupa.Ai',
+                                whatsapp: dados.cliente.whatsapp,
+                                avatar: null,
+                                isAdmin: dados.cliente.whatsapp === '5511997245501',
+                                isTestUser: dados.isDemo,
+                                permissions: dados.isDemo ? ['read'] : ['read', 'write']
+                            };
+                            
+                            // Atualizar resumo financeiro
+                            this.financialSummary = {
+                                receitas: dados.dashboard.resumo.ganhos.valor,
+                                despesas: dados.dashboard.resumo.gastos.valor,
+                                saldo: dados.dashboard.resumo.saldo_liquido.valor,
+                                variacaoReceitas: dados.dashboard.resumo.ganhos.variacao,
+                                variacaoDespesas: dados.dashboard.resumo.gastos.variacao
+                            };
+                            
+                            // Atualizar atividades recentes
+                            this.recentActivities = dados.dashboard.atividades_recentes;
+                            
+                            // Atualizar gastos por categoria
+                            this.gastosPorCategoria = dados.dashboard.gastos_por_categoria;
+                            
+                            // Atualizar evolução financeira
+                            this.evolucaoFinanceira = {
+                                labels: dados.dashboard.evolucao_financeira.map(item => 
+                                    new Date(item.data).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' })
+                                ),
+                                receitas: dados.dashboard.evolucao_financeira.map(item => item.receitas),
+                                despesas: dados.dashboard.evolucao_financeira.map(item => item.despesas)
+                            };
+                            
+                            // Atualizar gráficos
+                            this.$nextTick(() => {
+                                this.atualizarGraficos();
+                            });
+                            
+                            console.log('Dashboard carregado:', dados.isDemo ? 'Modo Demonstração' : 'Modo Produção');
+                        } else {
+                            this.error = dados.message;
+                        }
+                    } catch (error) {
+                        console.error('Erro ao carregar dashboard:', error);
+                        this.error = 'Erro ao carregar dados do dashboard';
+                    }
                 },
                 
                 detectarTipoUsuario() {

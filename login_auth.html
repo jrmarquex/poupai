@@ -41,6 +41,9 @@
     <!-- Alpine.js -->
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     
+    <!-- Sistema de Autenticação Híbrido -->
+    <script src="js/poupai-auth-hybrid.js"></script>
+    
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -351,20 +354,21 @@
                     this.message = '';
                     
                     try {
-                        // Todas as verificações de login são feitas no backend para segurança
-                        // Não há credenciais hardcoded no frontend
-                        
-                        // Simular chamada para API
-                        const response = await this.callAPI('/api/auth/login', {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                identifier: this.loginForm.identifier,
-                                senha: this.loginForm.senha
-                            })
-                        });
+                        // Usar sistema híbrido (demo no GitHub Pages + real na hospedagem)
+                        const response = await window.fazerLogin(
+                            this.loginForm.identifier, 
+                            this.loginForm.senha
+                        );
                         
                         if (response.success) {
-                            this.showMessage('Login realizado com sucesso! Redirecionando...', 'success');
+                            const envInfo = window.PoupaAiAuth.getEnvironmentInfo();
+                            
+                            if (envInfo.isDemo) {
+                                this.showMessage('Login realizado com sucesso! (Modo Demonstração)', 'success');
+                            } else {
+                                this.showMessage('Login realizado com sucesso!', 'success');
+                            }
+                            
                             setTimeout(() => {
                                 window.location.href = 'dashboard.html';
                             }, 2000);
