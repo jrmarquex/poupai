@@ -1,12 +1,33 @@
 <?php
 // config/database.php - Configurações do banco de dados
 
-// Configurações do Supabase PostgreSQL - CREDENCIAIS REAIS CONFIGURADAS
-define('DB_HOST', 'db.beqpplqfamcpyuzgzhcs.supabase.co'); // Host real do Supabase
+// ========================================
+// CONFIGURAÇÕES DO SUPABASE
+// ========================================
+// IMPORTANTE: Substitua pelos seus dados reais do Supabase!
+
+// Configurações do Supabase PostgreSQL
+define('DB_HOST', 'db.xxxxxxxxxxxx.supabase.co'); // ⚠️ SUBSTITUA pelo seu host real
 define('DB_PORT', '5432');
 define('DB_NAME', 'postgres');
 define('DB_USER', 'postgres');
-define('DB_PASS', 'Hyundaimax@@9'); // Senha real do Supabase
+define('DB_PASS', 'sua_senha_aqui'); // ⚠️ SUBSTITUA pela sua senha real
+
+// ========================================
+// EXEMPLO DE CONFIGURAÇÃO REAL:
+// ========================================
+// define('DB_HOST', 'db.abcdefghijklmnop.supabase.co');
+// define('DB_PASS', 'MinhaSenh@123');
+
+// ========================================
+// COMO OBTER SUAS CREDENCIAIS:
+// ========================================
+// 1. Acesse: https://supabase.com
+// 2. Faça login na sua conta
+// 3. Selecione seu projeto
+// 4. Vá em Settings → Database
+// 5. Copie o Host e Password
+// 6. Substitua nas linhas acima
 
 // Para desenvolvimento local, você pode usar estas configurações:
 // define('DB_HOST', 'localhost');

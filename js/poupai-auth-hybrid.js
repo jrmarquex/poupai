@@ -26,7 +26,7 @@ class PoupaAiAuth {
         
         // Se estiver em hospedagem real
         this.isProduction = true;
-        return 'https://seudominio.com/api'; // Substitua pela URL real
+        return 'https://seudominio.com/api'; // Substitua pela URL real da sua hospedagem
     }
 
     // Dados de demonstração para GitHub Pages
