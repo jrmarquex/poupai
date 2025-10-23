@@ -2130,77 +2130,68 @@
                     <p class="text-xl text-gray-300 mb-4">Clientes no mercado pagam mensalidades que chegam a R$ 160,00 por funcionalidades iguais — nós entregamos isso por valores promocionais</p>
                     <p class="text-lg text-gray-400 mb-12">Sem pegadinhas, sem planos confusos. Escolha o plano ideal para você.</p>
                     
-                    <!-- Pricing Cards -->
-                    <div class="flex flex-col items-center justify-center gap-8 md:flex-row max-w-6xl mx-auto">
+                    <!-- Pricing Cards com Animações -->
+                    <section class="relative flex flex-col items-center py-12">
+                        <div class="flex w-full flex-col items-center justify-center gap-8 md:flex-row max-w-6xl mx-auto">
                         
-                        <!-- Plano Mensal -->
-                        <div class="relative z-10 w-72 rounded-xl border border-primary/30 bg-black/40 p-8 text-white shadow-[0_0_0_1px_rgba(34,197,94,.08)_inset] backdrop-blur-md transition-transform hover:scale-105">
-                            <div class="mb-2 text-center text-lg font-semibold text-primary">
-                                Mensal
+                            <!-- Plano Mensal -->
+                            <div class="pricing-card pricing-card-mensal" data-delay="0">
+                                <div class="mb-2 text-4xl font-extrabold text-primary">R$ 29,90/mês</div>
+                                <div class="text-gray-400 mb-4 text-sm">
+                                    Ideal para testar
+                                </div>
+                                <ul class="text-gray-300 mb-6 space-y-1 text-left text-sm">
+                                    <li>✔️ Lançamentos ilimitados</li>
+                                    <li>✔️ IA para comprovantes</li>
+                                    <li>✔️ Dashboard completo</li>
+                                    <li>✔️ Suporte WhatsApp</li>
+                                </ul>
+                                <button class="bg-primary text-white hover:bg-primary/90 w-full rounded px-4 py-2 font-semibold transition">
+                                    🚀 Começar Agora
+                                </button>
                             </div>
-                            <div class="mb-4 text-center text-4xl font-extrabold text-white">
-                                R$ 29,90/mês
-                            </div>
-                            <div class="text-gray-400 mb-4 text-sm text-center">
-                                Ideal para testar
-                            </div>
-                            <ul class="mb-6 space-y-2 text-sm text-white/70">
-                                <li><span class="mr-2 text-primary">✔</span>Lançamentos ilimitados</li>
-                                <li><span class="mr-2 text-primary">✔</span>IA para comprovantes</li>
-                                <li><span class="mr-2 text-primary">✔</span>Dashboard completo</li>
-                                <li><span class="mr-2 text-primary">✔</span>Suporte WhatsApp</li>
-                            </ul>
-                            <button class="w-full rounded-md bg-primary py-2 font-semibold text-white hover:bg-primary/90 transition">
-                                🚀 Começar Agora
-                            </button>
-                        </div>
 
-                        <!-- Plano Trimestral (Featured) -->
-                        <div class="relative z-20 w-80 scale-110 rounded-xl border-4 border-secondary/50 bg-gradient-to-b from-secondary to-accent p-10 text-white shadow-xl transition-transform hover:scale-[1.12]">
-                            <div class="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full border border-white/20 bg-secondary px-4 py-1 text-xs font-bold text-white shadow">
-                                MAIS POPULAR
+                            <!-- Plano Trimestral (Featured) -->
+                            <div class="pricing-card pricing-card-trimestral" data-delay="200">
+                                <div class="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-secondary px-4 py-1 text-xs font-bold text-white shadow">
+                                    MAIS POPULAR
+                                </div>
+                                <div class="mb-2 text-4xl font-extrabold text-secondary">R$ 81,90/trimestre</div>
+                                <div class="text-gray-400 mb-4 text-sm">
+                                    Economia garantida
+                                </div>
+                                <ul class="text-gray-300 mb-6 space-y-1 text-left text-sm">
+                                    <li>✔️ Lançamentos ilimitados</li>
+                                    <li>✔️ IA para comprovantes</li>
+                                    <li>✔️ Dashboard completo</li>
+                                    <li>✔️ Suporte WhatsApp</li>
+                                    <li>✔️ Relatórios mensais</li>
+                                </ul>
+                                <button class="bg-secondary text-white hover:bg-secondary/90 w-full rounded px-4 py-2 font-semibold transition">
+                                    💰 Escolher Trimestral
+                                </button>
                             </div>
-                            <div class="mb-2 text-center text-lg font-semibold">Trimestral</div>
-                            <div class="mb-4 text-center text-5xl font-extrabold">R$ 81,90/trimestre</div>
-                            <div class="text-white/80 mb-4 text-sm text-center">
-                                Economia garantida
-                            </div>
-                            <ul class="mb-6 space-y-2 text-sm">
-                                <li><span class="mr-2 text-accent">✔</span>Lançamentos ilimitados</li>
-                                <li><span class="mr-2 text-accent">✔</span>IA para comprovantes</li>
-                                <li><span class="mr-2 text-accent">✔</span>Dashboard completo</li>
-                                <li><span class="mr-2 text-accent">✔</span>Suporte WhatsApp</li>
-                                <li><span class="mr-2 text-accent">✔</span>Relatórios mensais</li>
-                            </ul>
-                            <button class="w-full rounded-md bg-white py-2 font-semibold text-secondary hover:bg-white/90 transition">
-                                💰 Escolher Trimestral
-                            </button>
-                        </div>
 
-                        <!-- Plano Anual -->
-                        <div class="relative z-10 w-72 rounded-xl border border-accent/30 bg-black/40 p-8 text-white shadow-[0_0_0_1px_rgba(59,130,246,.08)_inset] backdrop-blur-md transition-transform hover:scale-105">
-                            <div class="mb-2 text-center text-lg font-semibold text-accent">
-                                Anual
+                            <!-- Plano Anual -->
+                            <div class="pricing-card pricing-card-anual" data-delay="400">
+                                <div class="mb-2 text-4xl font-extrabold text-accent">R$ 329,90/ano</div>
+                                <div class="text-gray-400 mb-4 text-sm">
+                                    Melhor custo-benefício
+                                </div>
+                                <ul class="text-gray-300 mb-6 space-y-1 text-left text-sm">
+                                    <li>✔️ Lançamentos ilimitados</li>
+                                    <li>✔️ IA para comprovantes</li>
+                                    <li>✔️ Dashboard completo</li>
+                                    <li>✔️ Suporte WhatsApp</li>
+                                    <li>✔️ Relatórios mensais</li>
+                                    <li>✔️ Recursos futuros inclusos</li>
+                                </ul>
+                                <button class="bg-accent text-white hover:bg-accent/90 w-full rounded px-4 py-2 font-semibold transition">
+                                    🏆 Garantir Anual
+                                </button>
                             </div>
-                            <div class="mb-4 text-center text-4xl font-extrabold text-white">
-                                R$ 329,90/ano
-                            </div>
-                            <div class="text-gray-400 mb-4 text-sm text-center">
-                                Melhor custo-benefício
-                            </div>
-                            <ul class="mb-6 space-y-2 text-sm text-white/70">
-                                <li><span class="mr-2 text-accent">✔</span>Lançamentos ilimitados</li>
-                                <li><span class="mr-2 text-accent">✔</span>IA para comprovantes</li>
-                                <li><span class="mr-2 text-accent">✔</span>Dashboard completo</li>
-                                <li><span class="mr-2 text-accent">✔</span>Suporte WhatsApp</li>
-                                <li><span class="mr-2 text-accent">✔</span>Relatórios mensais</li>
-                                <li><span class="mr-2 text-accent">✔</span>Recursos futuros inclusos</li>
-                            </ul>
-                            <button class="w-full rounded-md bg-accent py-2 font-semibold text-white hover:bg-accent/90 transition">
-                                🏆 Garantir Anual
-                            </button>
                         </div>
-                    </div>
+                    </section>
                     
                     <!-- Features List (comum para todos os planos) -->
                     <div class="glass-strong rounded-3xl p-8 max-w-2xl mx-auto mt-8">
@@ -2555,5 +2546,115 @@
             </svg>
         </button>
     </div>
+
+    <!-- CSS para Animações dos Cards de Preços -->
+    <style>
+        .pricing-card {
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            display: flex;
+            width: 320px;
+            flex-direction: column;
+            align-items: center;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            opacity: 0;
+            transform: scale(0.9);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: scale(1.05);
+        }
+
+        .pricing-card-mensal {
+            border-color: rgba(34, 197, 94, 0.3);
+            box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.08) inset;
+        }
+
+        .pricing-card-trimestral {
+            border-color: rgba(168, 85, 247, 0.5);
+            background: linear-gradient(to bottom, rgba(168, 85, 247, 0.1), rgba(59, 130, 246, 0.1));
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: scale(1.1);
+            z-index: 20;
+        }
+
+        .pricing-card-anual {
+            border-color: rgba(59, 130, 246, 0.3);
+            box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.08) inset;
+        }
+
+        .pricing-card.animate-in {
+            opacity: 1;
+            transform: scale(1);
+            animation: springIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .pricing-card-trimestral.animate-in {
+            transform: scale(1.1);
+        }
+
+        @keyframes springIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .pricing-card-trimestral @keyframes springIn {
+            100% {
+                transform: scale(1.1);
+            }
+        }
+    </style>
+
+    <!-- JavaScript para Animações dos Cards -->
+    <script>
+        // Função para animar os cards de preços
+        function animatePricingCards() {
+            const cards = document.querySelectorAll('.pricing-card');
+            
+            cards.forEach((card, index) => {
+                const delay = parseInt(card.getAttribute('data-delay')) || 0;
+                
+                setTimeout(() => {
+                    card.classList.add('animate-in');
+                }, delay);
+            });
+        }
+
+        // Executar animação quando a página carregar
+        document.addEventListener('DOMContentLoaded', () => {
+            // Aguardar um pouco para garantir que o CSS foi carregado
+            setTimeout(animatePricingCards, 100);
+        });
+
+        // Re-executar animação quando a seção entrar na viewport (para scroll)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animatePricingCards();
+                }
+            });
+        }, { threshold: 0.1 });
+
+        const pricingSection = document.querySelector('section');
+        if (pricingSection) {
+            observer.observe(pricingSection);
+        }
+    </script>
 </body>
 </html>
