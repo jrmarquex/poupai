@@ -85,8 +85,14 @@
             }
             
             
-            /* Mobile Bottom Menu */
+        /* Mobile Bottom Menu */
+        .mobile-bottom-menu {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
             .mobile-bottom-menu {
+                display: block !important;
                 position: fixed !important;
                 bottom: 0 !important;
                 left: 0 !important;
@@ -1304,7 +1310,7 @@
     </script>
     
     <!-- Mobile Bottom Menu -->
-    <div class="md:hidden mobile-bottom-menu">
+    <div class="mobile-bottom-menu">
         <div class="mobile-bottom-menu-content">
             <a href="dashboard.html" class="mobile-bottom-menu-item active">
                 <svg class="mobile-bottom-menu-icon" fill="currentColor" viewBox="0 0 24 24">
