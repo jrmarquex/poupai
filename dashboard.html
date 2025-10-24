@@ -122,9 +122,21 @@
             }
             
             .mobile-bottom-menu-content {
-                display: grid !important;
-                grid-template-columns: repeat(5, 1fr) !important;
+                display: flex !important;
+                overflow-x: auto !important;
                 gap: 0.5rem !important;
+                padding: 0 0.5rem !important;
+                scrollbar-width: none !important;
+                -ms-overflow-style: none !important;
+            }
+            
+            .mobile-bottom-menu-content::-webkit-scrollbar {
+                display: none !important;
+            }
+            
+            .mobile-bottom-menu-item {
+                flex-shrink: 0 !important;
+                min-width: 4rem !important;
             }
             
             .mobile-bottom-menu-item {
@@ -398,8 +410,7 @@
     </style>
 </head>
 <body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="dashboardApp()" x-init="mobileSidebarOpen = false">
-    <!-- Mobile Sidebar Overlay -->
-    <div @click="mobileSidebarOpen = false" class="md:hidden sidebar-overlay" :class="{ 'open': mobileSidebarOpen }"></div>
+    <!-- Mobile Sidebar Overlay - REMOVIDO para usar apenas barra inferior -->
     
     <!-- Desktop Sidebar -->
     <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-40 hidden md:block" x-data="{ sidebarOpen: true }">
@@ -469,14 +480,14 @@
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                     <span class="text-sm font-semibold text-white">Histórico Disponível</span>
-                </div>
+                    </div>
                 <p class="text-xs text-gray-400">Verifique seus relatórios semanais de transações</p>
             </div>
         </div>
     </div>
     
-    <!-- Mobile Sidebar -->
-    <div class="md:hidden sidebar-mobile" :class="{ 'open': mobileSidebarOpen }">
+    <!-- Mobile Sidebar - DESABILITADO para usar apenas barra inferior -->
+    <!-- <div class="md:hidden sidebar-mobile" :class="{ 'open': mobileSidebarOpen }">
         <div class="p-4">
             <!-- Logo -->
             <div class="flex items-center space-x-3 mb-6">
@@ -502,8 +513,8 @@
                 <div>
                     <h3 class="text-white font-semibold text-sm" x-text="userProfile.name"></h3>
                     <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
-                </div>
             </div>
+        </div>
             
             <!-- Navigation Menu -->
             <nav class="space-y-1">
@@ -545,7 +556,7 @@
                 <a href="feedback.html" @click="mobileSidebarOpen = false" class="flex items-center space-x-3 px-3 py-2 rounded-lg text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors mobile-nav-item">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                    </svg>
+                        </svg>
                     <span>Feedback</span>
                 </a>
             </nav>
@@ -557,11 +568,11 @@
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
                     <span class="text-xs font-semibold text-white">Histórico Disponível</span>
-                </div>
+                    </div>
                 <p class="text-xs text-gray-400">Verifique seus relatórios semanais de transações</p>
-            </div>
+                </div>
         </div>
-    </div>
+    </div> -->
     
     <!-- Main Content -->
     <div class="ml-64 p-6 main-content-mobile">
@@ -575,7 +586,7 @@
                     </svg>
                     <span>Filtros</span>
                 </button>
-            </div>
+                        </div>
             
             <div class="flex items-center space-x-4 mobile-header-right">
                 <!-- WhatsApp Assistant Button -->
@@ -607,7 +618,7 @@
                 
                 <!-- User Menu -->
                 <div x-data="{ dropdownOpen: false }" class="relative">
-                    <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-2 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-button">
+                    <button @click="dropdownOpen = !dropdownOpen" class="flex items-center space-x-4 glass px-4 py-2 rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-button">
                         <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/32x32/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
                              alt="Avatar" class="w-8 h-8 rounded-full">
                         <span x-text="userProfile.name"></span>
@@ -621,10 +632,10 @@
                     <a href="#" class="block px-4 py-2 text-sm text-gray-300 hover:bg-white hover:bg-opacity-10 transition-colors">Configurações</a>
                     <hr class="border-glass-border my-2">
                     <a href="#" @click="logout" class="block px-4 py-2 text-sm text-red-400 hover:bg-white hover:bg-opacity-10 transition-colors">Sair</a>
-                </div>
-            </div>
-        </div>
-        </div>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
         
         <!-- Financial Summary Cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 mobile-grid">
@@ -635,7 +646,7 @@
                         <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
-                    </div>
+                        </div>
                     <div class="text-right">
                         <p class="text-sm text-gray-400">Ganhos</p>
                         <p class="text-2xl font-bold text-success mobile-financial-value" x-text="'R$ ' + financialSummary.receitas.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
@@ -644,8 +655,8 @@
                 </div>
                 <div class="w-full bg-gray-700 rounded-full h-2">
                     <div class="bg-success h-2 rounded-full" style="width: 75%"></div>
-                    </div>
                 </div>
+            </div>
 
             <!-- Despesas Card -->
             <div class="glass-strong rounded-2xl p-6 card-hover mobile-card mobile-financial-card">
@@ -689,9 +700,9 @@
                          :class="financialSummary.saldo >= 0 ? 'bg-success' : 'bg-danger'"
                          :style="'width: ' + Math.min(Math.abs(financialSummary.saldo) / 1000 * 10, 100) + '%'"></div>
                 </div>
-            </div>
-        </div>
-        
+                            </div>
+                        </div>
+
         <!-- Charts Section -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 mobile-grid">
             <!-- Pie Chart - Gastos por Categoria -->
@@ -706,8 +717,8 @@
                 </div>
                 <div class="relative h-64 mobile-chart-container">
                     <canvas id="pieChart"></canvas>
-                </div>
-            </div>
+                            </div>
+                        </div>
 
             <!-- Line Chart - Evolução Financeira -->
                 <div class="glass-strong rounded-2xl p-6 mobile-card">
@@ -718,13 +729,13 @@
                         <option>Últimos 30 dias</option>
                         <option>Últimos 90 dias</option>
                     </select>
-                </div>
+                            </div>
                 <div class="relative h-64 mobile-chart-container">
                     <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        
+
         <!-- Recent Activities and Export Section -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Recent Activities -->
@@ -742,11 +753,11 @@
                                 <svg class="w-5 h-5" :class="activity.type === 'Receita' ? 'text-emerald-400' : 'text-orange-400'" fill="currentColor" viewBox="0 0 24 24">
                                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                                 </svg>
-                            </div>
+                                </div>
                             <div class="flex-1">
                                 <p class="text-white font-medium mobile-activity-text" x-text="activity.description"></p>
                                 <p class="text-sm text-gray-300 mobile-activity-text" x-text="activity.time"></p>
-                        </div>
+                            </div>
                             <div class="text-right">
                                 <p class="font-semibold text-lg mobile-activity-text" :class="activity.type === 'Receita' ? 'text-emerald-400' : 'text-orange-400'"
                                    x-text="(activity.type === 'Receita' ? '+' : '-') + 'R$ ' + activity.amount.toLocaleString('pt-BR', {minimumFractionDigits: 2})"></p>
@@ -755,8 +766,8 @@
                         </div>
                     </template>
                         </div>
-                    </div>
-            
+                        </div>
+
             <!-- Export Options -->
             <div class="glass-strong rounded-2xl p-6 mobile-card">
                 <div class="flex items-center justify-between mb-6">
@@ -764,7 +775,7 @@
                     <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                     </svg>
-                </div>
+                                </div>
 
                 <div class="space-y-4 mobile-export-grid">
                     <button @click="exportData('pdf')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-export-button">
@@ -774,7 +785,7 @@
                         <div class="text-left">
                             <p class="text-white font-medium">Exportar PDF</p>
                             <p class="text-xs text-gray-400">Relatório completo</p>
-                        </div>
+                            </div>
                     </button>
                     
                     <button @click="exportData('excel')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-export-button">
@@ -784,7 +795,7 @@
                         <div class="text-left">
                             <p class="text-white font-medium">Exportar Excel</p>
                             <p class="text-xs text-gray-400">Planilha de dados</p>
-                                </div>
+                        </div>
                     </button>
                     
                     <button @click="exportData('xml')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-export-button">
@@ -794,7 +805,7 @@
                         <div class="text-left">
                             <p class="text-white font-medium">Exportar XML</p>
                             <p class="text-xs text-gray-400">Dados estruturados</p>
-                        </div>
+                                </div>
                     </button>
                     
                     <button @click="exportData('csv')" class="w-full flex items-center space-x-3 p-3 glass rounded-lg hover:bg-white hover:bg-opacity-10 transition-colors mobile-export-button">
@@ -804,9 +815,9 @@
                         <div class="text-left">
                             <p class="text-white font-medium">Exportar CSV</p>
                             <p class="text-xs text-gray-400">Dados separados por vírgula</p>
-                                </div>
-                    </button>
                             </div>
+                    </button>
+                        </div>
                 
                 <!-- Quick Stats -->
                 <div class="mt-6 pt-6 border-t border-glass-border">
@@ -815,15 +826,15 @@
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-400">Total de Transações:</span>
                             <span class="text-white" x-text="recentActivities.length"></span>
-                        </div>
+                    </div>
                         <div class="flex justify-between text-sm">
                             <span class="text-gray-400">Última Atualização:</span>
                             <span class="text-white" x-text="new Date().toLocaleString('pt-BR')"></span>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
+        </div>
+            </div>
+        </div>
         </div>
 
     <!-- Floating Elements -->
