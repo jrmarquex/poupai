@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Feedback - Poupa.Ai</title>
+    <title>Feedback - Pouppi</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -198,7 +198,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-white">Poupa.Ai</h1>
+                    <h1 class="text-xl font-bold text-white">Pouppi</h1>
                     <p class="text-sm text-gray-400">Dashboard Financeiro</p>
                 </div>
             </div>
@@ -381,13 +381,13 @@
                     </svg>
                 </div>
                 <h3 class="text-2xl font-bold text-white mb-4">Envie seu Feedback</h3>
-                <p class="text-lg text-gray-300 mb-6">Sua opinião nos ajuda a melhorar o Poupa.Ai</p>
+                <p class="text-lg text-gray-300 mb-6">Sua opinião nos ajuda a melhorar o Pouppi</p>
             </div>
             
             <form @submit.prevent="submitFeedback" class="space-y-6">
                 <!-- Rating -->
                 <div class="space-y-3">
-                    <label class="block text-sm font-medium text-white">Como você avalia o Poupa.Ai?</label>
+                    <label class="block text-sm font-medium text-white">Como você avalia o Pouppi?</label>
                     <div class="flex space-x-2">
                         <button type="button" @click="feedback.rating = 1" 
                                 :class="feedback.rating >= 1 ? 'text-warning' : 'text-gray-400'"

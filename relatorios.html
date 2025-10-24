@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Relatórios - Poupa.Ai</title>
+    <title>Relatórios - Pouppi</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -108,7 +108,7 @@
                     </svg>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-white">Poupa.Ai</h1>
+                    <h1 class="text-xl font-bold text-white">Pouppi</h1>
                     <p class="text-xs text-gray-400">Dashboard Financeiro</p>
                 </div>
             </div>
@@ -414,7 +414,7 @@
             return {
                 userProfile: {
                     name: 'Usuário',
-                    role: 'Usuário Poupa.Ai',
+                    role: 'Usuário Pouppi',
                     avatar: null,
                     whatsapp: '5511997245501'
                 },
@@ -864,7 +864,7 @@
                 exportToPDF(data) {
                     // Create a simple PDF content
                     const content = `
-                        Relatório Financeiro - Poupa.Ai
+                        Relatório Financeiro - Pouppi
                         Período: ${data.period}
                         Gerado em: ${new Date().toLocaleDateString('pt-BR')}
                         
@@ -916,7 +916,7 @@
                     const xmlContent = `<?xml version="1.0" encoding="UTF-8"?>
 <relatorio>
     <cabecalho>
-        <titulo>Relatório Financeiro - Poupa.Ai</titulo>
+        <titulo>Relatório Financeiro - Pouppi</titulo>
         <periodo>${data.period}</periodo>
         <geradoEm>${new Date().toISOString()}</geradoEm>
     </cabecalho>
