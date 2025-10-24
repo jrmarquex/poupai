@@ -64,6 +64,12 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
+        .sidebar-glass {
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
         .glass-strong {
             background: rgba(255, 255, 255, 0.08);
             backdrop-filter: blur(16px);
@@ -72,41 +78,12 @@
         
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
-            /* Hide sidebar on mobile */
-            .sidebar-mobile {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
-            }
-            
-            .sidebar-mobile.open {
-                transform: translateX(0);
-            }
-            
             /* Adjust main content for mobile */
             .main-content-mobile {
                 margin-left: 0 !important;
                 padding: 1rem !important;
             }
             
-            
-            /* Mobile sidebar overlay */
-            .sidebar-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                bottom: 0;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 45;
-                opacity: 0;
-                visibility: hidden;
-                transition: all 0.3s ease;
-            }
-            
-            .sidebar-overlay.open {
-                opacity: 1;
-                visibility: visible;
-            }
             
             /* Mobile Bottom Menu */
             .mobile-bottom-menu {
@@ -172,20 +149,7 @@
                 padding-bottom: 4rem !important;
             }
             
-            /* Mobile sidebar */
-            .sidebar-mobile {
-                position: fixed;
-                top: 0;
-                left: 0;
-                height: 100vh;
-                width: 280px;
-                background: rgba(15, 23, 42, 0.95);
-                backdrop-filter: blur(20px);
-                border-right: 1px solid rgba(255, 255, 255, 0.1);
-                z-index: 50;
-                padding: 1rem;
-                overflow-y: auto;
-            }
+            /* Mobile sidebar - REMOVIDO */
             
             /* Mobile cards */
             .mobile-card {
@@ -413,7 +377,7 @@
     <!-- Mobile Sidebar Overlay - REMOVIDO para usar apenas barra inferior -->
     
     <!-- Desktop Sidebar -->
-    <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-40 hidden md:block" x-data="{ sidebarOpen: true }">
+    <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-50 hidden md:block" x-data="{ sidebarOpen: true }">
         <div class="p-6">
             <!-- Logo -->
             <div class="flex items-center space-x-3 mb-8">
