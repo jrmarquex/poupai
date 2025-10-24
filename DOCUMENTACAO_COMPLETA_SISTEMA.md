@@ -37,7 +37,7 @@ O **Poupa.Ai** é um sistema financeiro pessoal que permite aos usuários contro
 ## 📱 **PÁGINAS E FUNCIONALIDADES**
 
 ### **1. 🏠 Página de Vendas (`index.html`)**
-**URL:** `https://jrmarquex.github.io/pouppi/index.html`
+**URL:** `https://jrmarquex.github.io/poupai/index.html`
 
 **Objetivo:** Converter visitantes em clientes pagantes
 
@@ -60,7 +60,7 @@ O **Poupa.Ai** é um sistema financeiro pessoal que permite aos usuários contro
 - Design mobile-first
 
 ### **2. 🔐 Página de Login (`login_auth.html`)**
-**URL:** `https://jrmarquex.github.io/pouppi/login_auth.html`
+**URL:** `https://jrmarquex.github.io/poupai/login_auth.html`
 
 **Objetivo:** Autenticação de usuários no sistema
 
@@ -88,7 +88,7 @@ ALTERNATIVA ADMIN (Email):
 ```
 
 ### **3. 📊 Dashboard Principal (`dashboard.html`)**
-**URL:** `https://jrmarquex.github.io/pouppi/dashboard.html`
+**URL:** `https://jrmarquex.github.io/poupai/dashboard.html`
 
 **Objetivo:** Visão geral das finanças do usuário
 
@@ -106,7 +106,7 @@ ALTERNATIVA ADMIN (Email):
 - Atividades: Pizza R$ 70, iFood R$ 89,18, etc.
 
 ### **4. 💰 Página de Transações (`transacoes.html`)**
-**URL:** `https://jrmarquex.github.io/pouppi/transacoes.html`
+**URL:** `https://jrmarquex.github.io/poupai/transacoes.html`
 
 **Objetivo:** Lista detalhada de todas as movimentações
 
@@ -118,7 +118,7 @@ ALTERNATIVA ADMIN (Email):
 - **Paginação:** Carregamento de mais transações
 
 ### **5. 📈 Página de Relatórios (`relatorios.html`)**
-**URL:** `https://jrmarquex.github.io/pouppi/relatorios.html`
+**URL:** `https://jrmarquex.github.io/poupai/relatorios.html`
 
 **Objetivo:** Análises financeiras detalhadas
 
@@ -130,7 +130,7 @@ ALTERNATIVA ADMIN (Email):
 - **Filtros:** Por categoria, tipo, valor
 
 ### **6. ⚙️ Página de Configurações (`configuracoes.html`)**
-**URL:** `https://jrmarquex.github.io/pouppi/configuracoes.html`
+**URL:** `https://jrmarquex.github.io/poupai/configuracoes.html`
 
 **Objetivo:** Gerenciar perfil e preferências do usuário
 
@@ -142,7 +142,7 @@ ALTERNATIVA ADMIN (Email):
 - **Backup:** Exportar dados
 
 ### **7. 📚 Página de Tutorial (`tutorial.html`)**
-**URL:** `https://jrmarquex.github.io/pouppi/tutorial.html`
+**URL:** `https://jrmarquex.github.io/poupai/tutorial.html`
 
 **Objetivo:** Ensinar como usar o sistema
 
@@ -153,7 +153,7 @@ ALTERNATIVA ADMIN (Email):
 - **Suporte:** Link para WhatsApp de ajuda
 
 ### **8. 💬 Página de Feedback (`feedback.html`)**
-**URL:** `https://jrmarquex.github.io/pouppi/feedback.html`
+**URL:** `https://jrmarquex.github.io/poupai/feedback.html`
 
 **Objetivo:** Coletar feedback dos usuários
 
@@ -416,13 +416,13 @@ BlogLiterario/
 ## 🎯 **CASOS DE USO**
 
 ### **1. Demonstração para Cliente**
-- **Acesso:** `https://jrmarquex.github.io/pouppi/login_auth.html`
+- **Acesso:** `https://jrmarquex.github.io/poupai/login_auth.html`
 - **Login:** `cliente` / `1234`
 - **Resultado:** Visualiza dashboard com dados de exemplo
 - **Uso:** Mostrar funcionalidades sem comprometer dados reais
 
 ### **2. Uso Administrativo**
-- **Acesso:** `https://jrmarquex.github.io/pouppi/login_auth.html`
+- **Acesso:** `https://jrmarquex.github.io/poupai/login_auth.html`
 - **Login:** `5511997245501` / `Hyundaimax@@9`
 - **Resultado:** Acesso completo ao sistema
 - **Uso:** Gerenciar dados pessoais e do sistema
@@ -462,8 +462,8 @@ BlogLiterario/
 - **Email:** frmarques.oli@gmail.com
 
 ### **Sistema:**
-- **Repositório:** https://github.com/jrmarquex/pouppi
-- **Demo:** https://jrmarquex.github.io/pouppi/
+- **Repositório:** https://github.com/jrmarquex/poupai
+- **Demo:** https://jrmarquex.github.io/poupai/
 - **Documentação:** Este arquivo
 
 ---
