@@ -11,7 +11,7 @@ define('DB_PASS', 'Hyundaimax@@9'); // Senha real do Supabase
 // Para desenvolvimento local, você pode usar estas configurações:
 // define('DB_HOST', 'localhost');
 // define('DB_PORT', '5432');
-// define('DB_NAME', 'poupai');
+// define('DB_NAME', 'pouppi');
 // define('DB_USER', 'postgres');
 // define('DB_PASS', 'sua_senha_local');
 

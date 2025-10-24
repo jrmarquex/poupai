@@ -218,8 +218,8 @@ class PoupaAiAuth {
             this.currentUser = this.demoData.admin;
             
             // Salvar no localStorage para persistir
-            localStorage.setItem('poupai_demo_user', JSON.stringify(this.currentUser));
-            localStorage.setItem('poupai_demo_auth', 'true');
+            localStorage.setItem('pouppi_demo_user', JSON.stringify(this.currentUser));
+            localStorage.setItem('pouppi_demo_auth', 'true');
             
             return {
                 success: true,
@@ -436,8 +436,8 @@ class PoupaAiAuth {
     // Verificar se está logado
     verificarLogin() {
         // Verificar localStorage para modo demonstração
-        const demoAuth = localStorage.getItem('poupai_demo_auth');
-        const demoUser = localStorage.getItem('poupai_demo_user');
+        const demoAuth = localStorage.getItem('pouppi_demo_auth');
+        const demoUser = localStorage.getItem('pouppi_demo_user');
 
         if (demoAuth === 'true' && demoUser) {
             this.isAuthenticated = true;
@@ -454,8 +454,8 @@ class PoupaAiAuth {
         this.currentUser = null;
         
         // Limpar localStorage
-        localStorage.removeItem('poupai_demo_auth');
-        localStorage.removeItem('poupai_demo_user');
+        localStorage.removeItem('pouppi_demo_auth');
+        localStorage.removeItem('pouppi_demo_user');
         
         return {
             success: true,

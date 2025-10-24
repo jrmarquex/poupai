@@ -32,7 +32,7 @@ define('DB_PASS', 'sua_senha_aqui'); // ⚠️ SUBSTITUA pela sua senha real
 // Para desenvolvimento local, você pode usar estas configurações:
 // define('DB_HOST', 'localhost');
 // define('DB_PORT', '5432');
-// define('DB_NAME', 'poupai');
+// define('DB_NAME', 'pouppi');
 // define('DB_USER', 'postgres');
 // define('DB_PASS', 'sua_senha_local');
 
