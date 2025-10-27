@@ -1,0 +1,119 @@
+╔══════════════════════════════════════════════════════════════════════╗
+║           📦 ARQUIVOS PARA UPLOAD NA SUA HOSPEDAGEM                  ║
+╚══════════════════════════════════════════════════════════════════════╝
+
+📁 ESTRUTURA DE PASTAS:
+   seu-dominio.com/
+   ├── public_html/
+   │   ├── index.html
+   │   ├── login_auth.html
+   │   ├── dashboard.html
+   │   ├── transacoes.html
+   │   ├── relatorios.html
+   │   ├── configuracoes.html
+   │   ├── tutorial.html
+   │   ├── feedback.html
+   │   ├── login.html (OPCIONAL)
+   │   ├── .htaccess
+   │   │
+   │   ├── api/
+   │   │   ├── auth-real.php
+   │   │   ├── dashboard-real.php
+   │   │   ├── transacoes-real.php
+   │   │   └── relatorios-real.php
+   │   │
+   │   ├── config/
+   │   │   ├── database.php
+   │   │   └── .htaccess
+   │   │
+   │   └── js/
+   │       └── pouppi-auth-hybrid.js
+
+═══════════════════════════════════════════════════════════════════════
+
+📋 CHECKLIST DE UPLOAD:
+
+✅ PASTA: public_html/ (raiz)
+   [ ] index.html
+   [ ] login_auth.html
+   [ ] dashboard.html
+   [ ] transacoes.html
+   [ ] relatorios.html
+   [ ] configuracoes.html
+   [ ] tutorial.html
+   [ ] feedback.html
+   [ ] .htaccess
+
+✅ PASTA: public_html/api/
+   [ ] auth-real.php
+   [ ] dashboard-real.php
+   [ ] transacoes-real.php
+   [ ] relatorios-real.php
+
+✅ PASTA: public_html/config/
+   [ ] database.php
+   [ ] .htaccess
+
+✅ PASTA: public_html/js/
+   [ ] pouppi-auth-hybrid.js
+
+═══════════════════════════════════════════════════════════════════════
+
+🔐 ANTES DE FAZER UPLOAD:
+
+1. Editar config/database.php e verificar credenciais:
+   - DB_HOST: db.beqpplqfamcpyuzgzhcs.supabase.co
+   - DB_USER: postgres
+   - DB_PASS: Hyundaimax@@9
+   - DB_NAME: postgres
+
+2. Criar as pastas na hospedagem:
+   - api/
+   - config/
+   - js/
+
+3. Fazer upload de todos os arquivos
+
+═══════════════════════════════════════════════════════════════════════
+
+🧪 APÓS UPLOAD, TESTAR:
+
+1. Acesse: https://seudominio.com/
+2. Teste login com admin: 5511997245501 / Hyundaimax@@9
+3. Verifique se o dashboard carrega dados
+4. Teste navegação entre páginas
+
+═══════════════════════════════════════════════════════════════════════
+
+❌ NÃO ENVIAR ESTES ARQUIVOS:
+
+- node_modules/
+- package.json
+- backups/
+- attached_assets/
+- *.md (exceto se quiser manter documentação)
+- config.env
+- teste-php.php
+- *.sql (arquivos de banco)
+- Replit ou outros arquivos de configuração
+
+═══════════════════════════════════════════════════════════════════════
+
+📊 TOTAL DE ARQUIVOS: 16 arquivos
+   - 8 arquivos HTML
+   - 4 arquivos PHP (API)
+   - 1 arquivo PHP (config)
+   - 1 arquivo JavaScript
+   - 2 arquivos .htaccess
+
+═══════════════════════════════════════════════════════════════════════
+
+🎯 URLS APÓS DEPLOY:
+
+https://seudominio.com/
+https://seudominio.com/dashboard.html
+https://seudominio.com/login_auth.html
+https://seudominio.com/api/auth-real.php
+
+═══════════════════════════════════════════════════════════════════════
+

@@ -1,0 +1,16 @@
+# Proteger pasta config contra acesso direto
+# Remover o comment caso tenha algum arquivo sensível
+
+# Bloquear todos os arquivos PHP por padrão
+<FilesMatch "\.php$">
+    Order allow,deny
+    # Permitir acesso apenas via include
+    # Deny from all
+</FilesMatch>
+
+# Permitir acesso ao database.php apenas internamente
+<Files "database.php">
+    Order allow,deny
+    Allow from all
+</Files>
+

@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Webhook Lastlink | Pouppi</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-bg': '#0B0F14',
+                        'primary': '#20C997',
+                        'secondary': '#A78BFA',
+                        'accent': '#22D3EE',
+                        'danger': '#EF4444',
+                        'card-bg': 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Alpine.js -->
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #0B0F14 0%, #1a1f2e 100%);
+        }
+
+        .gradient-mesh {
+            background:
+                radial-gradient(at 40% 20%, rgba(32, 201, 151, 0.1) 0px, transparent 50%),
+                radial-gradient(at 80% 0%, rgba(167, 139, 250, 0.1) 0px, transparent 50%),
+                radial-gradient(at 0% 50%, rgba(34, 211, 238, 0.1) 0px, transparent 50%);
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body class="bg-dark-bg text-white gradient-bg gradient-mesh min-h-screen" x-data="webhookAdmin()">
+
+    <!-- Login Admin (se não autenticado) -->
+    <div x-show="!isAuthenticated" class="min-h-screen flex items-center justify-center p-4">
+        <div class="w-full max-w-md">
+            <div class="glass rounded-2xl p-8">
+                <div class="text-center mb-8">
+                    <div class="w-16 h-16 bg-gradient-to-br from-danger to-primary rounded-xl flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold mb-2">Acesso Administrativo</h1>
+                    <p class="text-gray-400 text-sm">Webhook - Área Restrita</p>
+                </div>
+
+                <form @submit.prevent="loginAdmin" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Email Admin</label>
+                        <input type="email" x-model="loginForm.email"
+                               placeholder="admin@pouppi.com"
+                               class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-danger"
+                               required>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300 mb-2">Senha</label>
+                        <input type="password" x-model="loginForm.senha"
+                               placeholder="••••••••"
+                               class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-danger"
+                               required>
+                    </div>
+
+                    <button type="submit" :disabled="loading"
+                            class="w-full bg-gradient-to-r from-danger to-primary text-white py-3 rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 disabled:opacity-50">
+                        <span x-show="!loading">Autenticar</span>
+                        <span x-show="loading">Verificando...</span>
+                    </button>
+                </form>
+
+                <div x-show="error" x-transition class="mt-4 p-3 bg-red-500/20 border border-red-500 rounded-lg text-red-300 text-sm" x-text="error"></div>
+
+                <div class="mt-6 text-center">
+                    <a href="dashboard.html" class="text-gray-400 hover:text-primary text-sm">
+                        ← Voltar ao Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Painel Admin (se autenticado) -->
+    <div x-show="isAuthenticated" x-cloak class="min-h-screen p-6">
+        <div class="max-w-6xl mx-auto">
+            <!-- Header -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold mb-2">Webhook Lastlink</h1>
+                    <p class="text-gray-400">Integração automática de vendas</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-400" x-text="adminEmail"></span>
+                    <button @click="logout" class="px-4 py-2 bg-danger/20 text-danger rounded-lg hover:bg-danger/30 transition-colors">
+                        Sair
+                    </button>
+                </div>
+            </div>
+
+            <!-- URL do Webhook -->
+            <div class="glass rounded-2xl p-6 mb-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div>
+                        <h2 class="text-xl font-bold mb-2 flex items-center">
+                            <svg class="w-6 h-6 text-primary mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M10.59 13.41c.41.39.41 1.03 0 1.42-.39.39-1.03.39-1.42 0a5.003 5.003 0 0 1 0-7.07l3.54-3.54a5.003 5.003 0 0 1 7.07 0 5.003 5.003 0 0 1 0 7.07l-1.49 1.49c.01-.82-.12-1.64-.4-2.42l.47-.48a2.982 2.982 0 0 0 0-4.24 2.982 2.982 0 0 0-4.24 0l-3.53 3.53a2.982 2.982 0 0 0 0 4.24zm2.82-4.24c.39-.39 1.03-.39 1.42 0a5.003 5.003 0 0 1 0 7.07l-3.54 3.54a5.003 5.003 0 0 1-7.07 0 5.003 5.003 0 0 1 0-7.07l1.49-1.49c-.01.82.12 1.64.4 2.43l-.47.47a2.982 2.982 0 0 0 0 4.24 2.982 2.982 0 0 0 4.24 0l3.53-3.53a2.982 2.982 0 0 0 0-4.24.973.973 0 0 1 0-1.42z"/>
+                            </svg>
+                            URL do Webhook
+                        </h2>
+                        <p class="text-sm text-gray-400">Cadastre esta URL no painel da Lastlink</p>
+                    </div>
+                    <button @click="copyWebhookUrl"
+                            class="px-4 py-2 bg-primary/20 text-primary rounded-lg hover:bg-primary/30 transition-colors flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                        </svg>
+                        Copiar URL
+                    </button>
+                </div>
+
+                <div class="code-block">
+                    <code x-text="webhookUrl"></code>
+                </div>
+
+                <div x-show="copied" x-transition class="mt-2 text-sm text-primary">
+                    ✓ URL copiada para a área de transferência!
+                </div>
+            </div>
+
+            <!-- Instruções -->
+            <div class="glass rounded-2xl p-6 mb-6">
+                <h3 class="text-lg font-bold mb-4">📝 Como Configurar na Lastlink</h3>
+                <ol class="space-y-3 text-gray-300">
+                    <li class="flex items-start">
+                        <span class="bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3 flex-shrink-0">1</span>
+                        <span>Acesse o painel administrativo da <strong>Lastlink</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3 flex-shrink-0">2</span>
+                        <span>Vá em <strong>Integrações → Webhooks</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3 flex-shrink-0">3</span>
+                        <span>Clique em <strong>"Adicionar Webhook"</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3 flex-shrink-0">4</span>
+                        <span>Cole a URL acima no campo <strong>"URL de Destino"</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3 flex-shrink-0">5</span>
+                        <span>Selecione os eventos: <strong>"Pagamento Aprovado"</strong>, <strong>"Nova Venda"</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold mr-3 flex-shrink-0">6</span>
+                        <span>Salve a configuração e teste o webhook</span>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- Informações Técnicas -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="glass rounded-xl p-6">
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 bg-primary/20 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-bold">Método HTTP</h3>
+                    </div>
+                    <p class="text-gray-300">POST</p>
+                </div>
+
+                <div class="glass rounded-xl p-6">
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 bg-accent/20 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-accent" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-bold">Content-Type</h3>
+                    </div>
+                    <p class="text-gray-300">application/json</p>
+                </div>
+
+                <div class="glass rounded-xl p-6">
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 bg-secondary/20 rounded-lg flex items-center justify-center mr-3">
+                            <svg class="w-5 h-5 text-secondary" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                            </svg>
+                        </div>
+                        <h3 class="font-bold">Status</h3>
+                    </div>
+                    <p class="text-primary">✓ Ativo</p>
+                </div>
+            </div>
+
+            <!-- O que acontece -->
+            <div class="glass rounded-2xl p-6 mt-6">
+                <h3 class="text-lg font-bold mb-4">⚙️ O que acontece automaticamente?</h3>
+                <ul class="space-y-2 text-gray-300">
+                    <li class="flex items-start">
+                        <span class="text-primary mr-2">✓</span>
+                        <span>Cliente é cadastrado automaticamente no banco de dados com <strong>status = TRUE</strong></span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary mr-2">✓</span>
+                        <span>WhatsApp do cliente é extraído e formatado (11 dígitos)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary mr-2">✓</span>
+                        <span>Cliente pode fazer login e completar o primeiro acesso</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary mr-2">✓</span>
+                        <span>Nome e email são preenchidos automaticamente (se fornecidos pela Lastlink)</span>
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-primary mr-2">✓</span>
+                        <span>Logs são gerados para auditoria em <code class="text-xs bg-gray-800 px-2 py-1 rounded">logs/webhook-lastlink.log</code></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function webhookAdmin() {
+            return {
+                isAuthenticated: false,
+                loading: false,
+                error: '',
+                copied: false,
+                adminEmail: '',
+                loginForm: {
+                    email: '',
+                    senha: ''
+                },
+                webhookUrl: window.location.origin + '/api/webhook-lastlink.php',
+
+                async loginAdmin() {
+                    this.loading = true;
+                    this.error = '';
+
+                    try {
+                        const response = await fetch('/api/admin-auth.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                email: this.loginForm.email,
+                                senha: this.loginForm.senha
+                            })
+                        });
+
+                        const data = await response.json();
+
+                        if (data.success) {
+                            this.isAuthenticated = true;
+                            this.adminEmail = data.admin.email;
+                            localStorage.setItem('admin_token', data.token);
+                            localStorage.setItem('admin_email', data.admin.email);
+                        } else {
+                            this.error = data.message || 'Credenciais inválidas';
+                        }
+                    } catch (error) {
+                        this.error = 'Erro ao conectar com o servidor';
+                        console.error('Erro:', error);
+                    } finally {
+                        this.loading = false;
+                    }
+                },
+
+                copyWebhookUrl() {
+                    navigator.clipboard.writeText(this.webhookUrl).then(() => {
+                        this.copied = true;
+                        setTimeout(() => {
+                            this.copied = false;
+                        }, 3000);
+                    });
+                },
+
+                logout() {
+                    this.isAuthenticated = false;
+                    this.adminEmail = '';
+                    localStorage.removeItem('admin_token');
+                    localStorage.removeItem('admin_email');
+                    this.loginForm = { email: '', senha: '' };
+                },
+
+                init() {
+                    // Verificar se já está autenticado
+                    const token = localStorage.getItem('admin_token');
+                    const email = localStorage.getItem('admin_email');
+
+                    if (token && email) {
+                        this.isAuthenticated = true;
+                        this.adminEmail = email;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>

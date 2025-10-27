@@ -1,0 +1,18 @@
+Arquivo,Localização,Pasta,Observação
+index.html,public_html/,Raiz,Página inicial
+login_auth.html,public_html/,Raiz,Login e autenticação
+dashboard.html,public_html/,Raiz,Dashboard principal
+transacoes.html,public_html/,Raiz,Página de transações
+relatorios.html,public_html/,Raiz,Relatórios financeiros
+configuracoes.html,public_html/,Raiz,Configurações do usuário
+tutorial.html,public_html/,Raiz,Tutorial do sistema
+feedback.html,public_html/,Raiz,Feedback dos usuários
+.htaccess,public_html/,Raiz,Segurança e performance
+api/auth-real.php,public_html/api/,api,Autenticação PHP
+api/dashboard-real.php,public_html/api/,api,Dados do dashboard
+api/transacoes-real.php,public_html/api/,api,Dados das transações
+api/relatorios-real.php,public_html/api/,api,Dados dos relatórios
+config/database.php,public_html/config/,config,Conexão com Supabase
+config/.htaccess,public_html/config/,config,Proteção da pasta config
+js/pouppi-auth-hybrid.js,public_html/js/,js,Sistema de autenticação
+
