@@ -76,10 +76,20 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
         }
         
-        /* Ocultar menu mobile no desktop */
-        .mobile-bottom-menu {
-            display: none !important;
-            visibility: hidden !important;
+        /* Ocultar menu mobile no desktop - FORÇA MÁXIMA */
+        @media (min-width: 769px) {
+            .mobile-bottom-menu {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                position: fixed !important;
+                bottom: -9999px !important;
+                left: -9999px !important;
+                pointer-events: none !important;
+                height: 0 !important;
+                width: 0 !important;
+                overflow: hidden !important;
+            }
         }
         
         /* Mobile Responsiveness */
@@ -1316,8 +1326,9 @@
         }
     </script>
     
-    <!-- Mobile Bottom Menu -->
-    <div class="mobile-bottom-menu">
+    <!-- Mobile Bottom Menu - Desabilitado no desktop, habilitado apenas no mobile via media query -->
+    <!-- No desktop (> 768px): este menu está COMPLETAMENTE OCULTO via CSS -->
+    <div class="mobile-bottom-menu" style="display: none;">
         <div class="mobile-bottom-menu-content">
             <a href="dashboard.html" class="mobile-bottom-menu-item active">
                 <svg class="mobile-bottom-menu-icon" fill="currentColor" viewBox="0 0 24 24">
