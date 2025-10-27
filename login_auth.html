@@ -134,11 +134,15 @@
                     <form @submit.prevent="registerFirstAccess" class="space-y-4">
                         <!-- WhatsApp -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">WhatsApp</label>
-                            <input type="tel" x-model="form.whatsapp" 
-                                   placeholder="(11) 99999-9999"
+                            <label class="block text-sm font-medium text-gray-300 mb-2">WhatsApp (apenas números)</label>
+                            <input type="tel" x-model="form.whatsapp"
+                                   placeholder="11912345678"
+                                   maxlength="11"
+                                   pattern="[0-9]{11}"
+                                   @input="form.whatsapp = form.whatsapp.replace(/[^0-9]/g, '').slice(0, 11)"
                                    class="w-full px-4 py-3 glass rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary"
                                    required>
+                            <p class="text-xs text-gray-400 mt-1">Exemplo: 11912345678 (11 dígitos)</p>
                         </div>
                         
                         <!-- Nome -->
@@ -388,50 +392,8 @@
                     // Para demonstração, vamos simular a API localmente
                     // Em produção, use a API real
                     
-                    if (endpoint === '/api/auth/login') {
-                        const body = JSON.parse(options.body);
-                        
-                        // Simular delay da API
-                        await new Promise(resolve => setTimeout(resolve, 1000));
-                        
-                        // Verificar credenciais de demonstração
-                        if (body.identifier === 'cliente' && body.senha === '1234') {
-                            return {
-                                success: true,
-                                cliente: {
-                                    clientid: 'demo-client-id',
-                                    whatsapp: '5511997245501',
-                                    nome: 'Cliente Teste',
-                                    email: 'cliente@pouppi.com',
-                                    primeiro_acesso: false,
-                                    isTestUser: true,
-                                    permissions: ['read']
-                                }
-                            };
-                        }
-                        
-                        // Aceitar tanto WhatsApp quanto email para o admin
-                        if ((body.identifier === '5511997245501' || body.identifier === 'frmarques.oli@gmail.com') && body.senha === 'Hyundaimax@@9') {
-                            return {
-                                success: true,
-                                cliente: {
-                                    clientid: 'demo-admin-id',
-                                    whatsapp: '5511997245501',
-                                    nome: 'Francisco Marques de Oliveira Junior',
-                                    email: 'frmarques.oli@gmail.com',
-                                    primeiro_acesso: false,
-                                    isAdmin: true,
-                                    permissions: ['read', 'write', 'delete', 'admin']
-                                }
-                            };
-                        }
-                        
-                        // Credenciais inválidas
-                        return {
-                            success: false,
-                            message: 'Credenciais inválidas'
-                        };
-                    }
+                    // SEGURANÇA: Não validar credenciais no front-end
+                    // Todas as validações devem ser feitas no backend via API
                     
                     // Para outros endpoints, tentar API real
                     try {

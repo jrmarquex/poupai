@@ -104,24 +104,42 @@ try {
         
         // Hash da senha
         $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
-        
-        // Verificar se cliente já existe
-        $stmt = $pdo->prepare("SELECT clientid FROM clientes WHERE whatsapp = :whatsapp");
+
+        // Verificar se cliente já existe e validar status
+        $stmt = $pdo->prepare("SELECT clientid, status, bloqueado_ate FROM clientes WHERE whatsapp = :whatsapp");
         $stmt->execute(['whatsapp' => $whatsapp]);
         $clienteExistente = $stmt->fetch(PDO::FETCH_ASSOC);
-        
+
         if ($clienteExistente) {
-            // Atualizar cliente existente
+            // VALIDAR STATUS DO CLIENTE
+            if (!$clienteExistente['status'] || $clienteExistente['status'] === false) {
+                http_response_code(403);
+                $response['success'] = false;
+                $response['message'] = 'Seu acesso não está ativo. Contate nosso suporte para mais informações.';
+                echo json_encode($response);
+                exit();
+            }
+
+            // Verificar se está bloqueado
+            if ($clienteExistente['bloqueado_ate'] && strtotime($clienteExistente['bloqueado_ate']) > time()) {
+                http_response_code(423);
+                $response['success'] = false;
+                $response['message'] = 'Conta temporariamente bloqueada. Tente novamente mais tarde.';
+                echo json_encode($response);
+                exit();
+            }
+
+            // Atualizar cliente existente (somente se status = TRUE)
             $stmt = $pdo->prepare("
-                UPDATE clientes 
-                SET nome = :nome, 
-                    email = :email, 
-                    senha_hash = :senha_hash, 
+                UPDATE clientes
+                SET nome = :nome,
+                    email = :email,
+                    senha_hash = :senha_hash,
                     primeiro_acesso = FALSE,
                     ultimo_login = NOW(),
                     tentativas_login = 0,
                     updated_at = NOW()
-                WHERE whatsapp = :whatsapp
+                WHERE whatsapp = :whatsapp AND status = TRUE
                 RETURNING clientid
             ");
             $stmt->execute([
@@ -130,21 +148,23 @@ try {
                 'senha_hash' => $senhaHash,
                 'whatsapp' => $whatsapp
             ]);
-            $clienteId = $stmt->fetch()['clientid'];
+
+            $result = $stmt->fetch();
+            if (!$result) {
+                http_response_code(403);
+                $response['success'] = false;
+                $response['message'] = 'Não foi possível completar o cadastro. Entre em contato com o suporte.';
+                echo json_encode($response);
+                exit();
+            }
+            $clienteId = $result['clientid'];
         } else {
-            // Criar novo cliente
-            $stmt = $pdo->prepare("
-                INSERT INTO clientes (whatsapp, nome, email, senha_hash, primeiro_acesso, ultimo_login, status)
-                VALUES (:whatsapp, :nome, :email, :senha_hash, FALSE, NOW(), TRUE)
-                RETURNING clientid
-            ");
-            $stmt->execute([
-                'whatsapp' => $whatsapp,
-                'nome' => $nome,
-                'email' => $email,
-                'senha_hash' => $senhaHash
-            ]);
-            $clienteId = $stmt->fetch()['clientid'];
+            // NOVO CLIENTE: Não pode criar conta sem estar na base
+            http_response_code(403);
+            $response['success'] = false;
+            $response['message'] = 'WhatsApp não autorizado. Entre em contato com o suporte para liberação de acesso.';
+            echo json_encode($response);
+            exit();
         }
         
         // Iniciar sessão
