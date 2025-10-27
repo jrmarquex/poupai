@@ -1,0 +1,14 @@
+# Proteger acesso aos logs
+# Apenas o sistema pode escrever, ninguém pode ler via HTTP
+
+# Negar acesso a todos os arquivos de log
+<FilesMatch "\.(log|txt)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Permitir apenas scripts PHP do próprio sistema
+<FilesMatch "\.php$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
