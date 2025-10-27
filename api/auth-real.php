@@ -19,7 +19,167 @@ try {
         exit();
     }
     
-    if ($method === 'POST') {
+    // Verificar se é POST com ação específica
+    $action = $_GET['action'] ?? '';
+    
+    if ($method === 'POST' && $action === 'check-first-access') {
+        // VERIFICAR PRIMEIRO ACESSO
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$input) {
+            $input = $_POST;
+        }
+        
+        $whatsapp = $input['whatsapp'] ?? '';
+        
+        if (empty($whatsapp)) {
+            http_response_code(400);
+            $response['message'] = 'WhatsApp é obrigatório.';
+            echo json_encode($response);
+            exit();
+        }
+        
+        // Buscar cliente
+        $stmt = $pdo->prepare("
+            SELECT clientid, whatsapp, nome, email, primeiro_acesso, status, bloqueado_ate
+            FROM clientes 
+            WHERE whatsapp = :whatsapp
+        ");
+        $stmt->execute(['whatsapp' => $whatsapp]);
+        $cliente = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$cliente) {
+            $response['success'] = true;
+            $response['isFirstAccess'] = true;
+            $response['message'] = 'Cliente não encontrado - primeiro acesso necessário';
+            echo json_encode($response);
+            exit();
+        }
+        
+        // Verificar se está bloqueado
+        if ($cliente['bloqueado_ate'] && strtotime($cliente['bloqueado_ate']) > time()) {
+            http_response_code(423);
+            $response['message'] = 'Conta temporariamente bloqueada. Tente novamente mais tarde.';
+            echo json_encode($response);
+            exit();
+        }
+        
+        $response['success'] = true;
+        $response['isFirstAccess'] = $cliente['primeiro_acesso'] || empty($cliente['nome']);
+        $response['cliente'] = [
+            'clientid' => $cliente['clientid'],
+            'whatsapp' => $cliente['whatsapp'],
+            'nome' => $cliente['nome'],
+            'email' => $cliente['email']
+        ];
+        echo json_encode($response);
+        exit();
+        
+    } elseif ($method === 'POST' && $action === 'register-first-access') {
+        // REGISTRAR PRIMEIRO ACESSO
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$input) {
+            $input = $_POST;
+        }
+        
+        $whatsapp = $input['whatsapp'] ?? '';
+        $nome = $input['nome'] ?? '';
+        $email = $input['email'] ?? '';
+        $senha = $input['senha'] ?? '';
+        
+        if (empty($whatsapp) || empty($nome) || empty($email) || empty($senha)) {
+            http_response_code(400);
+            $response['message'] = 'Todos os campos são obrigatórios.';
+            echo json_encode($response);
+            exit();
+        }
+        
+        if (strlen($senha) < 6) {
+            http_response_code(400);
+            $response['message'] = 'A senha deve ter pelo menos 6 caracteres.';
+            echo json_encode($response);
+            exit();
+        }
+        
+        // Hash da senha
+        $senhaHash = password_hash($senha, PASSWORD_BCRYPT);
+        
+        // Verificar se cliente já existe
+        $stmt = $pdo->prepare("SELECT clientid FROM clientes WHERE whatsapp = :whatsapp");
+        $stmt->execute(['whatsapp' => $whatsapp]);
+        $clienteExistente = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($clienteExistente) {
+            // Atualizar cliente existente
+            $stmt = $pdo->prepare("
+                UPDATE clientes 
+                SET nome = :nome, 
+                    email = :email, 
+                    senha_hash = :senha_hash, 
+                    primeiro_acesso = FALSE,
+                    ultimo_login = NOW(),
+                    tentativas_login = 0,
+                    updated_at = NOW()
+                WHERE whatsapp = :whatsapp
+                RETURNING clientid
+            ");
+            $stmt->execute([
+                'nome' => $nome,
+                'email' => $email,
+                'senha_hash' => $senhaHash,
+                'whatsapp' => $whatsapp
+            ]);
+            $clienteId = $stmt->fetch()['clientid'];
+        } else {
+            // Criar novo cliente
+            $stmt = $pdo->prepare("
+                INSERT INTO clientes (whatsapp, nome, email, senha_hash, primeiro_acesso, ultimo_login, status)
+                VALUES (:whatsapp, :nome, :email, :senha_hash, FALSE, NOW(), TRUE)
+                RETURNING clientid
+            ");
+            $stmt->execute([
+                'whatsapp' => $whatsapp,
+                'nome' => $nome,
+                'email' => $email,
+                'senha_hash' => $senhaHash
+            ]);
+            $clienteId = $stmt->fetch()['clientid'];
+        }
+        
+        // Iniciar sessão
+        session_start();
+        $_SESSION['clientid'] = $clienteId;
+        $_SESSION['nome'] = $nome;
+        $_SESSION['email'] = $email;
+        $_SESSION['whatsapp'] = $whatsapp;
+        $_SESSION['primeiro_acesso'] = false;
+        
+        // Gerar token
+        $token_data = [
+            'clientid' => $clienteId,
+            'whatsapp' => $whatsapp,
+            'nome' => $nome,
+            'email' => $email,
+            'iat' => time(),
+            'exp' => time() + (24 * 60 * 60)
+        ];
+        $token = base64_encode(json_encode($token_data));
+        
+        $response['success'] = true;
+        $response['message'] = 'Conta criada com sucesso.';
+        $response['cliente'] = [
+            'clientid' => $clienteId,
+            'whatsapp' => $whatsapp,
+            'nome' => $nome,
+            'email' => $email,
+            'primeiro_acesso' => false
+        ];
+        $response['token'] = $token;
+        echo json_encode($response);
+        exit();
+        
+    } elseif ($method === 'POST' && $action === 'login' || empty($action)) {
         // LOGIN
         $input = json_decode(file_get_contents('php://input'), true);
         
