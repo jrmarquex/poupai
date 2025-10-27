@@ -77,7 +77,19 @@
         }
         
         /* REMOVER TODO CSS DO MENU MOBILE - NÃO EXISTE MAIS NO DESKTOP */
-        
+
+        /* Forçar ocultação de qualquer menu mobile no desktop */
+        @media (min-width: 769px) {
+            .mobile-bottom-menu,
+            .sidebar-mobile,
+            .mobile-menu-overlay {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+        }
+
         /* Mobile Responsiveness */
         @media (max-width: 768px) {
             /* Adjust main content for mobile */
