@@ -96,7 +96,7 @@
         }
     </style>
 </head>
-<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="relatoriosApp()">
+<body class="bg-dark-bg text-white font-inter gradient-bg gradient-mesh min-h-screen" x-data="relatoriosApp()" x-init="init()">
     <!-- Sidebar -->
     <div class="fixed left-0 top-0 h-full w-64 sidebar-glass z-40">
         <div class="p-6">
@@ -201,9 +201,8 @@
                 
                 <!-- User Avatar -->
                 <div class="flex items-center space-x-3">
-                    <img x-bind:src="userProfile.avatar || 'https://via.placeholder.com/40x40/20C997/FFFFFF?text=' + userProfile.name.charAt(0)" 
-                         alt="Avatar" 
-                         class="w-10 h-10 rounded-full border-2 border-primary">
+                    <div class="w-10 h-10 rounded-full border-2 border-primary bg-primary flex items-center justify-center text-white font-bold text-lg"
+                         x-text="userProfile.name.charAt(0)"></div>
                     <div>
                         <p class="text-white font-medium" x-text="userProfile.name"></p>
                         <p class="text-xs text-gray-400" x-text="userProfile.role"></p>
@@ -413,10 +412,11 @@
         function relatoriosApp() {
             return {
                 userProfile: {
-                    name: 'Usuário',
-                    role: 'Usuário Pouppi',
+                    name: '',
+                    role: '',
                     avatar: null,
-                    whatsapp: '5511997245501'
+                    whatsapp: '',
+                    isAdmin: false
                 },
                 
                 filters: {
@@ -437,128 +437,143 @@
                     saldoLiquido: 0,
                     totalTransacoes: 0
                 },
-                
+
                 // Configurações da API
-                apiBaseUrl: 'http://localhost:3000/api',
-                
+                apiBaseUrl: '/api',
+
                 async init() {
-                    console.log('Inicializando relatórios com dados reais...');
+                    console.log('🚀 === INICIANDO RELATÓRIOS ===');
+                    console.log('Timestamp:', new Date().toISOString());
+
+                    // LIMPAR dados antigos
+                    this.reportData = {
+                        totalReceitas: 0,
+                        totalDespesas: 0,
+                        saldoLiquido: 0,
+                        totalTransacoes: 0
+                    };
+                    this.transactions = [];
+                    console.log('✅ Dados limpos');
+
+                    // Verificar se usuário está logado
+                    if (!localStorage.getItem('isLoggedIn')) {
+                        console.log('❌ Usuário não logado, redirecionando...');
+                        window.location.href = 'login_auth.html';
+                        return;
+                    }
+
+                    console.log('✅ Usuário está logado');
+
+                    // Carregar dados do perfil
+                    const nome = localStorage.getItem('nome');
+                    const perfil = localStorage.getItem('perfil');
+                    this.userProfile.name = nome || 'Usuário';
+                    this.userProfile.role = perfil === 'admin' ? 'Administrador' : 'Usuário Pouppi';
+
+                    console.log('✅ Perfil carregado:', this.userProfile);
+
                     await this.carregarDadosRelatorios();
+
+                    console.log('✅ reportData final:', this.reportData);
+                    console.log('✅ Total de transactions:', this.transactions.length);
+
                     this.loading = false;
+                    console.log('🚀 === INIT COMPLETO ===');
                 },
-                
+
                 async carregarDadosRelatorios() {
+                    console.log('🔄 Carregando relatórios da API...');
+
                     try {
-                        // Tentar API real primeiro
-                        const response = await fetch(`${this.apiBaseUrl}/relatorios/usuario/5511997245501`, {
+                        // Buscar período configurado nos filtros
+                        const periodo = this.filters.dateRange || 'month';
+                        
+                        // Mapear período frontend para backend
+                        const periodoMap = {
+                            'today': 'hoje',
+                            'week': 'semana',
+                            'month': 'mes',
+                            'quarter': 'trimestre',
+                            'year': 'ano',
+                            'custom': 'mes'
+                        };
+                        const periodoBackend = periodoMap[periodo] || 'mes';
+
+                        const response = await fetch(`${this.apiBaseUrl}/relatorios-real.php?periodo=${periodoBackend}`, {
                             method: 'GET',
                             headers: {
-                                'Content-Type': 'application/json',
-                                'Authorization': 'Bearer admin-token'
-                            }
+                                'Content-Type': 'application/json'
+                            },
+                            credentials: 'include'
                         });
-                        
+
+                        console.log('📡 Response status:', response.status);
+
                         if (!response.ok) {
                             throw new Error(`HTTP error! status: ${response.status}`);
                         }
-                        
+
                         const data = await response.json();
-                        
+                        console.log('📦 Dados recebidos:', data);
+
                         if (data.success) {
+                            // Atualizar perfil do usuário com dados da API (igual dashboard.html)
+                            if (data.cliente) {
+                                this.userProfile.name = data.cliente.nome || 'Usuário';
+                                this.userProfile.whatsapp = data.cliente.whatsapp;
+                                this.userProfile.isAdmin = (data.cliente.perfil === 'admin');
+                                this.userProfile.role = data.cliente.perfil === 'admin' ? 'Administrador' : 'Usuário Pouppi';
+                                console.log('✅ Perfil atualizado com dados da API:', this.userProfile);
+                            }
+
                             this.reportData = {
-                                totalReceitas: data.resumo.totalReceitas,
-                                totalDespesas: data.resumo.totalDespesas,
-                                saldoLiquido: data.resumo.saldoLiquido,
-                                totalTransacoes: data.resumo.totalTransacoes
+                                totalReceitas: data.resumo.receita_total || 0,
+                                totalDespesas: data.resumo.despesa_total || 0,
+                                saldoLiquido: data.resumo.saldo || 0,
+                                totalTransacoes: data.resumo.total_transacoes || 0
                             };
-                            
-                            this.transactions = data.transacoes.map(transacao => ({
-                                id: transacao.id,
-                                description: transacao.observation || `${transacao.category} - ${transacao.type}`,
-                                amount: transacao.valor_movimentacao,
-                                type: transacao.type,
-                                category: transacao.category,
-                                date: transacao.data_movimentacao,
-                                time: transacao.updated_at || '00:00:00',
-                                status: 'Concluído'
-                            }));
-                            
-                            this.userProfile.name = data.cliente.nome || 'Administrador';
-                            console.log('Dados de relatórios carregados:', this.reportData);
+
+                            if (data.transacoes && Array.isArray(data.transacoes)) {
+                                this.transactions = data.transacoes.map(t => ({
+                                    id: t.id,
+                                    description: t.observation || `${t.category || 'Outros'} - ${t.type || 'N/A'}`,
+                                    amount: parseFloat(t.valor_movimentacao || 0),
+                                    type: (t.type || '').toLowerCase() === 'receita' ? 'Receita' : 'Despesa',
+                                    category: t.category || 'Outros',
+                                    date: t.data_movimentacao,
+                                    time: t.updated_at || t.created_at || new Date().toISOString(),
+                                    status: 'Concluído'
+                                }));
+                                console.log('✅ Transações mapeadas:', this.transactions);
+                            }
+
+                            console.log('✅ Dados de relatórios carregados:', this.reportData);
+                            console.log('✅ Total de transações:', this.transactions.length);
+                        } else {
+                            console.error('❌ API retornou success=false');
+                            this.reportData = {
+                                totalReceitas: 0,
+                                totalDespesas: 0,
+                                saldoLiquido: 0,
+                                totalTransacoes: 0
+                            };
+                            this.transactions = [];
                         }
-                        
+
                     } catch (error) {
-                        console.log('API não disponível, usando dados de demonstração');
-                        // Fallback para dados de demonstração
-                        this.carregarDadosDemonstracao();
+                        console.error('❌ ERRO ao carregar relatórios:', error);
+                        this.reportData = {
+                            totalReceitas: 0,
+                            totalDespesas: 0,
+                            saldoLiquido: 0,
+                            totalTransacoes: 0
+                        };
+                        this.transactions = [];
                     }
                 },
                 
-                carregarDadosDemonstracao() {
-                    this.reportData = {
-                        totalReceitas: 3500.00,
-                        totalDespesas: 1290.00,
-                        saldoLiquido: 2210.00,
-                        totalTransacoes: 15
-                    };
-                },
-                
-                transactions: [
-                    {
-                        id: 1,
-                        description: 'Freelance Design',
-                        amount: 850.00,
-                        type: 'Receita',
-                        category: 'outros',
-                        date: '2024-11-30',
-                        time: '10:42:23'
-                    },
-                    {
-                        id: 2,
-                        description: 'Uber - Centro',
-                        amount: 25.00,
-                        type: 'Despesa',
-                        category: 'transporte',
-                        date: '2024-11-30',
-                        time: '12:50:40'
-                    },
-                    {
-                        id: 3,
-                        description: 'iFood - Jantar',
-                        amount: 42.90,
-                        type: 'Despesa',
-                        category: 'alimentação',
-                        date: '2024-11-29',
-                        time: '19:30:00'
-                    },
-                    {
-                        id: 4,
-                        description: 'Salário CLT',
-                        amount: 2800.00,
-                        type: 'Receita',
-                        category: 'outros',
-                        date: '2024-11-28',
-                        time: '09:00:00'
-                    },
-                    {
-                        id: 5,
-                        description: 'Netflix',
-                        amount: 25.90,
-                        type: 'Despesa',
-                        category: 'lazer',
-                        date: '2024-11-27',
-                        time: '08:00:00'
-                    },
-                    {
-                        id: 6,
-                        description: 'Supermercado',
-                        amount: 120.50,
-                        type: 'Despesa',
-                        category: 'alimentação',
-                        date: '2024-11-26',
-                        time: '16:30:00'
-                    }
-                ],
+                // Array de transações (inicializado vazio, será preenchido pela API)
+                transactions: [],
                 
                 get filteredTransactions() {
                     let filtered = [...this.transactions];
@@ -658,14 +673,23 @@
                 },
                 
                 initPieChart() {
-                    const ctx = document.getElementById('pieChart').getContext('2d');
+                    const canvas = document.getElementById('pieChart');
+
+                    // Destruir gráfico existente se houver
+                    if (canvas && Chart.getChart(canvas)) {
+                        Chart.getChart(canvas).destroy();
+                    }
+
+                    if (!canvas) return;
+
+                    const ctx = canvas.getContext('2d');
                     const expenses = this.transactions.filter(t => t.type === 'Despesa');
                     const categoryTotals = {};
-                    
+
                     expenses.forEach(expense => {
                         categoryTotals[expense.category] = (categoryTotals[expense.category] || 0) + expense.amount;
                     });
-                    
+
                     new Chart(ctx, {
                         type: 'pie',
                         data: {
@@ -700,8 +724,17 @@
                 },
                 
                 initLineChart() {
-                    const ctx = document.getElementById('lineChart').getContext('2d');
-                    
+                    const canvas = document.getElementById('lineChart');
+
+                    // Destruir gráfico existente se houver
+                    if (canvas && Chart.getChart(canvas)) {
+                        Chart.getChart(canvas).destroy();
+                    }
+
+                    if (!canvas) return;
+
+                    const ctx = canvas.getContext('2d');
+
                     // Generate monthly data for the last 6 months
                     const monthlyData = [];
                     const labels = [];
